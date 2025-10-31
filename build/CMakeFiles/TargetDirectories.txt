@@ -1,0 +1,3 @@
+D:/UFRGS/Etapa5/FCG/FCG/build/CMakeFiles/main.dir
+D:/UFRGS/Etapa5/FCG/FCG/build/CMakeFiles/edit_cache.dir
+D:/UFRGS/Etapa5/FCG/FCG/build/CMakeFiles/rebuild_cache.dir
