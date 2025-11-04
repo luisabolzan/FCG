@@ -8,6 +8,13 @@
 set(SOURCES
   src/main.cpp
   src/glad.c
+  src/FCGfunctions.cpp
+  src/FCGstructures.cpp
+  src/globals.cpp
+  src/textrendering.cpp
+  src/matrices.cpp
+  src/stb_image.cpp
+  src/tiny_obj_loader.cpp
 )
 
 cmake_minimum_required(VERSION 3.10)
