@@ -2,7 +2,27 @@
 #ifndef FCGSTRUCTURES_H
 #define FCGSTRUCTURES_H
 
-#include "FCGincludes.h"
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <map>
+#include <set>
+#include <stack>
+#include <string>
+#include <vector>
+#include <limits>
+#include <fstream>
+#include <sstream>
+#include <stdexcept>
+#include <algorithm>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <glm/mat4x4.hpp>
+#include <glm/vec4.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <tiny_obj_loader.h>
+#include <stb_image.h>
+#include "matrices.h"
 
 struct ObjModel
 {

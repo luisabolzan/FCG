@@ -32,6 +32,7 @@ uniform vec4 bbox_max;
 uniform sampler2D TextureImage0;
 uniform sampler2D TextureImage1;
 uniform sampler2D TextureImage2;
+uniform sampler2D TextureImage3;
 
 // O valor de saída ("out") de um Fragment Shader é a cor final do fragmento.
 out vec4 color;
@@ -84,14 +85,10 @@ void main()
         //   variável position_model
 
         vec4 bbox_center = (bbox_min + bbox_max) / 2.0;
-
         vec4 pc = position_model - bbox_center;
-
         float rho = length(pc);
-
         vec4 pLinha = bbox_center + rho*normalize(pc);
         vec4 pVetor = (pLinha - bbox_center);
-
         float theta = atan(pVetor.x, pVetor.z);
         float phi = asin(pVetor.y/rho);
 
@@ -128,14 +125,23 @@ void main()
         V = texcoords.y;
     }
 
-    vec3 Kd0 = texture(TextureImage0, vec2(U,V)).rgb; // dia
-    vec3 Kd1 = texture(TextureImage1, vec2(U,V)).rgb; // noite
+    vec3 Kd;
+
+    if ( object_id ==  SPHERE )
+    {
+        Kd = texture(TextureImage1, vec2(U,V)).rgb;
+    }
+    else if ( object_id ==  BUNNY )
+    {
+
+    }
+    if ( object_id == PLANE )
+    {
+        Kd = texture(TextureImage2, vec2(U,V)).rgb;
+    }
 
     // Equação de Iluminação
     float lambert = max(0.0, dot(n, l));
-
-    float t = smoothstep(0.0, 0.3, lambert);
-    vec3 Kd = mix(Kd1, Kd0, t);
 
     color.rgb = Kd * (lambert + 0.5);
 
