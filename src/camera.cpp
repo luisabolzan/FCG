@@ -17,12 +17,12 @@ Camera::Camera() {
     float y = r*sin(g_CameraPhi);
     float z = r*cos(g_CameraPhi)*cos(g_CameraTheta);
     float x = r*cos(g_CameraPhi)*sin(g_CameraTheta);
-    position_c = glm::vec4(x,y,z,1.0f);;
+    position = glm::vec4(x,y,z,1.0f);;
 
     lookat = glm::vec4(0.0f,0.0f,0.0f,1.0f);;
 
     if (!g_FreeCamera){
-        view_vector = lookat - position_c;
+        view_vector = lookat - position;
     }
     else {
         view_vector = glm::vec4(0.0f, 0.0f, 1.0f, 0.0f);
@@ -30,26 +30,26 @@ Camera::Camera() {
 
     up_vector = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
 
-    view_matrix = Matrix_Camera_View(position_c, view_vector, up_vector);
+    view_matrix = Matrix_Camera_View(position, view_vector, up_vector);
     projection = Matrix_Perspective(field_of_view, g_ScreenRatio, nearplane, farplane);
 
 
 }
 
 glm::vec3 Camera::GetPosition(){
-    return glm::vec3(position_c.x, position_c.y, position_c.z);
+    return glm::vec3(position.x, position.y, position.z);
 }
 
 float Camera::GetPositionX() {
-    return position_c.x;
+    return position.x;
 }
 
 float Camera::GetPositionY() {
-    return position_c.y;
+    return position.y;
 }
 
 float Camera::GetPositionZ() {
-    return position_c.z;
+    return position.z;
 }
 
 glm::mat4 Camera::GetViewMatrix(){

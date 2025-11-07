@@ -25,7 +25,7 @@ class Camera {
     private:
 
     bool g_FreeCamera;              // booleano para saber se é camera livre
-    glm::vec4 position_c;           // Ponto "c", centro da câmera
+    glm::vec4 position;           // Ponto "c", centro da câmera
     glm::vec4 lookat;               // Ponto para onde a câmera (look-at) estará sempre olhando
     glm::vec4 view_vector;          // Vetor "view", sentido para onde a câmera está virada
     glm::vec4 up_vector;            // Vetor "up" fixado para apontar para o "céu" (eito Y global)

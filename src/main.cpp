@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
 
         //=======================================================================================================
 
-        Camera camera = Camera(glm::vec3(1.0f,1.0f,1.0f));
+        Camera camera = Camera();
 
         // Enviamos as matrizes "view" e "projection" para a placa de vídeo (GPU).
         glUniformMatrix4fv(g_view_uniform       , 1 , GL_FALSE , glm::value_ptr(camera.GetViewMatrix()));
