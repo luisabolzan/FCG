@@ -11,6 +11,7 @@ set(SOURCES
   src/FCGfunctions.cpp
   src/FCGstructures.cpp
   src/globals.cpp
+  src/camera.cpp
   src/textrendering.cpp
   src/matrices.cpp
   src/stb_image.cpp

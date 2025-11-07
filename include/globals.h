@@ -20,10 +20,6 @@ extern bool g_LeftMouseButtonPressed;
 extern bool g_RightMouseButtonPressed;
 extern bool g_MiddleMouseButtonPressed;
 
-extern float g_CameraTheta;
-extern float g_CameraPhi;
-extern float g_CameraDistance;
-
 extern bool g_UsePerspectiveProjection;
 extern bool g_ShowInfoText;
 

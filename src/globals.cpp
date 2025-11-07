@@ -23,14 +23,6 @@ bool g_LeftMouseButtonPressed = false;
 bool g_RightMouseButtonPressed = false; // Análogo para botão direito do mouse
 bool g_MiddleMouseButtonPressed = false; // Análogo para botão do meio do mouse
 
-// Variáveis que definem a câmera em coordenadas esféricas, controladas pelo
-// usuário através do mouse (veja função CursorPosCallback()). A posição
-// efetiva da câmera é calculada dentro da função main(), dentro do loop de
-// renderização.
-float g_CameraTheta = 0.0f; // Ângulo no plano ZX em relação ao eixo Z
-float g_CameraPhi = 0.0f;   // Ângulo em relação ao eixo Y
-float g_CameraDistance = 3.5f; // Distância da câmera para a origem
-
 // Variável que controla o tipo de projeção utilizada: perspectiva ou ortográfica.
 bool g_UsePerspectiveProjection = true;
 
@@ -55,5 +47,14 @@ GLuint g_NumLoadedTextures = 0;
 // de tempo. Utilizadas no callback CursorPosCallback() abaixo.
 double g_LastCursorPosX = 0.0;
 double g_LastCursorPosY = 0.0;
+
+// =================================================================================
+
+bool g_FreeCamera = false;
+glm::vec4 camera_position_c;
+glm::vec4 camera_lookat_l;
+glm::vec4 camera_view_vector;
+glm::vec4 camera_up_vector;
+
 
 
