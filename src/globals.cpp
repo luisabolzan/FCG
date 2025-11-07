@@ -50,11 +50,5 @@ double g_LastCursorPosY = 0.0;
 
 // =================================================================================
 
-bool g_FreeCamera = false;
-glm::vec4 camera_position_c;
-glm::vec4 camera_lookat_l;
-glm::vec4 camera_view_vector;
-glm::vec4 camera_up_vector;
-
 
 

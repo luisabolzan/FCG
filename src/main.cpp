@@ -108,24 +108,15 @@ int main(int argc, char* argv[])
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUseProgram(g_GpuProgramID);
 
-        // Computamos a posição da câmera utilizando coordenadas esféricas.
-        float r = g_CameraDistance;
-        float y = r*sin(g_CameraPhi);
-        float z = r*cos(g_CameraPhi)*cos(g_CameraTheta);
-        float x = r*cos(g_CameraPhi)*sin(g_CameraTheta);
+        //=======================================================================================================
 
-        Camera camera = Camera(glm::vec3(x,y,z));
-
-        // Planos near e far
-        float nearplane = -0.1f;  // Posição do "near plane"
-        float farplane  = -300.0f; // Posição do "far plane"
-        float field_of_view = 3.141592 / 3.0f;
-
+        Camera camera = Camera(glm::vec3(1.0f,1.0f,1.0f));
 
         // Enviamos as matrizes "view" e "projection" para a placa de vídeo (GPU).
         glUniformMatrix4fv(g_view_uniform       , 1 , GL_FALSE , glm::value_ptr(camera.GetViewMatrix()));
-        glm::mat4 projection = Matrix_Perspective(field_of_view, g_ScreenRatio, nearplane, farplane);;
-        glUniformMatrix4fv(g_projection_uniform , 1 , GL_FALSE , glm::value_ptr(projection));
+        glUniformMatrix4fv(g_projection_uniform , 1 , GL_FALSE , glm::value_ptr(camera.GetProjectionMatrix()));
+
+        //=======================================================================================================
 
         glm::mat4 model = Matrix_Identity();
 
@@ -156,10 +147,10 @@ int main(int argc, char* argv[])
         glUniform1i(g_object_id_uniform, PLANE);
         DrawVirtualObject("the_plane");
 
+        //=======================================================================================================
 
         // Imprimimos na tela FPS
         TextRendering_ShowFramesPerSecond(window);
-
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -168,6 +159,8 @@ int main(int argc, char* argv[])
     return 0;
 }
 
+//=======================================================================================================
+// Funções:
 
 // Função callback chamada sempre que o usuário aperta algum dos botões do mouse
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)

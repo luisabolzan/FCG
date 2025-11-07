@@ -4,10 +4,21 @@ float g_CameraTheta = 0.0f;       // Ângulo no plano ZX em relação ao eixo Z
 float g_CameraPhi = 0.0f;         // Ângulo em relação ao eixo Y
 float g_CameraDistance = 3.5f;    // Distância da câmera para a origem
 
-Camera::Camera(glm::vec3 StartingPosition) {
+float nearplane = -0.1f;  // Posição do "near plane"
+float farplane  = -300.0f; // Posição do "far plane"
+float field_of_view = 3.141592 / 3.0f;
+
+Camera::Camera() {
 
     g_FreeCamera = false;
-    position_c = glm::vec4(StartingPosition.x, StartingPosition.y, StartingPosition.z, 1.0f);;
+
+    // Computamos a posição da câmera utilizando coordenadas esféricas.
+    float r = g_CameraDistance;
+    float y = r*sin(g_CameraPhi);
+    float z = r*cos(g_CameraPhi)*cos(g_CameraTheta);
+    float x = r*cos(g_CameraPhi)*sin(g_CameraTheta);
+    position_c = glm::vec4(x,y,z,1.0f);;
+
     lookat = glm::vec4(0.0f,0.0f,0.0f,1.0f);;
 
     if (!g_FreeCamera){
@@ -19,7 +30,9 @@ Camera::Camera(glm::vec3 StartingPosition) {
 
     up_vector = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
 
-    view_matrix = Matrix_Camera_View(position_c, view_vector, up_vector);;
+    view_matrix = Matrix_Camera_View(position_c, view_vector, up_vector);
+    projection = Matrix_Perspective(field_of_view, g_ScreenRatio, nearplane, farplane);
+
 
 }
 
@@ -40,7 +53,11 @@ float Camera::GetPositionZ() {
 }
 
 glm::mat4 Camera::GetViewMatrix(){
-    return Matrix_Camera_View(position_c, view_vector, up_vector);
+    return view_matrix;
+}
+
+glm::mat4 Camera::GetProjectionMatrix() {
+    return projection;
 }
 
 glm::vec4 Camera::GetViewVector(){
