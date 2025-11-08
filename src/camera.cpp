@@ -115,5 +115,49 @@ void Camera::SyncVectorToAngles() {
     g_CameraTheta = atan2(v.x, v.z);
 }
 
+void Camera::StartCamera() {
+
+    if (CPressed) {
+        this->SetFreeCamera(!this->GetFreeCamera());
+        this->SyncVectorToAngles();
+        CPressed = false;
+    }
+
+    currentTime = glfwGetTime();
+    deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
+
+    if (this->GetFreeCamera()) {
+
+        float speed = this->GetSpeed() * deltaTime;
+        if (WPressed){
+            this->SetPosition(this->GetPosition() + this->GetViewVector() * speed);
+        }
+        if (APressed){
+            this->SetPosition(this->GetPosition() - this->GetU() * speed);
+        }
+        if (SPressed){
+            this->SetPosition(this->GetPosition() - this->GetViewVector() * speed);
+        }
+        if (DPressed){
+            this->SetPosition(this->GetPosition() + this->GetU() * speed);
+        }
+        if (SpacePressed) {
+            this->SetPositionY(this->GetPositionY() + speed);
+        }
+        if (ShiftPressed) {
+            this->SetPositionY(this->GetPositionY() - speed);
+        }
+        this->UpdateFreeCamera();
+    }
+    else
+        this->UpdateLookAtCamera();
+
+    // Enviamos as matrizes "view" e "projection" para a placa de vídeo (GPU).
+    glUniformMatrix4fv(g_view_uniform       , 1 , GL_FALSE , glm::value_ptr(this->GetViewMatrix()));
+    glUniformMatrix4fv(g_projection_uniform , 1 , GL_FALSE , glm::value_ptr(this->GetProjectionMatrix()));
+}
+
+
 
 

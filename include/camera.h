@@ -65,6 +65,7 @@ class Camera {
     void UpdateFreeCamera();
     void UpdateLookAtCamera();
     void SyncVectorToAngles();
+    void StartCamera();
 
 };
 

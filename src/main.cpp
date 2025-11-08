@@ -99,6 +99,7 @@ int main(int argc, char* argv[])
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
+    // Constroi a Camera
     Camera camera;
 
     // Ficamos em um loop infinito, renderizando, até que o usuário feche a janela
@@ -111,45 +112,8 @@ int main(int argc, char* argv[])
 
         //=======================================================================================================
 
-        if (CPressed) {
-            camera.SetFreeCamera(!camera.GetFreeCamera());
-            camera.SyncVectorToAngles();
-            CPressed = false;
-        }
-
-        currentTime = glfwGetTime();
-        deltaTime = currentTime - lastTime;
-        lastTime = currentTime;
-
-        if (camera.GetFreeCamera()) {
-
-            float speed = camera.GetSpeed() * deltaTime;
-            if (WPressed){
-                camera.SetPosition(camera.GetPosition() + camera.GetViewVector() * speed);
-            }
-            if (APressed){
-                camera.SetPosition(camera.GetPosition() - camera.GetU() * speed);
-            }
-            if (SPressed){
-                camera.SetPosition(camera.GetPosition() - camera.GetViewVector() * speed);
-            }
-            if (DPressed){
-                camera.SetPosition(camera.GetPosition() + camera.GetU() * speed);
-            }
-            if (SpacePressed) {
-                camera.SetPositionY(camera.GetPositionY() + speed);
-            }
-            if (ShiftPressed) {
-                camera.SetPositionY(camera.GetPositionY() - speed);
-            }
-            camera.UpdateFreeCamera();
-        }
-        else
-            camera.UpdateLookAtCamera();
-
-        // Enviamos as matrizes "view" e "projection" para a placa de vídeo (GPU).
-        glUniformMatrix4fv(g_view_uniform       , 1 , GL_FALSE , glm::value_ptr(camera.GetViewMatrix()));
-        glUniformMatrix4fv(g_projection_uniform , 1 , GL_FALSE , glm::value_ptr(camera.GetProjectionMatrix()));
+        // Inicializa e mantem o funcionamento da camera
+        camera.StartCamera();
 
         //=======================================================================================================
 
