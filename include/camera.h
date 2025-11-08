@@ -33,7 +33,7 @@ class Camera {
     glm::mat4 projection;           // Matriz de Projeção
 
     glm::vec4 U;
-    glm::vec4 W;
+
 
     float r;
 

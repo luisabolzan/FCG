@@ -21,7 +21,6 @@ Camera::Camera() {
     projection = Matrix_Perspective(field_of_view, g_ScreenRatio, nearplane, farplane);
 
     U = crossproduct(view_vector, up_vector);
-    W = -view_vector / norm(view_vector);
 
     speed = 10.0f;
 }
@@ -81,7 +80,6 @@ void Camera::SetPositionY(float y) {
 
 void Camera::SetLookAt(glm::vec4 lookat) {
     this->lookat = lookat;
-    this->view_vector = lookat - position;
 }
 
 void Camera::UpdateFreeCamera() {
@@ -93,7 +91,6 @@ void Camera::UpdateFreeCamera() {
     view_vector = glm::vec4( cosPhi * sinTheta, sinPhi, cosPhi * cosTheta, 0.0f);
 
     U = normalize( crossproduct(view_vector, up_vector) );
-    W = -normalize(view_vector);
 
     view_matrix = Matrix_Camera_View(position, view_vector, up_vector);
 }
