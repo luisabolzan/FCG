@@ -60,6 +60,7 @@ bool SPressed = false;
 bool DPressed = false;
 
 bool CPressed = false;
+bool MPressed = false;
 
 bool SpacePressed = false;
 bool ShiftPressed = false;

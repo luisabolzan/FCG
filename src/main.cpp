@@ -111,23 +111,11 @@ int main(int argc, char* argv[])
 
         //=======================================================================================================
 
-
         if (CPressed) {
             camera.SetFreeCamera(!camera.GetFreeCamera());
-
-            if (camera.GetFreeCamera()) {
-                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            }
-            else {
-                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            }
-
+            camera.SyncVectorToAngles();
             CPressed = false;
         }
-        else {
-
-        }
-
 
         currentTime = glfwGetTime();
         deltaTime = currentTime - lastTime;
@@ -154,9 +142,10 @@ int main(int argc, char* argv[])
             if (ShiftPressed) {
                 camera.SetPositionY(camera.GetPositionY() - speed);
             }
-
-            camera.UpdateView();
+            camera.UpdateFreeCamera();
         }
+        else
+            camera.UpdateLookAtCamera();
 
         // Enviamos as matrizes "view" e "projection" para a placa de vídeo (GPU).
         glUniformMatrix4fv(g_view_uniform       , 1 , GL_FALSE , glm::value_ptr(camera.GetViewMatrix()));
@@ -348,6 +337,17 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
     if (key == GLFW_KEY_C && action == GLFW_PRESS)
     {
         CPressed = !CPressed;
+    }
+
+    if (key == GLFW_KEY_M && action == GLFW_PRESS)
+    {
+        MPressed = !MPressed;
+        if (MPressed) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+        else {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
     }
 
     if (key == GLFW_KEY_W)

@@ -60,8 +60,11 @@ class Camera {
     void SetPosition(glm::vec4 position);
     void SetPositionY(float y);
 
-    void UpdateView();
+    void SetLookAt(glm::vec4 lookat);
 
+    void UpdateFreeCamera();
+    void UpdateLookAtCamera();
+    void SyncVectorToAngles();
 
 };
 

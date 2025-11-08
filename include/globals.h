@@ -48,6 +48,7 @@ extern bool SPressed;
 extern bool DPressed;
 
 extern bool CPressed;
+extern bool MPressed;
 
 extern bool SpacePressed;
 extern bool ShiftPressed;
