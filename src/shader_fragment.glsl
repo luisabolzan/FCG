@@ -148,18 +148,14 @@ void main() {
         vec3 BlinnPhongShading = LambertShading + ambient_term + blinn_phong_specular_term;
 
 
-        if (IlluminationModel == LAMBERT) {
-            color.rgb = LambertShading;
-        }
-        if (IlluminationModel == PHONG) {
-            color.rgb = PhongShading;
-        }    
-        if (IlluminationModel == BLINNPHONG) {
-            color.rgb = BlinnPhongShading;
-        }
-        if (IlluminationModel == GLOBALLIGHT) {
+        if (IlluminationModel == GLOBALLIGHT)
             color.rgb = Kd * (max(0.0, dot(n,l)) + 0.5);
-        }
+        else if (IlluminationModel == LAMBERT)
+            color.rgb = LambertShading;
+        else if (IlluminationModel == PHONG)
+            color.rgb = PhongShading;
+        else if (IlluminationModel == BLINNPHONG)
+            color.rgb = BlinnPhongShading;
 
 
         color.a = 1;

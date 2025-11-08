@@ -192,14 +192,14 @@ void main()
         vec3 BlinnPhongShading = LambertShading + ambient_term + blinn_phong_specular_term;
 
 
-        if (IlluminationModel == LAMBERT)
+        if (IlluminationModel == GLOBALLIGHT)
+            GouraudColor.rgb = Kd * (max(0.0, dot(n, l)) + 0.5);
+        else if (IlluminationModel == LAMBERT)
             GouraudColor.rgb = LambertShading;
         else if (IlluminationModel == PHONG)
             GouraudColor.rgb = PhongShading;
         else if (IlluminationModel == BLINNPHONG)
             GouraudColor.rgb = BlinnPhongShading;
-        else if (IlluminationModel == GLOBALLIGHT)
-            GouraudColor.rgb = Kd * (max(0.0, dot(n, l)) + 0.5);
 
 
         GouraudColor.a = 1;
