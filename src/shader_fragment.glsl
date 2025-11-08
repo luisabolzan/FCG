@@ -39,9 +39,13 @@ in vec4 GouraudColor;
 uniform int IlluminationModel;
 
 // Identificador que define qual objeto está sendo desenhado no momento
-#define SPHERE 0
-#define BUNNY  1
-#define PLANE  2
+#define SPHERE      0
+#define BUNNY       1
+#define PLANE       2
+#define KART        3
+#define RACETRACK   4
+#define COIN        5
+#define BULLET      6
 uniform int object_id;
 
 // Variáveis para acesso das imagens de textura
@@ -94,7 +98,7 @@ void main() {
             U = (theta + M_PI) / (2*M_PI);
             V = (phi + M_PI_2) / M_PI;
 
-            Kd = texture(TextureImage1, vec2(U,V)).rgb;
+            Kd = texture(TextureImage0, vec2(U,V)).rgb;
             // Ka =
             // Ks =
             // q =
@@ -122,10 +126,21 @@ void main() {
             U = texcoords.x;
             V = texcoords.y;
 
-            Kd = texture(TextureImage2, vec2(U,V)).rgb;
+            Kd = texture(TextureImage1, vec2(U,V)).rgb;
             // Ka =
             // Ks =
             // q =
+        }
+        else if (object_id == COIN) {
+
+            U = texcoords.x + 0.1f;
+            V = texcoords.y ;
+
+            Kd = texture(TextureImage2, vec2(U,V)).rgb;
+            Ka = vec3(0.7, 0.7, 0.0);
+            Ks = vec3(0.3, 0.3, 0.3);
+            q  = 10.0;
+
         }
 
         //==============================================================================
