@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
 
     /// texturas adicionadas
     LoadTextureImage("../../data/tc-earth_daymap_surface.jpg");           // TextureImage0
-    LoadTextureImage("../../data/sky.jpg");                               // TextureImage1
+    LoadTextureImage("../../data/sky.hdr");                               // TextureImage1
     LoadTextureImage("../../data/grama.jpg");                             // TextureImage2
 
 
