@@ -86,6 +86,10 @@ int main(int argc, char* argv[])
     ComputeNormals(&planemodel);
     BuildTrianglesAndAddToVirtualScene(&planemodel);
 
+    ObjModel bulletmodel("../../data/bullet.obj");
+    ComputeNormals(&bulletmodel);
+    BuildTrianglesAndAddToVirtualScene(&bulletmodel);
+
     //============================================================================================
 
     // Inicializamos o código para renderização de texto.
@@ -122,6 +126,7 @@ int main(int argc, char* argv[])
         #define SPHERE 0
         #define BUNNY  1
         #define PLANE  2
+        #define BULLET 3
 
         // Desenhamos o modelo da esfera
         glCullFace(GL_FRONT);
@@ -145,6 +150,12 @@ int main(int argc, char* argv[])
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, PLANE);
         DrawVirtualObject("the_plane");
+
+        model = Matrix_Translate(2.0f,0.0f,0.0f) * Matrix_Scale(0.03f, 0.03f, 0.03f);
+        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, BULLET);
+        DrawVirtualObject("the_bullet");
+              
 
         //=======================================================================================================
 
