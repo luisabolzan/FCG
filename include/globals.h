@@ -36,4 +36,20 @@ extern GLuint g_NumLoadedTextures;
 
 extern double g_LastCursorPosX, g_LastCursorPosY;
 
+// =================================================================================
+
+extern float currentTime;
+extern float deltaTime;
+extern float lastTime;
+
+extern bool WPressed;
+extern bool APressed;
+extern bool SPressed;
+extern bool DPressed;
+
+extern bool CPressed;
+
+extern bool SpacePressed;
+extern bool ShiftPressed;
+
 #endif //GLOBALS_H

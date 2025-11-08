@@ -50,5 +50,37 @@ double g_LastCursorPosY = 0.0;
 
 // =================================================================================
 
+float currentTime;
+float deltaTime;
+float lastTime;
+
+bool WPressed = false;
+bool APressed = false;
+bool SPressed = false;
+bool DPressed = false;
+
+bool CPressed = false;
+
+bool SpacePressed = false;
+bool ShiftPressed = false;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

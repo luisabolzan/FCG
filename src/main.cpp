@@ -99,6 +99,7 @@ int main(int argc, char* argv[])
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
+    Camera camera;
 
     // Ficamos em um loop infinito, renderizando, até que o usuário feche a janela
     while (!glfwWindowShouldClose(window))
@@ -110,7 +111,52 @@ int main(int argc, char* argv[])
 
         //=======================================================================================================
 
-        Camera camera = Camera();
+
+        if (CPressed) {
+            camera.SetFreeCamera(!camera.GetFreeCamera());
+
+            if (camera.GetFreeCamera()) {
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            }
+            else {
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            }
+
+            CPressed = false;
+        }
+        else {
+
+        }
+
+
+        currentTime = glfwGetTime();
+        deltaTime = currentTime - lastTime;
+        lastTime = currentTime;
+
+        if (camera.GetFreeCamera()) {
+
+            float speed = camera.GetSpeed() * deltaTime;
+            if (WPressed){
+                camera.SetPosition(camera.GetPosition() + camera.GetViewVector() * speed);
+            }
+            if (APressed){
+                camera.SetPosition(camera.GetPosition() - camera.GetU() * speed);
+            }
+            if (SPressed){
+                camera.SetPosition(camera.GetPosition() - camera.GetViewVector() * speed);
+            }
+            if (DPressed){
+                camera.SetPosition(camera.GetPosition() + camera.GetU() * speed);
+            }
+            if (SpacePressed) {
+                camera.SetPositionY(camera.GetPositionY() + speed);
+            }
+            if (ShiftPressed) {
+                camera.SetPositionY(camera.GetPositionY() - speed);
+            }
+
+            camera.UpdateView();
+        }
 
         // Enviamos as matrizes "view" e "projection" para a placa de vídeo (GPU).
         glUniformMatrix4fv(g_view_uniform       , 1 , GL_FALSE , glm::value_ptr(camera.GetViewMatrix()));
@@ -225,26 +271,23 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos)
     // parâmetros que definem a posição da câmera dentro da cena virtual.
     // Assim, temos que o usuário consegue controlar a câmera.
 
-    if (g_LeftMouseButtonPressed)
+    if (!g_LeftMouseButtonPressed)
     {
-        // Deslocamento do cursor do mouse em x e y de coordenadas de tela!
         float dx = xpos - g_LastCursorPosX;
         float dy = ypos - g_LastCursorPosY;
-    
-        // Atualizamos parâmetros da câmera com os deslocamentos
-        g_CameraTheta -= 0.01f*dx;
-        g_CameraPhi   += 0.01f*dy;
-    
-        // Em coordenadas esféricas, o ângulo phi deve ficar entre -pi/2 e +pi/2.
-        float phimax = 3.141592f/2;
+
+        g_CameraTheta -= 0.002f * dx;
+        g_CameraPhi   -= 0.002f * dy;
+
+        float phimax = 3.141592f / 2.0f;
         float phimin = -phimax;
-    
+
         if (g_CameraPhi > phimax)
             g_CameraPhi = phimax;
-    
+
         if (g_CameraPhi < phimin)
             g_CameraPhi = phimin;
-    
+
         // Atualizamos as variáveis globais para armazenar a posição atual do
         // cursor como sendo a última posição conhecida do cursor.
         g_LastCursorPosX = xpos;
@@ -301,6 +344,63 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
     // Se o usuário pressionar a tecla ESC, fechamos a janela.
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
+
+    if (key == GLFW_KEY_C && action == GLFW_PRESS)
+    {
+        CPressed = !CPressed;
+    }
+
+    if (key == GLFW_KEY_W)
+    {
+        if (action == GLFW_PRESS || action == GLFW_REPEAT)
+            WPressed = true;
+        else if (action == GLFW_RELEASE)
+            WPressed = false;
+    }
+
+    if (key == GLFW_KEY_A)
+    {
+        if (action == GLFW_PRESS || action == GLFW_REPEAT)
+            APressed = true;
+        else if (action == GLFW_RELEASE)
+            APressed = false;
+    }
+
+    if (key == GLFW_KEY_S)
+    {
+        if (action == GLFW_PRESS || action == GLFW_REPEAT)
+            SPressed = true;
+        else if (action == GLFW_RELEASE)
+            SPressed = false;
+    }
+
+    if (key == GLFW_KEY_D)
+    {
+        if (action == GLFW_PRESS || action == GLFW_REPEAT)
+            DPressed = true;
+        else if (action == GLFW_RELEASE)
+            DPressed = false;
+    }
+
+    if (key == GLFW_KEY_SPACE)
+    {
+        if (action == GLFW_PRESS || action == GLFW_REPEAT)
+            SpacePressed = true;
+        else if (action == GLFW_RELEASE)
+            SpacePressed = false;
+    }
+
+    if (key == GLFW_KEY_LEFT_SHIFT)
+    {
+        if (action == GLFW_PRESS || action == GLFW_REPEAT)
+            ShiftPressed = true;
+        else if (action == GLFW_RELEASE)
+            ShiftPressed = false;
+    }
+
+
+
+    //====================================================================
 
     // O código abaixo implementa a seguinte lógica:
     //   Se apertar tecla X       então g_AngleX += delta;
@@ -359,4 +459,6 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         fprintf(stdout,"Shaders recarregados!\n");
         fflush(stdout);
     }
+
+    //====================================================================
 }

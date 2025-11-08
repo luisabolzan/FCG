@@ -24,20 +24,27 @@ class Camera {
 
     private:
 
-    bool g_FreeCamera;              // booleano para saber se é camera livre
-    glm::vec4 position;           // Ponto "c", centro da câmera
+    bool FreeCamera;                // booleano para saber se é camera livre
+    glm::vec4 position;             // Ponto "c", centro da camera
     glm::vec4 lookat;               // Ponto para onde a câmera (look-at) estará sempre olhando
     glm::vec4 view_vector;          // Vetor "view", sentido para onde a câmera está virada
     glm::vec4 up_vector;            // Vetor "up" fixado para apontar para o "céu" (eito Y global)
     glm::mat4 view_matrix;          // Matriz view
     glm::mat4 projection;           // Matriz de Projeção
 
+    glm::vec4 U;
+    glm::vec4 W;
+
+    float r;
+
+    float speed;                    // Velocidade da Camera
+
     public:
 
     //Camera(glm::vec3 StartingPosition);
     Camera();
 
-    glm::vec3 GetPosition();
+    glm::vec4 GetPosition();
     float GetPositionX();
     float GetPositionY();
     float GetPositionZ();
@@ -45,6 +52,16 @@ class Camera {
     glm::mat4 GetViewMatrix();
     glm::mat4 GetProjectionMatrix();
     glm::vec4 GetViewVector();
+    bool GetFreeCamera();
+    float GetSpeed();
+    glm::vec4 GetU();
+
+    void SetFreeCamera(bool freeCamera);
+    void SetPosition(glm::vec4 position);
+    void SetPositionY(float y);
+
+    void UpdateView();
+
 
 };
 
