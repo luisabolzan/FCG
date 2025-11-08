@@ -20,10 +20,6 @@ extern bool g_LeftMouseButtonPressed;
 extern bool g_RightMouseButtonPressed;
 extern bool g_MiddleMouseButtonPressed;
 
-extern float g_CameraTheta;
-extern float g_CameraPhi;
-extern float g_CameraDistance;
-
 extern bool g_UsePerspectiveProjection;
 extern bool g_ShowInfoText;
 
@@ -39,5 +35,22 @@ extern GLint g_bbox_max_uniform;
 extern GLuint g_NumLoadedTextures;
 
 extern double g_LastCursorPosX, g_LastCursorPosY;
+
+// =================================================================================
+
+extern float currentTime;
+extern float deltaTime;
+extern float lastTime;
+
+extern bool WPressed;
+extern bool APressed;
+extern bool SPressed;
+extern bool DPressed;
+
+extern bool CPressed;
+extern bool MPressed;
+
+extern bool SpacePressed;
+extern bool ShiftPressed;
 
 #endif //GLOBALS_H

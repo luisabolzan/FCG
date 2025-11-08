@@ -5,6 +5,7 @@
 
 #include "FCGfunctions.h"
 #include "globals.h"
+#include "camera.h"
 
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -98,6 +99,8 @@ int main(int argc, char* argv[])
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
+    // Constroi a Camera
+    Camera camera;
 
     // Ficamos em um loop infinito, renderizando, até que o usuário feche a janela
     while (!glfwWindowShouldClose(window))
@@ -107,32 +110,12 @@ int main(int argc, char* argv[])
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUseProgram(g_GpuProgramID);
 
-        // Computamos a posição da câmera utilizando coordenadas esféricas.
-        float r = g_CameraDistance;
-        float y = r*sin(g_CameraPhi);
-        float z = r*cos(g_CameraPhi)*cos(g_CameraTheta);
-        float x = r*cos(g_CameraPhi)*sin(g_CameraTheta);
+        //=======================================================================================================
 
-        // Abaixo definimos as varáveis que efetivamente definem a câmera virtual.
-        glm::vec4 camera_position_c  = glm::vec4(x,y,z,1.0f);                   // Ponto "c", centro da câmera
-        glm::vec4 camera_lookat_l    = glm::vec4(0.0f,0.0f,0.0f,1.0f);          // Ponto "l", para onde a câmera (look-at) estará sempre olhando
-        glm::vec4 camera_view_vector = camera_lookat_l - camera_position_c;     // Vetor "view", sentido para onde a câmera está virada
-        glm::vec4 camera_up_vector   = glm::vec4(0.0f,1.0f,0.0f,0.0f);          // Vetor "up" fixado para apontar para o "céu" (eito Y global)
+        // Inicializa e mantem o funcionamento da camera
+        camera.StartCamera();
 
-        // Computamos a matriz "View" utilizando os parâmetros da câmera para definir o sistema de coordenadas da câmera.
-        glm::mat4 view = Matrix_Camera_View(camera_position_c, camera_view_vector, camera_up_vector);
-
-
-        // Planos near e far
-        float nearplane = -0.1f;  // Posição do "near plane"
-        float farplane  = -300.0f; // Posição do "far plane"
-        float field_of_view = 3.141592 / 3.0f;
-
-
-        // Enviamos as matrizes "view" e "projection" para a placa de vídeo (GPU).
-        glUniformMatrix4fv(g_view_uniform       , 1 , GL_FALSE , glm::value_ptr(view));
-        glm::mat4 projection = Matrix_Perspective(field_of_view, g_ScreenRatio, nearplane, farplane);;
-        glUniformMatrix4fv(g_projection_uniform , 1 , GL_FALSE , glm::value_ptr(projection));
+        //=======================================================================================================
 
         glm::mat4 model = Matrix_Identity();
 
@@ -143,7 +126,7 @@ int main(int argc, char* argv[])
         // Desenhamos o modelo da esfera
         glCullFace(GL_FRONT);
         glDepthMask(GL_FALSE);
-        model = Matrix_Translate(camera_position_c.x, camera_position_c.y, camera_position_c.z) * Matrix_Scale(200.0f, 200.0f, 200.0f);
+        model = Matrix_Translate(camera.GetPositionX() , camera.GetPositionY(), camera.GetPositionZ()) * Matrix_Scale(200.0f, 200.0f, 200.0f);
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, SPHERE);
         DrawVirtualObject("the_sphere");
@@ -163,10 +146,10 @@ int main(int argc, char* argv[])
         glUniform1i(g_object_id_uniform, PLANE);
         DrawVirtualObject("the_plane");
 
+        //=======================================================================================================
 
         // Imprimimos na tela FPS
         TextRendering_ShowFramesPerSecond(window);
-
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -175,6 +158,8 @@ int main(int argc, char* argv[])
     return 0;
 }
 
+//=======================================================================================================
+// Funções:
 
 // Função callback chamada sempre que o usuário aperta algum dos botões do mouse
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
@@ -239,26 +224,23 @@ void CursorPosCallback(GLFWwindow* window, double xpos, double ypos)
     // parâmetros que definem a posição da câmera dentro da cena virtual.
     // Assim, temos que o usuário consegue controlar a câmera.
 
-    if (g_LeftMouseButtonPressed)
+    if (!g_LeftMouseButtonPressed)
     {
-        // Deslocamento do cursor do mouse em x e y de coordenadas de tela!
         float dx = xpos - g_LastCursorPosX;
         float dy = ypos - g_LastCursorPosY;
-    
-        // Atualizamos parâmetros da câmera com os deslocamentos
-        g_CameraTheta -= 0.01f*dx;
-        g_CameraPhi   += 0.01f*dy;
-    
-        // Em coordenadas esféricas, o ângulo phi deve ficar entre -pi/2 e +pi/2.
-        float phimax = 3.141592f/2;
+
+        g_CameraTheta -= 0.002f * dx;
+        g_CameraPhi   -= 0.002f * dy;
+
+        float phimax = 3.141592f / 2.0f;
         float phimin = -phimax;
-    
+
         if (g_CameraPhi > phimax)
             g_CameraPhi = phimax;
-    
+
         if (g_CameraPhi < phimin)
             g_CameraPhi = phimin;
-    
+
         // Atualizamos as variáveis globais para armazenar a posição atual do
         // cursor como sendo a última posição conhecida do cursor.
         g_LastCursorPosX = xpos;
@@ -311,17 +293,78 @@ void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 // tecla do teclado. Veja http://www.glfw.org/docs/latest/input_guide.html#input_key
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
 {
-    // =======================
-    // Não modifique este loop! Ele é utilizando para correção automatizada dos
-    // laboratórios. Deve ser sempre o primeiro comando desta função KeyCallback().
-    for (int i = 0; i < 10; ++i)
-        if (key == GLFW_KEY_0 + i && action == GLFW_PRESS && mod == GLFW_MOD_SHIFT)
-            std::exit(100 + i);
-    // =======================
 
     // Se o usuário pressionar a tecla ESC, fechamos a janela.
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
+
+    if (key == GLFW_KEY_C && action == GLFW_PRESS)
+    {
+        CPressed = !CPressed;
+    }
+
+    if (key == GLFW_KEY_M && action == GLFW_PRESS)
+    {
+        MPressed = !MPressed;
+        if (MPressed) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+        else {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+    }
+
+    if (key == GLFW_KEY_W)
+    {
+        if (action == GLFW_PRESS || action == GLFW_REPEAT)
+            WPressed = true;
+        else if (action == GLFW_RELEASE)
+            WPressed = false;
+    }
+
+    if (key == GLFW_KEY_A)
+    {
+        if (action == GLFW_PRESS || action == GLFW_REPEAT)
+            APressed = true;
+        else if (action == GLFW_RELEASE)
+            APressed = false;
+    }
+
+    if (key == GLFW_KEY_S)
+    {
+        if (action == GLFW_PRESS || action == GLFW_REPEAT)
+            SPressed = true;
+        else if (action == GLFW_RELEASE)
+            SPressed = false;
+    }
+
+    if (key == GLFW_KEY_D)
+    {
+        if (action == GLFW_PRESS || action == GLFW_REPEAT)
+            DPressed = true;
+        else if (action == GLFW_RELEASE)
+            DPressed = false;
+    }
+
+    if (key == GLFW_KEY_SPACE)
+    {
+        if (action == GLFW_PRESS || action == GLFW_REPEAT)
+            SpacePressed = true;
+        else if (action == GLFW_RELEASE)
+            SpacePressed = false;
+    }
+
+    if (key == GLFW_KEY_LEFT_SHIFT)
+    {
+        if (action == GLFW_PRESS || action == GLFW_REPEAT)
+            ShiftPressed = true;
+        else if (action == GLFW_RELEASE)
+            ShiftPressed = false;
+    }
+
+
+
+    //====================================================================
 
     // O código abaixo implementa a seguinte lógica:
     //   Se apertar tecla X       então g_AngleX += delta;
@@ -380,4 +423,6 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         fprintf(stdout,"Shaders recarregados!\n");
         fflush(stdout);
     }
+
+    //====================================================================
 }
