@@ -38,6 +38,9 @@ extern double g_LastCursorPosX, g_LastCursorPosY;
 
 // =================================================================================
 
+extern int IlluminationModel;
+extern bool IsGouraudShading;
+
 extern float currentTime;
 extern float deltaTime;
 extern float lastTime;

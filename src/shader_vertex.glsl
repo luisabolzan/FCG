@@ -20,6 +20,39 @@ out vec4 position_model;
 out vec4 normal;
 out vec2 texcoords;
 
+// Parâmetros da axis-aligned bounding box (AABB) do modelo
+uniform vec4 bbox_min;
+uniform vec4 bbox_max;
+
+// Constantes
+#define M_PI   3.14159265358979323846
+#define M_PI_2 1.57079632679489661923
+
+#define GLOBALLIGHT 0
+#define LAMBERT 1
+#define PHONG 2
+#define BLINNPHONG 3
+
+
+// Variáveis de iluminação
+uniform bool IsGouraudShading;
+out vec4 GouraudColor;
+uniform int IlluminationModel;
+
+// Identificador que define qual objeto está sendo desenhado no momento
+#define SPHERE 0
+#define BUNNY  1
+#define PLANE  2
+uniform int object_id;
+
+// Variáveis para acesso das imagens de textura
+uniform sampler2D TextureImage0;
+uniform sampler2D TextureImage1;
+uniform sampler2D TextureImage2;
+uniform sampler2D TextureImage3;
+
+
+
 void main()
 {
     // A variável gl_Position define a posição final de cada vértice
@@ -63,5 +96,117 @@ void main()
 
     // Coordenadas de textura obtidas do arquivo OBJ (se existirem!)
     texcoords = texture_coefficients;
+
+    //============================================================================
+    //Gouraud Shading
+
+    if(IsGouraudShading) {
+        vec4 origin = vec4(0.0, 0.0, 0.0, 1.0);
+        vec4 camera_position = inverse(view) * origin;
+
+        vec4 LightPosition = normalize(vec4(1.0,1.0,0.5,0.0));
+        vec4 LightDirection = normalize(vec4(0.0, -1.0, 0.0, 0.0));
+        vec4 LightL = normalize(position_world - LightPosition);
+        float LightAngle = dot(LightL, LightDirection);
+
+        vec4 p = position_world;
+        vec4 n = normalize(normal);
+        vec4 l = normalize(LightPosition);
+        vec4 v = normalize(camera_position - p);
+        vec4 r = -l + 2 * n * (dot(n,l));
+
+        // Parâmetros que definem as propriedades espectrais da superfície
+        vec3 Kd; // Refletância difusa
+        vec3 Ks; // Refletância especular
+        vec3 Ka; // Refletância ambiente
+        float q; // Expoente especular para o modelo de iluminação de Phong
+
+        // Coordenadas de textura U e V
+        float U = 0.0;
+        float V = 0.0;
+
+        if ( object_id == SPHERE ) {
+
+            vec4 bbox_center = (bbox_min + bbox_max) / 2.0;
+            vec4 pc = position_model - bbox_center;
+            float rho = length(pc);
+            vec4 pLinha = bbox_center + rho*normalize(pc);
+            vec4 pVetor = (pLinha - bbox_center);
+            float theta = atan(pVetor.x, pVetor.z);
+            float phi = asin(pVetor.y/rho);
+
+            U = (theta + M_PI) / (2*M_PI);
+            V = (phi + M_PI_2) / M_PI;
+
+            Kd = texture(TextureImage1, vec2(U,V)).rgb;
+            // Ka =
+            // Ks =
+            // q =
+        }
+        else if ( object_id == BUNNY ) {
+
+            float minx = bbox_min.x;
+            float maxx = bbox_max.x;
+
+            float miny = bbox_min.y;
+            float maxy = bbox_max.y;
+
+            float minz = bbox_min.z;
+            float maxz = bbox_max.z;
+
+            U = (position_model.x - minx) / (maxx - minx);
+            V = (position_model.y - miny) / (maxy - miny);
+
+            Kd = texture(TextureImage1, vec2(U,V)).rgb;
+            // Ka =
+            // Ks =
+            // q =
+        }
+        else if ( object_id == PLANE ) {
+            U = texcoords.x;
+            V = texcoords.y;
+
+            Kd = texture(TextureImage2, vec2(U,V)).rgb;
+            // Ka =
+            // Ks =
+            // q =
+        }
+
+        //==============================================================================
+        // Modelos de Iluminação
+
+        vec3 I = vec3(1.0,1.0,1.0);     // Espectro da fonte de iluminação
+        vec3 Ia = vec3(0.2,0.2,0.2);    // Espectro da luz ambiente
+
+        // LAMBERT
+        vec3 LambertShading = Kd * I * max(0.0, dot(n,l));
+
+        // PHONG
+        vec3 ambient_term = Ka * Ia;
+        vec3 phong_specular_term  = Ks * I * pow(max(0.0, dot(r, v)), q);
+        vec3 PhongShading = LambertShading + ambient_term + phong_specular_term;
+
+        // BLINN-PHONG
+        vec4 h = normalize(v + l);
+        vec3 blinn_phong_specular_term = Ks * I * pow(max(0, dot(n, h)), q);
+        vec3 BlinnPhongShading = LambertShading + ambient_term + blinn_phong_specular_term;
+
+
+        if (IlluminationModel == LAMBERT)
+            GouraudColor.rgb = LambertShading;
+        else if (IlluminationModel == PHONG)
+            GouraudColor.rgb = PhongShading;
+        else if (IlluminationModel == BLINNPHONG)
+            GouraudColor.rgb = BlinnPhongShading;
+        else if (IlluminationModel == GLOBALLIGHT)
+            GouraudColor.rgb = Kd * (max(0.0, dot(n, l)) + 0.5);
+
+
+        GouraudColor.a = 1;
+        GouraudColor.rgb = pow(GouraudColor.rgb, vec3(1.0,1.0,1.0)/2.2);
+    }
+
+
+
 }
 
