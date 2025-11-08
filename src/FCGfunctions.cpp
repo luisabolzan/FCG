@@ -128,11 +128,19 @@ void LoadShadersFromFiles()
     g_bbox_min_uniform   = glGetUniformLocation(g_GpuProgramID, "bbox_min");
     g_bbox_max_uniform   = glGetUniformLocation(g_GpuProgramID, "bbox_max");
 
+
+
     // Variáveis em "shader_fragment.glsl" para acesso das imagens de textura
     glUseProgram(g_GpuProgramID);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage0"), 0);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage1"), 1);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage2"), 2);
+
+    // Se quiser adicionar variáveis nos arquivos de Shader, colocar aqui:
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), IlluminationModel);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), IsGouraudShading);
+
+
     glUseProgram(0);
 }
 
