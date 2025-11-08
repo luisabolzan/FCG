@@ -1,0 +1,25 @@
+# Pasta build
+build/
+
+# Pastas dentro do build
+Debug/
+Release/
+
+# Arquivos da IDE
+.vs/
+*.user
+*.suo
+*.userprefs
+
+# Arquivos compilados
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Arquivos do CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
