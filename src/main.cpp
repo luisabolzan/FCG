@@ -68,10 +68,9 @@ int main(int argc, char* argv[])
     //============================================================================================
 
     /// texturas adicionadas
-    LoadTextureImage("../../data/tc-earth_daymap_surface.jpg");           // TextureImage0
-    LoadTextureImage("../../data/sky/sky.hdr");                               // TextureImage1
-    LoadTextureImage("../../data/floor/grass.jpg");                             // TextureImage2
-
+    LoadTextureImage("../../data/sky/sky.hdr");                               // TextureImage0
+    LoadTextureImage("../../data/floor/grass.jpg");                             // TextureImage1
+    LoadTextureImage("../../data/coin/coin.jpg");                             // TextureImage2
 
     /// .obj adicionados
     ObjModel spheremodel("../../data/sky/sphere.obj");
@@ -89,6 +88,10 @@ int main(int argc, char* argv[])
     ObjModel bulletmodel("../../data/bullet/bullet.obj");
     ComputeNormals(&bulletmodel);
     BuildTrianglesAndAddToVirtualScene(&bulletmodel);
+
+    ObjModel coinModel("../../data/coin/coin.obj");
+    ComputeNormals(&coinModel);
+    BuildTrianglesAndAddToVirtualScene(&coinModel);
 
     //============================================================================================
 
@@ -123,10 +126,13 @@ int main(int argc, char* argv[])
 
         glm::mat4 model = Matrix_Identity();
 
-        #define SPHERE 0
-        #define BUNNY  1
-        #define PLANE  2
-        #define BULLET 3
+        #define SPHERE      0
+        #define BUNNY       1
+        #define PLANE       2
+        #define KART        3
+        #define RACETRACK   4
+        #define COIN        5
+        #define BULLET      6
 
         // Desenhamos o modelo da esfera
         glCullFace(GL_FRONT);
@@ -155,6 +161,14 @@ int main(int argc, char* argv[])
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, BULLET);
         DrawVirtualObject("the_bullet");
+
+        model = Matrix_Translate(0.0f, 0.0f, 0.0f)         // posição
+                * Matrix_Rotate_Y((float)glfwGetTime());    // rotação animada
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, COIN);        // ou define um ID novo, ex: COIN = 4;
+        DrawVirtualObject("the_coin");
+
+
               
 
         //=======================================================================================================
