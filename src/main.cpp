@@ -137,7 +137,7 @@ int main(int argc, char* argv[])
         // Desenhamos o modelo da esfera
         glCullFace(GL_FRONT);
         glDepthMask(GL_FALSE);
-        model = Matrix_Translate(camera.GetPositionX() , camera.GetPositionY(), camera.GetPositionZ()) * Matrix_Scale(200.0f, 200.0f, 200.0f);
+        model = Matrix_Translate(0.0f , 0.0f, 0.0f) * Matrix_Scale(200.0f, 200.0f, 200.0f);
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, SPHERE);
         DrawVirtualObject("the_sphere");
@@ -162,10 +162,9 @@ int main(int argc, char* argv[])
         glUniform1i(g_object_id_uniform, BULLET);
         DrawVirtualObject("the_bullet");
 
-        model = Matrix_Translate(0.0f, 0.0f, 0.0f)         // posição
-                * Matrix_Rotate_Y((float)glfwGetTime());    // rotação animada
+        model = Matrix_Translate(0.0f, 0.0f, 0.0f) * Matrix_Rotate_Y((float)glfwGetTime());
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, COIN);        // ou define um ID novo, ex: COIN = 4;
+        glUniform1i(g_object_id_uniform, COIN);
         DrawVirtualObject("the_coin");
 
 

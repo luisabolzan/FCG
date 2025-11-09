@@ -133,7 +133,7 @@ void main() {
         }
         else if (object_id == COIN) {
 
-            U = texcoords.x + 0.1f;
+            U = texcoords.x ;
             V = texcoords.y ;
 
             Kd = texture(TextureImage2, vec2(U,V)).rgb;
