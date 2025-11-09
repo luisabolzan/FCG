@@ -69,12 +69,12 @@ int main(int argc, char* argv[])
 
     /// texturas adicionadas
     LoadTextureImage("../../data/tc-earth_daymap_surface.jpg");           // TextureImage0
-    LoadTextureImage("../../data/sky.hdr");                               // TextureImage1
-    LoadTextureImage("../../data/grama.jpg");                             // TextureImage2
+    LoadTextureImage("../../data/sky/sky.hdr");                               // TextureImage1
+    LoadTextureImage("../../data/floor/grass.jpg");                             // TextureImage2
 
 
     /// .obj adicionados
-    ObjModel spheremodel("../../data/sphere.obj");
+    ObjModel spheremodel("../../data/sky/sphere.obj");
     ComputeNormals(&spheremodel);
     BuildTrianglesAndAddToVirtualScene(&spheremodel);
 
@@ -82,11 +82,11 @@ int main(int argc, char* argv[])
     ComputeNormals(&bunnymodel);
     BuildTrianglesAndAddToVirtualScene(&bunnymodel);
 
-    ObjModel planemodel("../../data/plane.obj");
+    ObjModel planemodel("../../data/floor/plane.obj");
     ComputeNormals(&planemodel);
     BuildTrianglesAndAddToVirtualScene(&planemodel);
 
-    ObjModel bulletmodel("../../data/bullet.obj");
+    ObjModel bulletmodel("../../data/bullet/bullet.obj");
     ComputeNormals(&bulletmodel);
     BuildTrianglesAndAddToVirtualScene(&bulletmodel);
 
