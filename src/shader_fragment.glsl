@@ -45,7 +45,7 @@ uniform int IlluminationModel;
 #define KART        3
 #define RACETRACK   4
 #define COIN        5
-#define BULLET      6
+#define ROCKET      6
 uniform int object_id;
 
 // Variáveis para acesso das imagens de textura
@@ -150,6 +150,17 @@ void main() {
             V = texcoords.y ;
 
             Kd = texture(TextureImage3, vec2(U,V)).rgb;
+            Ka = vec3(0.0, 0.0, 0.0);
+            Ks = vec3(0.0, 0.0, 0.0);
+            q  = 10.0;
+
+        }
+        else if (object_id == ROCKET) {
+
+            U = texcoords.x ;
+            V = texcoords.y ;
+
+            Kd = texture(TextureImage4, vec2(U,V)).rgb;
             Ka = vec3(0.0, 0.0, 0.0);
             Ks = vec3(0.0, 0.0, 0.0);
             q  = 10.0;

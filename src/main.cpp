@@ -72,6 +72,8 @@ int main(int argc, char* argv[])
     LoadTextureImage("../../data/floor/grass.jpg");     // TextureImage1
     LoadTextureImage("../../data/coin/coin.jpg");       // TextureImage2
     LoadTextureImage("../../data/kart/kart.jpg");       // TextureImage3
+    LoadTextureImage("../../data/rocket/rocket.jpg");   // TextureImage4
+
 
 
     /// .obj adicionados
@@ -87,10 +89,6 @@ int main(int argc, char* argv[])
     ComputeNormals(&planemodel);
     BuildTrianglesAndAddToVirtualScene(&planemodel);
 
-    ObjModel bulletmodel("../../data/bullet/bullet.obj");
-    ComputeNormals(&bulletmodel);
-    BuildTrianglesAndAddToVirtualScene(&bulletmodel);
-
     ObjModel coinModel("../../data/coin/coin.obj");
     ComputeNormals(&coinModel);
     BuildTrianglesAndAddToVirtualScene(&coinModel);
@@ -98,6 +96,10 @@ int main(int argc, char* argv[])
     ObjModel kartModel("../../data/kart/kart.obj");
     ComputeNormals(&kartModel);
     BuildTrianglesAndAddToVirtualScene(&kartModel);
+
+    ObjModel rocketmodel("../../data/rocket/rocket.obj");
+    ComputeNormals(&rocketmodel);
+    BuildTrianglesAndAddToVirtualScene(&rocketmodel);
 
     //============================================================================================
 
@@ -138,7 +140,7 @@ int main(int argc, char* argv[])
         #define KART       3
         #define RACETRACK   4
         #define COIN        5
-        #define BULLET      6
+        #define ROCKET      6
 
         // Desenhamos o modelo da esfera
         glCullFace(GL_FRONT);
@@ -163,21 +165,22 @@ int main(int argc, char* argv[])
         glUniform1i(g_object_id_uniform, PLANE);
         DrawVirtualObject("the_plane");
 
-        model = Matrix_Translate(2.0f,2.0f,0.0f) * Matrix_Scale(0.03f, 0.03f, 0.03f);
-        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, BULLET);
-        DrawVirtualObject("the_bullet");
-
         model = Matrix_Translate(0.0f, 0.0f, 0.0f) * Matrix_Rotate_Y((float)glfwGetTime());
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, COIN);
         DrawVirtualObject("the_coin");
 
-
         model = Matrix_Translate(5.0f, 0.0f, 5.0f);
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, KART);
         DrawVirtualObject("the_kart");
+
+        model = Matrix_Translate(2.0f,2.0f,0.0f) * Matrix_Scale(1.0f, 1.0f, 1.0f);
+        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, ROCKET);
+        DrawVirtualObject("the_rocket");
+
+
 
 
 
