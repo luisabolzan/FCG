@@ -53,6 +53,8 @@ uniform sampler2D TextureImage0;
 uniform sampler2D TextureImage1;
 uniform sampler2D TextureImage2;
 uniform sampler2D TextureImage3;
+uniform sampler2D TextureImage4;
+uniform sampler2D TextureImage5;
 
 void main() {
 
@@ -142,6 +144,18 @@ void main() {
             q  = 10.0;
 
         }
+        else if (object_id == KART) {
+
+            U = texcoords.x ;
+            V = texcoords.y ;
+
+            Kd = texture(TextureImage3, vec2(U,V)).rgb;
+            Ka = vec3(0.0, 0.0, 0.0);
+            Ks = vec3(0.0, 0.0, 0.0);
+            q  = 10.0;
+
+        }
+
 
         //==============================================================================
         // Modelos de Iluminação
