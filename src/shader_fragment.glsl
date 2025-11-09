@@ -39,9 +39,13 @@ in vec4 GouraudColor;
 uniform int IlluminationModel;
 
 // Identificador que define qual objeto está sendo desenhado no momento
-#define SPHERE 0
-#define BUNNY  1
-#define PLANE  2
+#define SPHERE      0
+#define BUNNY       1
+#define PLANE       2
+#define KART        3
+#define RACETRACK   4
+#define COIN        5
+#define ROCKET      6
 uniform int object_id;
 
 // Variáveis para acesso das imagens de textura
@@ -49,6 +53,8 @@ uniform sampler2D TextureImage0;
 uniform sampler2D TextureImage1;
 uniform sampler2D TextureImage2;
 uniform sampler2D TextureImage3;
+uniform sampler2D TextureImage4;
+uniform sampler2D TextureImage5;
 
 void main() {
 
@@ -94,7 +100,7 @@ void main() {
             U = (theta + M_PI) / (2*M_PI);
             V = (phi + M_PI_2) / M_PI;
 
-            Kd = texture(TextureImage1, vec2(U,V)).rgb;
+            Kd = texture(TextureImage0, vec2(U,V)).rgb;
             // Ka =
             // Ks =
             // q =
@@ -113,7 +119,7 @@ void main() {
             U = (position_model.x - minx) / (maxx - minx);
             V = (position_model.y - miny) / (maxy - miny);
 
-            Kd = texture(TextureImage1, vec2(U,V)).rgb;
+            Kd = texture(TextureImage0, vec2(U,V)).rgb;
             // Ka =
             // Ks =
             // q =
@@ -122,11 +128,45 @@ void main() {
             U = texcoords.x;
             V = texcoords.y;
 
-            Kd = texture(TextureImage2, vec2(U,V)).rgb;
+            Kd = texture(TextureImage1, vec2(U,V)).rgb;
             // Ka =
             // Ks =
             // q =
         }
+        else if (object_id == COIN) {
+
+            U = texcoords.x ;
+            V = texcoords.y ;
+
+            Kd = texture(TextureImage2, vec2(U,V)).rgb;
+            Ka = vec3(0.7, 0.7, 0.0);
+            Ks = vec3(0.3, 0.3, 0.3);
+            q  = 10.0;
+
+        }
+        else if (object_id == KART) {
+
+            U = texcoords.x ;
+            V = texcoords.y ;
+
+            Kd = texture(TextureImage3, vec2(U,V)).rgb;
+            Ka = vec3(0.0, 0.0, 0.0);
+            Ks = vec3(0.0, 0.0, 0.0);
+            q  = 10.0;
+
+        }
+        else if (object_id == ROCKET) {
+
+            U = texcoords.x ;
+            V = texcoords.y ;
+
+            Kd = texture(TextureImage4, vec2(U,V)).rgb;
+            Ka = vec3(0.0, 0.0, 0.0);
+            Ks = vec3(0.0, 0.0, 0.0);
+            q  = 10.0;
+
+        }
+
 
         //==============================================================================
         // Modelos de Iluminação
