@@ -6,6 +6,7 @@
 #include "FCGfunctions.h"
 #include "globals.h"
 #include "camera.h"
+#include "animation.h"
 
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -165,7 +166,17 @@ int main(int argc, char* argv[])
         glUniform1i(g_object_id_uniform, PLANE);
         DrawVirtualObject("the_plane");
 
-        model = Matrix_Translate(0.0f, 0.0f, 0.0f) * Matrix_Rotate_Y((float)glfwGetTime());
+        // Curva de Bèzier na moeda
+        float speed = 0.2f;
+        float t_loop = fmod(glfwGetTime() * speed, 2.0f);
+        float t;
+        if (t_loop < 1.0f)
+            t = t_loop; // ida
+        else
+            t = 2.0f - t_loop; // volta
+        glm::vec3 pos = Bezier3(p0, p1, p2, p3, t);
+
+        model = Matrix_Translate(pos.x, pos.y, pos.z) * Matrix_Rotate_Y((float)glfwGetTime());
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, COIN);
         DrawVirtualObject("the_coin");
