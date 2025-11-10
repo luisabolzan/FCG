@@ -16,6 +16,7 @@ set(SOURCES
   src/matrices.cpp
   src/stb_image.cpp
   src/tiny_obj_loader.cpp
+  src/animation.cpp
 )
 
 cmake_minimum_required(VERSION 3.10)
