@@ -56,4 +56,10 @@ extern bool MPressed;
 extern bool SpacePressed;
 extern bool ShiftPressed;
 
+// ==================================================================================
+extern glm::vec3 p0;
+extern glm::vec3 p1;
+extern glm::vec3 p2;
+extern glm::vec3 p3;
+
 #endif //GLOBALS_H
