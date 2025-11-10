@@ -68,6 +68,12 @@ bool MPressed = false;
 bool SpacePressed = false;
 bool ShiftPressed = false;
 
+// =================================================================================
+// Váriaveis de Bèzier
+glm::vec3 p0(0.0f, 0.0f, 0.0f);
+glm::vec3 p1(2.0f, 5.0f, 0.0f);
+glm::vec3 p2(5.0f, 5.0f, 0.0f);
+glm::vec3 p3(10.0f, 0.0f, 0.0f);
 
 
 
