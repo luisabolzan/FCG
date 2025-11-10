@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "camera.h"
 #include "animation.h"
+#include "kart.h"
 
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -95,6 +96,7 @@ int main(int argc, char* argv[])
     BuildTrianglesAndAddToVirtualScene(&coinModel);
 
     ObjModel kartModel("../../data/kart/kart.obj");
+    Kart player1("Player1", kartModel, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
     ComputeNormals(&kartModel);
     BuildTrianglesAndAddToVirtualScene(&kartModel);
 
@@ -129,7 +131,7 @@ int main(int argc, char* argv[])
         //=======================================================================================================
 
         // Inicializa e mantem o funcionamento da camera
-        camera.StartCamera();
+        camera.StartCamera(player1);
 
         //=======================================================================================================
 
@@ -181,7 +183,9 @@ int main(int argc, char* argv[])
         glUniform1i(g_object_id_uniform, COIN);
         DrawVirtualObject("the_coin");
 
-        model = Matrix_Translate(5.0f, 0.0f, 5.0f);
+        player1.UpdateMovement();
+        model = Matrix_Translate(player1.position.x, player1.position.y, player1.position.z)
+                * Matrix_Rotate_Y(player1.rotation.y);
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, KART);
         DrawVirtualObject("the_kart");

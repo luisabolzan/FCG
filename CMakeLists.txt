@@ -17,6 +17,7 @@ set(SOURCES
   src/stb_image.cpp
   src/tiny_obj_loader.cpp
   src/animation.cpp
+  src/kart.cpp
 )
 
 cmake_minimum_required(VERSION 3.10)

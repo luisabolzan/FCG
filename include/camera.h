@@ -10,6 +10,7 @@
 
 #include "matrices.h"
 #include "globals.h"
+#include "kart.h"
 
 
 extern float g_CameraTheta;       // Ângulo no plano ZX em relação ao eixo Z
@@ -63,9 +64,9 @@ class Camera {
     void SetLookAt(glm::vec4 lookat);
 
     void UpdateFreeCamera();
-    void UpdateLookAtCamera();
+    void UpdateLookAtCamera(const Kart& kart);
     void SyncVectorToAngles();
-    void StartCamera();
+    void StartCamera(const Kart& kart);
 
 };
 
