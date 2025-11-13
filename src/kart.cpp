@@ -31,8 +31,7 @@ Kart::Kart(const std::string& name, ObjModel obj, const glm::vec4& startPos):
     direction = glm::normalize(direction);
 }
 
-void Kart::UpdateMovement()
-{
+void Kart::UpdateMovement() {
 
     if (APressed)
         rotation.y += turnSpeed * deltaTime;
@@ -43,26 +42,24 @@ void Kart::UpdateMovement()
     direction.z = cos(rotation.y);
     direction = glm::normalize(direction);
 
-    if (WPressed){
+    if (WPressed) {
         speed += acceleration * deltaTime;
         if (speed > maxSpeed)
             speed = maxSpeed;
     }
-    else if (SPressed){
+    else if (SPressed) {
         speed -= acceleration * deltaTime;
         if (speed < -maxSpeed / 2.0f)
             speed = -maxSpeed / 2.0f;
     }
     else{
 
-        if (speed > 0.0f)
-        {
+        if (speed > 0.0f) {
             speed -= acceleration * 0.5f * deltaTime;
             if (speed < 0.0f)
                 speed = 0.0f;
         }
-        else if (speed < 0.0f)
-        {
+        else if (speed < 0.0f) {
             speed += acceleration * 0.5f * deltaTime;
             if (speed > 0.0f)
                 speed = 0.0f;
@@ -70,5 +67,41 @@ void Kart::UpdateMovement()
     }
 
     position += direction * speed * deltaTime;
+}
+
+void Kart::FireRocket() {
+    if (currentTime - lastShotTime < fireRate)
+        return;
+    if (ammo <= 0)
+        return;
+
+    glm::vec4 spawnPos = position + direction * 1.3f + glm::vec4(0, 0.1f, 0, 0);
+
+    rockets.emplace_back(spawnPos, direction, speed);
+    lastShotTime = currentTime;
+    ammo--;
+}
+
+void Kart::Render() {
+    this->UpdateMovement();
+
+    glm::mat4 model = Matrix_Translate(position.x, position.y, position.z) * Matrix_Rotate_Y(rotation.y);
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(g_object_id_uniform, KART);
+    DrawVirtualObject("the_kart");
+
+    if (SpacePressed)
+        this->FireRocket();
+
+    for (auto& rocket : rockets) {
+        rocket.Update();
+        if (!rocket.active) continue;
+
+        glm::mat4 rocketModel = Matrix_Translate(rocket.position.x, rocket.position.y, rocket.position.z)
+                              * Matrix_Rotate_Y(rocket.rotationY)  * Matrix_Scale(0.5f, 0.5f, 0.5f);
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(rocketModel));
+        glUniform1i(g_object_id_uniform, ROCKET);
+        DrawVirtualObject("the_rocket");
+    }
 }
 

@@ -18,6 +18,7 @@ set(SOURCES
   src/tiny_obj_loader.cpp
   src/animation.cpp
   src/kart.cpp
+  src/rocket.cpp
 )
 
 cmake_minimum_required(VERSION 3.10)

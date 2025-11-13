@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "matrices.h"
 #include "FCGstructures.h"
+#include "rocket.h"
 
 
 class Kart {
@@ -28,11 +29,12 @@ class Kart {
     glm::vec4 direction;        // direção atual (vetor normalizado)
 
     // Atributos de combate
-    int health;                 // pontos de vida
-    int ammo;                   // munição disponível
-    float fireRate;             // tempo mínimo entre disparos
-    float lastShotTime;         // controle de cooldown de tiro
-    bool isInvincible;          // invulnerabilidade temporária
+    int health;                     // pontos de vida
+    int ammo;                       // munição disponível
+    std::vector<Rocket> rockets;    // foguetes disparados
+    float fireRate;                 // tempo mínimo entre disparos
+    float lastShotTime;             // controle de cooldown de tiro
+    bool isInvincible;              // invulnerabilidade temporária
 
     // Atributos de jogo
     int score;                  // pontuação acumulada
@@ -53,6 +55,8 @@ class Kart {
     Kart(const std::string& name, ObjModel obj, const glm::vec4& startPos);
 
     void UpdateMovement();
+    void FireRocket();
+    void Render();
 };
 
 #endif //KART_H

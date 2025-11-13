@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
     BuildTrianglesAndAddToVirtualScene(&coinModel);
 
     ObjModel kartModel("../../data/kart/kart.obj");
-    Kart player1("Player1", kartModel, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    Kart player1("Player1", kartModel, glm::vec4(0.0f, -1.40f, 0.0f, 1.0f));
     ComputeNormals(&kartModel);
     BuildTrianglesAndAddToVirtualScene(&kartModel);
 
@@ -130,20 +130,12 @@ int main(int argc, char* argv[])
 
         //=======================================================================================================
 
-        // Inicializa e mantem o funcionamento da camera
+        // Inicializa e mantém o funcionamento da camera
         camera.StartCamera(player1);
 
         //=======================================================================================================
 
         glm::mat4 model = Matrix_Identity();
-
-        #define SPHERE      0
-        #define BUNNY       1
-        #define PLANE       2
-        #define KART       3
-        #define RACETRACK   4
-        #define COIN        5
-        #define ROCKET      6
 
         // Desenhamos o modelo da esfera
         glCullFace(GL_FRONT);
@@ -156,11 +148,11 @@ int main(int argc, char* argv[])
         glCullFace(GL_BACK);
 
         // Desenhamos o modelo do coelho
-        model = Matrix_Translate(3.0f,0.0f,0.0f)
+        /*model = Matrix_Translate(3.0f,0.0f,0.0f)
               * Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
         glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, BUNNY);
-        DrawVirtualObject("the_bunny");
+        DrawVirtualObject("the_bunny"); */
 
         // Desenhamos o plano do chão
         model = Matrix_Translate(0.0f,-2.1f,0.0f) * Matrix_Scale(100.0f, 0.0f, 100.0f);;
@@ -183,21 +175,7 @@ int main(int argc, char* argv[])
         glUniform1i(g_object_id_uniform, COIN);
         DrawVirtualObject("the_coin");
 
-        player1.UpdateMovement();
-        model = Matrix_Translate(player1.position.x, player1.position.y, player1.position.z)
-                * Matrix_Rotate_Y(player1.rotation.y);
-        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, KART);
-        DrawVirtualObject("the_kart");
-
-        model = Matrix_Translate(2.0f,2.0f,0.0f) * Matrix_Scale(1.0f, 1.0f, 1.0f);
-        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, ROCKET);
-        DrawVirtualObject("the_rocket");
-
-
-
-
+        player1.Render();
 
               
 

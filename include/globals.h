@@ -62,4 +62,13 @@ extern glm::vec3 p1;
 extern glm::vec3 p2;
 extern glm::vec3 p3;
 
+
+#define SPHERE      0
+#define BUNNY       1
+#define PLANE       2
+#define KART       3
+#define RACETRACK   4
+#define COIN        5
+#define ROCKET      6
+
 #endif //GLOBALS_H

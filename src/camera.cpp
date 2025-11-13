@@ -10,7 +10,7 @@ float field_of_view = 3.141592 / 3.0f;
 
 Camera::Camera() {
 
-    FreeCamera = true;
+    FreeCamera = false;
 
     position = glm::vec4(0, 1.8f, 5, 1);
     up_vector = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
