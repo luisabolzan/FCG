@@ -10,7 +10,7 @@ float field_of_view = 3.141592 / 3.0f;
 
 Camera::Camera() {
 
-    FreeCamera = true;
+    FreeCamera = false;
 
     position = glm::vec4(0, 1.8f, 5, 1);
     up_vector = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);
@@ -95,16 +95,26 @@ void Camera::UpdateFreeCamera() {
     view_matrix = Matrix_Camera_View(position, view_vector, up_vector);
 }
 
-void Camera::UpdateLookAtCamera() {
+void Camera::UpdateLookAtCamera(const Kart& kart) {
+
     float r = g_CameraDistance;
-    float y = -r*sin(g_CameraPhi);
-    float z = r*cos(g_CameraPhi)*cos(g_CameraTheta);
-    float x = r*cos(g_CameraPhi)*sin(g_CameraTheta);
-    position = glm::vec4(x,y,z,1.0f);
+    float cosPhi = cos(g_CameraPhi);
+    float sinPhi = sin(g_CameraPhi);
+    float cosTheta = cos(g_CameraTheta + kart.rotation.y);
+    float sinTheta = sin(g_CameraTheta + kart.rotation.y);
 
-    lookat = glm::vec4 (0.0f, 0.0f, 0.0f, 1.0f);
+
+    glm::vec4 offset = glm::vec4(
+        r * cosPhi * sinTheta,
+        r * sinPhi,
+        r * cosPhi * cosTheta,
+        0.0f
+    );
+
+    position = kart.position - offset;
+    lookat = kart.position;
+
     view_vector = glm::normalize(lookat - position);
-
     view_matrix = Matrix_Camera_View(position, view_vector, up_vector);
 }
 
@@ -115,7 +125,7 @@ void Camera::SyncVectorToAngles() {
     g_CameraTheta = atan2(v.x, v.z);
 }
 
-void Camera::StartCamera() {
+void Camera::StartCamera(const Kart& kart) {
 
     if (CPressed) {
         this->SetFreeCamera(!this->GetFreeCamera());
@@ -151,7 +161,7 @@ void Camera::StartCamera() {
         this->UpdateFreeCamera();
     }
     else
-        this->UpdateLookAtCamera();
+        this->UpdateLookAtCamera(kart);
 
     // Enviamos as matrizes "view" e "projection" para a placa de vídeo (GPU).
     glUniformMatrix4fv(g_view_uniform       , 1 , GL_FALSE , glm::value_ptr(this->GetViewMatrix()));
