@@ -3,6 +3,7 @@
 #define COLLISIONS_H
 
 #include <glm/glm.hpp>
+class Kart;
 
 struct BoundingSphere {
     glm::vec3 center;
@@ -22,6 +23,8 @@ bool CheckRayCube(const glm::vec3& origin, const glm::vec3& dir, const AABB& box
 bool CheckRaySphere(const glm::vec3& origin, const glm::vec3& dir, const BoundingSphere& sphere, float& t);
 
 void HandleCollisions();
+
+void CheckRocketHits(Kart& shooter, Kart& target);
 
 
 #endif //COLLISIONS_H

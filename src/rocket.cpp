@@ -4,6 +4,7 @@
 
 Rocket::Rocket(const glm::vec4& pos, const glm::vec4& dir, float kartSpeed)
     : position(pos),
+      prevPosition(pos),
       direction(glm::normalize(dir)),
       active(true),
       lifetime(5.0f),
@@ -16,6 +17,8 @@ Rocket::Rocket(const glm::vec4& pos, const glm::vec4& dir, float kartSpeed)
 
 void Rocket::Update() {
     if (!active) return;
+
+    prevPosition = position;
 
     age += deltaTime;
     if (age > lifetime) {

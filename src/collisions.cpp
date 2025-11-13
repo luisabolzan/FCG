@@ -1,23 +1,24 @@
 #include "collisions.h"
+#include "kart.h"
 #include <algorithm>
 
 // Colisão Kart (sphere) com Kart (sphere)
 bool CheckSphereSphere(const BoundingSphere& a, const BoundingSphere& b) {
-    float distSq = glm::length2(a.center - b.center);
+    float distSq = glm::dot(a.center - b.center, a.center - b.center);
     float radiusSum = a.radius + b.radius;
     return distSq <= radiusSum * radiusSum;
 }
 
 // Colisão Coin (ponto) com Kart (sphere)
 bool CheckPointSphere(const glm::vec3& point, const BoundingSphere& sphere){
-    float distSq = glm::length2(point - sphere.center);
+    float distSq = glm::dot(point - sphere.center, point - sphere.center);
     return distSq <= sphere.radius * sphere.radius;
 }
 
 // Colisão Kart (sphere) com Cenário (Cube)
 bool CheckSphereCube(const BoundingSphere& sphere, const AABB& box) {
     glm::vec3 closestPoint = glm::clamp(sphere.center, box.min, box.max);
-    float distSq = glm::length2(sphere.center - closestPoint);
+    float distSq = glm::dot(sphere.center - closestPoint, sphere.center - closestPoint);
     return distSq <= sphere.radius * sphere.radius;
 }
 
@@ -66,4 +67,31 @@ bool CheckRaySphere(const glm::vec3& origin, const glm::vec3& dir, const Boundin
     }
 
     return false;
+}
+
+void CheckRocketHits(Kart& shooter, Kart& target) {
+    for (auto& rocket : shooter.rockets) {
+
+        if (!rocket.active) continue;
+        if (!target.isAlive) continue;
+
+        glm::vec3 segmentStart = glm::vec3(rocket.prevPosition);
+        glm::vec3 segmentDirection = normalize(glm::vec3(rocket.position - rocket.prevPosition));
+        float segmentLength = length(glm::vec3(rocket.position - rocket.prevPosition));
+
+        if (segmentLength <= 0.0f) continue;
+
+        float hitDistance;
+        BoundingSphere targetSphere;
+        targetSphere.center = glm::vec3(target.position);
+        targetSphere.radius = target.radius;
+
+        if (CheckRaySphere(segmentStart, segmentDirection, targetSphere, hitDistance) &&
+            hitDistance >= 0.0f && hitDistance <= segmentLength)
+        {
+            rocket.active = false;
+            target.isAlive = false;
+            printf(" %s atingiu %s!\n", shooter.name.c_str(), target.name.c_str());
+        }
+    }
 }

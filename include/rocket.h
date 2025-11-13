@@ -10,6 +10,7 @@
 class Rocket {
 public:
     glm::vec4 position;     // posição no mundo
+    glm::vec4 prevPosition; // posição do último frame
     glm::vec4 direction;    // direção normalizada de movimento
     float rotationY;        // orientação fixa no momento do disparo
     float speed;            // velocidade constante

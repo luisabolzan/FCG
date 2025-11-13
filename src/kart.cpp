@@ -2,6 +2,7 @@
 #include "kart.h"
 
 
+
 Kart::Kart(const std::string& name, ObjModel obj, const glm::vec4& startPos):
     name(name),
     kartModel(obj),
@@ -21,7 +22,8 @@ Kart::Kart(const std::string& name, ObjModel obj, const glm::vec4& startPos):
     score(0),
     coins(0),
     isAlive(true),
-    radius(1.0f),
+    dummy(false),
+    radius(1.5f),
     isColliding(false),
     accelerating(false),
     braking(false),
@@ -32,6 +34,9 @@ Kart::Kart(const std::string& name, ObjModel obj, const glm::vec4& startPos):
 }
 
 void Kart::UpdateMovement() {
+
+    if (dummy)
+        return;
 
     if (APressed)
         rotation.y += turnSpeed * deltaTime;
@@ -70,6 +75,8 @@ void Kart::UpdateMovement() {
 }
 
 void Kart::FireRocket() {
+    if (dummy)
+        return;
     if (currentTime - lastShotTime < fireRate)
         return;
     if (ammo <= 0)
@@ -85,10 +92,12 @@ void Kart::FireRocket() {
 void Kart::Render() {
     this->UpdateMovement();
 
-    glm::mat4 model = Matrix_Translate(position.x, position.y, position.z) * Matrix_Rotate_Y(rotation.y);
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, KART);
-    DrawVirtualObject("the_kart");
+    if (isAlive) {
+        glm::mat4 model = Matrix_Translate(position.x, position.y, position.z) * Matrix_Rotate_Y(rotation.y);
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, KART);
+        DrawVirtualObject("the_kart");
+    }
 
     if (SpacePressed)
         this->FireRocket();
@@ -104,4 +113,8 @@ void Kart::Render() {
         DrawVirtualObject("the_rocket");
     }
 }
+
+
+
+
 

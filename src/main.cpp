@@ -8,6 +8,7 @@
 #include "camera.h"
 #include "animation.h"
 #include "kart.h"
+#include "collisions.h"
 
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -96,7 +97,8 @@ int main(int argc, char* argv[])
     BuildTrianglesAndAddToVirtualScene(&coinModel);
 
     ObjModel kartModel("../../data/kart/kart.obj");
-    Kart player1("Player1", kartModel, glm::vec4(0.0f, -1.40f, 0.0f, 1.0f));
+    Kart player1("Player1", kartModel, glm::vec4(0.0f, -1.4f, 0.0f, 1.0f));
+    Kart enemyKart("Enemy", kartModel, glm::vec4(5.0f, -1.4f, 0.0f, 1.0f));
     ComputeNormals(&kartModel);
     BuildTrianglesAndAddToVirtualScene(&kartModel);
 
@@ -176,7 +178,11 @@ int main(int argc, char* argv[])
         DrawVirtualObject("the_coin");
 
         player1.Render();
+        enemyKart.Render();
+        enemyKart.dummy = true;
 
+        CheckRocketHits(player1, enemyKart);
+        //CheckRocketHits(enemyKart, player1);
               
 
         //=======================================================================================================

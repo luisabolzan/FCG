@@ -8,6 +8,7 @@
 #include "matrices.h"
 #include "FCGstructures.h"
 #include "rocket.h"
+#include "collisions.h"
 
 
 class Kart {
@@ -40,6 +41,7 @@ class Kart {
     int score;                  // pontuação acumulada
     int coins;                  // número de moedas coletadas
     bool isAlive;               // se está ativo no jogo
+    bool dummy;                 // é um boneco de teste?
 
     // Atributos de física/colisão
     float radius;               // raio da colisão
