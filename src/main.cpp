@@ -182,9 +182,10 @@ int main(int argc, char* argv[])
         coin.Render(pos);
 
         CheckRocketHits(player1, player2);
-        //CheckRocketHits(enemyKart, player1);
+        CheckRocketHits(player2, player1);
 
         CheckKartCoinCollision(player1, coin);
+        CheckKartCoinCollision(player2, coin);
 
         CheckKartKartCollision(player1, player2);
 
