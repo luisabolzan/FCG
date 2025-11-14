@@ -28,7 +28,7 @@ Kart::Kart(const std::string& name, const ObjModel &obj, const glm::vec4& startP
     invincibleTime(2.0f),
     invincibleTimer(0.0f),
     dummy(false),
-    radius(1.5f),
+    radius(1.1f),
     isColliding(false),
     accelerating(false),
     braking(false),

@@ -186,7 +186,7 @@ int main(int argc, char* argv[])
 
         CheckKartCoinCollision(player1, coin);
 
-              
+        CheckKartKartCollision(player1, player2);
 
         //=======================================================================================================
 

@@ -1,6 +1,6 @@
+#include <algorithm>
 #include "collisions.h"
 #include "kart.h"
-#include <algorithm>
 #include "coin.h"
 
 // Colisão Kart (sphere) com Kart (sphere)
@@ -114,5 +114,39 @@ void CheckKartCoinCollision(Kart& kart, Coin& coin) {
         coin.respawnTimer = 0.0f;
         kart.ammo++;
         printf("%s pegou uma moeda!\n", kart.name.c_str());
+    }
+}
+
+void CheckKartKartCollision(Kart& kartA, Kart& kartB) {
+
+    if (!kartA.isAlive || !kartB.isAlive) return;
+
+    BoundingSphere sphereA;
+    sphereA.center = glm::vec3(kartA.position);
+    sphereA.radius = kartA.radius;
+
+    BoundingSphere sphereB;
+    sphereB.center = glm::vec3(kartB.position);
+    sphereB.radius = kartB.radius;
+
+    if (CheckSphereSphere(sphereA, sphereB)) {
+
+        glm::vec3 vectorBetweenCenters = sphereA.center - sphereB.center;
+        float currentDistance = length(vectorBetweenCenters);
+
+        float combinedRadii = sphereA.radius + sphereB.radius;
+        float penetrationDepth = combinedRadii - currentDistance;
+
+        glm::vec3 collisionNormal;
+        if (currentDistance == 0.0f) {
+            collisionNormal = glm::vec3(1.0f, 0.0f, 0.0f);
+        } else {
+            collisionNormal = normalize(vectorBetweenCenters);
+        }
+
+        glm::vec4 correctionVector = glm::vec4(collisionNormal * (penetrationDepth / 2.0f), 0.0f);
+
+        kartA.position += correctionVector;
+        kartB.position -= correctionVector;
     }
 }

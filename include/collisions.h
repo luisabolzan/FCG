@@ -27,6 +27,6 @@ void HandleCollisions();
 
 void CheckRocketHits(Kart& shooter, Kart& target);
 void CheckKartCoinCollision(Kart& kart, Coin& coin);
-
+void CheckKartKartCollision(Kart& kartA, Kart& kartB);
 
 #endif //COLLISIONS_H
