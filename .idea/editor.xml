@@ -10,9 +10,10 @@
     <option name="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=C3D036E1_002DE16F_002D5D03_002D8D2B_002DE10785755B97_002Fd_003Asrc_002Ff_003AFCGfunctions_002Ecpp/@EntryIndexedValue" value="ExplicitlyExcluded" type="string" />
     <option name="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=C3D036E1_002DE16F_002D5D03_002D8D2B_002DE10785755B97_002Fd_003Asrc_002Ff_003AFCGstructures_002Ecpp/@EntryIndexedValue" value="ExplicitlyExcluded" type="string" />
     <option name="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=C3D036E1_002DE16F_002D5D03_002D8D2B_002DE10785755B97_002Fd_003Asrc_002Ff_003Acamera_002Ecpp/@EntryIndexedValue" value="ForceIncluded" type="string" />
+    <option name="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=C3D036E1_002DE16F_002D5D03_002D8D2B_002DE10785755B97_002Fd_003Asrc_002Ff_003Acollisions_002Ecpp/@EntryIndexedValue" value="ForceIncluded" type="string" />
     <option name="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=C3D036E1_002DE16F_002D5D03_002D8D2B_002DE10785755B97_002Fd_003Asrc_002Ff_003Aglobals_002Ecpp/@EntryIndexedValue" value="ExplicitlyExcluded" type="string" />
     <option name="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=C3D036E1_002DE16F_002D5D03_002D8D2B_002DE10785755B97_002Fd_003Asrc_002Ff_003Alabs_002Ecpp/@EntryIndexedValue" value="ExplicitlyExcluded" type="string" />
-    <option name="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=C3D036E1_002DE16F_002D5D03_002D8D2B_002DE10785755B97_002Fd_003Asrc_002Ff_003Amain_002Ecpp/@EntryIndexedValue" value="ExplicitlyExcluded" type="string" />
+    <option name="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=C3D036E1_002DE16F_002D5D03_002D8D2B_002DE10785755B97_002Fd_003Asrc_002Ff_003Amain_002Ecpp/@EntryIndexedValue" value="ForceIncluded" type="string" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CDeclarationWithImplicitIntType/@EntryIndexedValue" value="WARNING" type="string" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CommentTypo/@EntryIndexedValue" value="DO_NOT_SHOW" type="string" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=ConstevalIfIsAlwaysConstant/@EntryIndexedValue" value="WARNING" type="string" />
@@ -40,7 +41,7 @@
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppConstValueFunctionReturnType/@EntryIndexedValue" value="SUGGESTION" type="string" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppCoroutineCallResolveError/@EntryIndexedValue" value="WARNING" type="string" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppDFAArrayIndexOutOfBounds/@EntryIndexedValue" value="WARNING" type="string" />
-    <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppDFAConstantConditions/@EntryIndexedValue" value="DO_NOT_SHOW" type="string" />
+    <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppDFAConstantConditions/@EntryIndexedValue" value="WARNING" type="string" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppDFAConstantFunctionResult/@EntryIndexedValue" value="WARNING" type="string" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppDFAConstantParameter/@EntryIndexedValue" value="WARNING" type="string" />
     <option name="/Default/CodeInspection/Highlighting/InspectionSeverities/=CppDFADeletedPointer/@EntryIndexedValue" value="WARNING" type="string" />

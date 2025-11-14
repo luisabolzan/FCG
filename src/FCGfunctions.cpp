@@ -137,7 +137,7 @@ void LoadShadersFromFiles()
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage2"), 2);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage3"), 3);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage4"), 4);
-    glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage4"), 5);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage5"), 5);
 
 
     // Se quiser adicionar variáveis nos arquivos de Shader, colocar aqui:
@@ -540,6 +540,7 @@ GLuint CreateGpuProgram(GLuint vertex_shader_id, GLuint fragment_shader_id)
 // "framebuffer" (região de memória onde são armazenados os pixels da imagem).
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
+    // tela dividida (split screen)
     glViewport(0, 0, width, height);
     g_ScreenRatio = (float)width / height;
 }
