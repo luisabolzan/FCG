@@ -1,23 +1,25 @@
-#include "collisions.h"
 #include <algorithm>
+#include "collisions.h"
+#include "kart.h"
+#include "coin.h"
 
 // Colisão Kart (sphere) com Kart (sphere)
 bool CheckSphereSphere(const BoundingSphere& a, const BoundingSphere& b) {
-    float distSq = glm::length2(a.center - b.center);
+    float distSq = glm::dot(a.center - b.center, a.center - b.center);
     float radiusSum = a.radius + b.radius;
     return distSq <= radiusSum * radiusSum;
 }
 
 // Colisão Coin (ponto) com Kart (sphere)
 bool CheckPointSphere(const glm::vec3& point, const BoundingSphere& sphere){
-    float distSq = glm::length2(point - sphere.center);
+    float distSq = glm::dot(point - sphere.center, point - sphere.center);
     return distSq <= sphere.radius * sphere.radius;
 }
 
 // Colisão Kart (sphere) com Cenário (Cube)
 bool CheckSphereCube(const BoundingSphere& sphere, const AABB& box) {
     glm::vec3 closestPoint = glm::clamp(sphere.center, box.min, box.max);
-    float distSq = glm::length2(sphere.center - closestPoint);
+    float distSq = glm::dot(sphere.center - closestPoint, sphere.center - closestPoint);
     return distSq <= sphere.radius * sphere.radius;
 }
 
@@ -66,4 +68,85 @@ bool CheckRaySphere(const glm::vec3& origin, const glm::vec3& dir, const Boundin
     }
 
     return false;
+}
+
+void CheckRocketHits(Kart& shooter, Kart& target) {
+    for (auto& rocket : shooter.rockets) {
+
+        if (!rocket.active) continue;
+        if (!target.isAlive) continue;
+        if (target.isInvincible) continue;
+
+        glm::vec3 segmentStart = glm::vec3(rocket.prevPosition);
+        glm::vec3 segmentDirection = normalize(glm::vec3(rocket.position - rocket.prevPosition));
+        float segmentLength = length(glm::vec3(rocket.position - rocket.prevPosition));
+
+        if (segmentLength <= 0.0f) continue;
+
+        float hitDistance;
+        BoundingSphere targetSphere;
+        targetSphere.center = glm::vec3(target.position);
+        targetSphere.radius = target.radius;
+
+        if (CheckRaySphere(segmentStart, segmentDirection, targetSphere, hitDistance) &&
+            hitDistance >= 0.0f && hitDistance <= segmentLength)
+        {
+            rocket.active = false;
+            target.isAlive = false;
+            printf(" %s atingiu %s!\n", shooter.name.c_str(), target.name.c_str());
+        }
+    }
+}
+
+void CheckKartCoinCollision(Kart& kart, Coin& coin) {
+
+    if (!coin.active) return;
+
+    BoundingSphere kartSphere;
+    kartSphere.center = glm::vec3(kart.position);
+    kartSphere.radius = kart.radius;
+
+    glm::vec3 coinPoint = glm::vec3(coin.position);
+
+    if (CheckPointSphere(coinPoint, kartSphere)) {
+
+        coin.active = false;
+        coin.respawnTimer = 0.0f;
+        kart.ammo++;
+        printf("%s pegou uma moeda!\n", kart.name.c_str());
+    }
+}
+
+void CheckKartKartCollision(Kart& kartA, Kart& kartB) {
+
+    if (!kartA.isAlive || !kartB.isAlive) return;
+
+    BoundingSphere sphereA;
+    sphereA.center = glm::vec3(kartA.position);
+    sphereA.radius = kartA.radius;
+
+    BoundingSphere sphereB;
+    sphereB.center = glm::vec3(kartB.position);
+    sphereB.radius = kartB.radius;
+
+    if (CheckSphereSphere(sphereA, sphereB)) {
+
+        glm::vec3 vectorBetweenCenters = sphereA.center - sphereB.center;
+        float currentDistance = length(vectorBetweenCenters);
+
+        float combinedRadii = sphereA.radius + sphereB.radius;
+        float penetrationDepth = combinedRadii - currentDistance;
+
+        glm::vec3 collisionNormal;
+        if (currentDistance == 0.0f) {
+            collisionNormal = glm::vec3(1.0f, 0.0f, 0.0f);
+        } else {
+            collisionNormal = normalize(vectorBetweenCenters);
+        }
+
+        glm::vec4 correctionVector = glm::vec4(collisionNormal * (penetrationDepth / 2.0f), 0.0f);
+
+        kartA.position += correctionVector;
+        kartB.position -= correctionVector;
+    }
 }

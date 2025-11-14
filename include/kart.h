@@ -8,6 +8,7 @@
 #include "matrices.h"
 #include "FCGstructures.h"
 #include "rocket.h"
+#include "collisions.h"
 
 
 class Kart {
@@ -18,8 +19,10 @@ class Kart {
     std::string name;           // nome do jogador ou do kart
     ObjModel kartModel;         // arquivo Obj
     glm::vec4 position;         // posição no mundo
+    glm::vec4 spawnPosition;
     glm::vec4 rotation;         // rotação em torno dos eixos
     glm::vec4 scale;            // escala do modelo
+
 
     // Atributos de movimento
     float speed;                // velocidade atual
@@ -34,12 +37,17 @@ class Kart {
     std::vector<Rocket> rockets;    // foguetes disparados
     float fireRate;                 // tempo mínimo entre disparos
     float lastShotTime;             // controle de cooldown de tiro
-    bool isInvincible;              // invulnerabilidade temporária
 
     // Atributos de jogo
-    int score;                  // pontuação acumulada
-    int coins;                  // número de moedas coletadas
-    bool isAlive;               // se está ativo no jogo
+    int score;                        // pontuação acumulada
+    int coins;                        // número de moedas coletadas
+    bool isAlive;                     // se está ativo no jogo
+    float respawnTime;                // tempo morto antes do respawn
+    float respawnTimer;
+    bool isInvincible;                // invulnerabilidade temporária
+    float invincibleTime;             // duração da invencibilidade ao renascer
+    float invincibleTimer;
+    bool dummy;                       // é um boneco de teste?
 
     // Atributos de física/colisão
     float radius;               // raio da colisão
@@ -52,7 +60,7 @@ class Kart {
     bool turningRight;          // virando à direita
 
 
-    Kart(const std::string& name, ObjModel obj, const glm::vec4& startPos);
+    Kart(const std::string& name, const ObjModel &obj, const glm::vec4& startPos);
 
     void UpdateMovement();
     void FireRocket();
