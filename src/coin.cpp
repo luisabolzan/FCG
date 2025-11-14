@@ -9,7 +9,9 @@ Coin::Coin(const glm::vec4 pos) {
     rotationY    = 0.0f;
 }
 
-void Coin::Render() {
+void Coin::Render(const glm::vec4 pos) {
+
+    position = pos;
 
     if (!active) {
         respawnTimer += deltaTime;

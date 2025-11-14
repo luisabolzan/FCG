@@ -18,7 +18,7 @@ public:
 
     Coin(glm::vec4 pos);
 
-    void Render();
+    void Render(const glm::vec4 pos);
 };
 
 #endif //COIN_H

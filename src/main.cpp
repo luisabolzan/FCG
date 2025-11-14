@@ -172,14 +172,14 @@ int main(int argc, char* argv[])
             t = t_loop; // ida
         else
             t = 2.0f - t_loop; // volta
-        glm::vec3 pos = Bezier3(p0, p1, p2, p3, t);
+        glm::vec4 pos = glm::vec4(Bezier3(p0, p1, p2, p3, t), 1.0f);
 
 
         player1.Render();
         player2.Render();
         player2.dummy = true;
 
-        coin.Render();
+        coin.Render(pos);
 
         CheckRocketHits(player1, player2);
         //CheckRocketHits(enemyKart, player1);
