@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 class Kart;
+class Coin;
 
 struct BoundingSphere {
     glm::vec3 center;
@@ -25,6 +26,7 @@ bool CheckRaySphere(const glm::vec3& origin, const glm::vec3& dir, const Boundin
 void HandleCollisions();
 
 void CheckRocketHits(Kart& shooter, Kart& target);
+void CheckKartCoinCollision(Kart& kart, Coin& coin);
 
 
 #endif //COLLISIONS_H

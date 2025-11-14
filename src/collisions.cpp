@@ -1,6 +1,7 @@
 #include "collisions.h"
 #include "kart.h"
 #include <algorithm>
+#include "coin.h"
 
 // Colisão Kart (sphere) com Kart (sphere)
 bool CheckSphereSphere(const BoundingSphere& a, const BoundingSphere& b) {
@@ -74,6 +75,7 @@ void CheckRocketHits(Kart& shooter, Kart& target) {
 
         if (!rocket.active) continue;
         if (!target.isAlive) continue;
+        if (target.isInvincible) continue;
 
         glm::vec3 segmentStart = glm::vec3(rocket.prevPosition);
         glm::vec3 segmentDirection = normalize(glm::vec3(rocket.position - rocket.prevPosition));
@@ -93,5 +95,24 @@ void CheckRocketHits(Kart& shooter, Kart& target) {
             target.isAlive = false;
             printf(" %s atingiu %s!\n", shooter.name.c_str(), target.name.c_str());
         }
+    }
+}
+
+void CheckKartCoinCollision(Kart& kart, Coin& coin) {
+
+    if (!coin.active) return;
+
+    BoundingSphere kartSphere;
+    kartSphere.center = glm::vec3(kart.position);
+    kartSphere.radius = kart.radius;
+
+    glm::vec3 coinPoint = glm::vec3(coin.position);
+
+    if (CheckPointSphere(coinPoint, kartSphere)) {
+
+        coin.active = false;
+        coin.respawnTimer = 0.0f;
+        kart.ammo++;
+        printf("%s pegou uma moeda!\n", kart.name.c_str());
     }
 }

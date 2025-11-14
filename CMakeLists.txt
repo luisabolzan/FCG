@@ -20,6 +20,7 @@ set(SOURCES
   src/kart.cpp
   src/rocket.cpp
   src/collisions.cpp
+  src/coin.cpp
 )
 
 cmake_minimum_required(VERSION 3.10)

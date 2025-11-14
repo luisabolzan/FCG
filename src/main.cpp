@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "camera.h"
 #include "animation.h"
+#include "coin.h"
 #include "kart.h"
 #include "collisions.h"
 
@@ -95,10 +96,11 @@ int main(int argc, char* argv[])
     ObjModel coinModel("../../data/coin/coin.obj");
     ComputeNormals(&coinModel);
     BuildTrianglesAndAddToVirtualScene(&coinModel);
+    Coin coin(glm::vec4(0.0f, -1.4f, 0.0f, 1.0f));
 
     ObjModel kartModel("../../data/kart/kart.obj");
     Kart player1("Player1", kartModel, glm::vec4(0.0f, -1.4f, 0.0f, 1.0f));
-    Kart enemyKart("Enemy", kartModel, glm::vec4(5.0f, -1.4f, 0.0f, 1.0f));
+    Kart player2("Enemy", kartModel, glm::vec4(5.0f, -1.4f, 0.0f, 1.0f));
     ComputeNormals(&kartModel);
     BuildTrianglesAndAddToVirtualScene(&kartModel);
 
@@ -172,17 +174,18 @@ int main(int argc, char* argv[])
             t = 2.0f - t_loop; // volta
         glm::vec3 pos = Bezier3(p0, p1, p2, p3, t);
 
-        model = Matrix_Translate(pos.x, pos.y, pos.z) * Matrix_Rotate_Y((float)glfwGetTime());
-        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, COIN);
-        DrawVirtualObject("the_coin");
 
         player1.Render();
-        enemyKart.Render();
-        enemyKart.dummy = true;
+        player2.Render();
+        player2.dummy = true;
 
-        CheckRocketHits(player1, enemyKart);
+        coin.Render();
+
+        CheckRocketHits(player1, player2);
         //CheckRocketHits(enemyKart, player1);
+
+        CheckKartCoinCollision(player1, coin);
+
               
 
         //=======================================================================================================

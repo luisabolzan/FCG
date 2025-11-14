@@ -16,11 +16,11 @@ Rocket::Rocket(const glm::vec4& pos, const glm::vec4& dir, float kartSpeed)
 
 
 void Rocket::Update() {
+
     if (!active) return;
-
     prevPosition = position;
-
     age += deltaTime;
+
     if (age > lifetime) {
         active = false;
         return;
