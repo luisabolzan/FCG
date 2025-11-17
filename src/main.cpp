@@ -10,6 +10,7 @@
 #include "coin.h"
 #include "kart.h"
 #include "collisions.h"
+#include "scene.h"
 
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -133,6 +134,8 @@ int main(int argc, char* argv[])
 
     // Constroi a Camera
     Camera camera;
+    // Constroi o cenário
+    Scene scene;
 
     // Ficamos em um loop infinito, renderizando, até que o usuário feche a janela
     while (!glfwWindowShouldClose(window))
@@ -149,56 +152,8 @@ int main(int argc, char* argv[])
 
         //=======================================================================================================
 
-        glm::mat4 model = Matrix_Identity();
 
-        // Desenhamos o modelo da esfera
-        glCullFace(GL_FRONT);
-        glDepthMask(GL_FALSE);
-        model = Matrix_Translate(0.0f , 0.0f, 0.0f) * Matrix_Scale(200.0f, 200.0f, 200.0f);
-        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, SPHERE);
-        DrawVirtualObject("the_sphere");
-        glDepthMask(GL_TRUE);
-        glCullFace(GL_BACK);
-
-        // Desenhamos o modelo do coelho
-        /*model = Matrix_Translate(3.0f,0.0f,0.0f)
-              * Matrix_Rotate_X(g_AngleX + (float)glfwGetTime() * 0.1f);
-        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, BUNNY);
-        DrawVirtualObject("the_bunny"); */
-
-        // Desenhamos o plano do chão
-        model = Matrix_Translate(0.0f,-2.1f,0.0f) * Matrix_Scale(100.0f, 0.0f, 100.0f);;
-        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, PLANE);
-        DrawVirtualObject("the_plane");
-
-
-        float track_scale = 0.005f;
-        model = Matrix_Translate(0.0f, -2.0f, 27.0f) * Matrix_Scale(track_scale, track_scale, track_scale);
-        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, RACETRACK);
-        DrawVirtualObject("Road_1X_Straight");
-
-
-        model = Matrix_Translate(0.0f, -2.0f, -19.55f) * Matrix_Scale(track_scale, track_scale, track_scale);
-        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, RACETRACK);
-        DrawVirtualObject("Road_1X_Straight");
-
-        model = Matrix_Translate(40.2f, -2.0f, 3.8f) * Matrix_Scale(track_scale, track_scale, track_scale)
-               * Matrix_Rotate_Y(3.14159265359/2.0f);
-        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, RACETRACK);
-        DrawVirtualObject("Road_1X_HalfCircle");
-
-        model = Matrix_Translate(-40.2f, -2.0f, 3.8f) * Matrix_Scale(track_scale, track_scale, track_scale)
-               * Matrix_Rotate_Y(-3.14159265359/2.0f);
-        glUniformMatrix4fv(g_model_uniform, 1 , GL_FALSE , glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, RACETRACK);
-        DrawVirtualObject("Road_1X_HalfCircle");
-
+        scene.Render(player1, player2);
 
 
 
@@ -213,9 +168,7 @@ int main(int argc, char* argv[])
         glm::vec4 pos = glm::vec4(Bezier3(p0, p1, p2, p3, t), 1.0f);
 
 
-        player1.Render();
-        player2.Render();
-        player2.dummy = true;
+
 
         coin.Render(pos);
 
@@ -226,6 +179,9 @@ int main(int argc, char* argv[])
         CheckKartCoinCollision(player2, coin);
 
         CheckKartKartCollision(player1, player2);
+
+
+
 
         //=======================================================================================================
 

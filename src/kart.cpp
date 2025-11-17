@@ -102,7 +102,7 @@ void Kart::Render() {
             isAlive = true;
             isInvincible = true;       // revive INVENCÍVEL
             respawnTimer = 0.0f;
-            position = position;// spawnPosition; você precisa guardar posição inicial
+            position = position; // spawnPosition; você precisa guardar posição inicial
         }
         return;
     }
@@ -126,7 +126,7 @@ void Kart::Render() {
         this->FireRocket();
 
     for (auto& rocket : rockets) {
-        rocket.Update();
+        rocket.UpdateMovement();
         if (!rocket.active) continue;
 
         glm::mat4 rocketModel = Matrix_Translate(rocket.position.x, rocket.position.y, rocket.position.z)
