@@ -68,59 +68,6 @@ int main(int argc, char* argv[])
 
     LoadShadersFromFiles();
 
-    //============================================================================================
-    //                                     TEXTURAS E OBJETOS
-    //============================================================================================
-
-    /// texturas adicionadas
-    LoadTextureImage("../../data/sky/sky.hdr");         // TextureImage0
-    LoadTextureImage("../../data/floor/grass.jpg");     // TextureImage1
-    LoadTextureImage("../../data/coin/coin.jpg");       // TextureImage2
-    LoadTextureImage("../../data/kart/kart.jpg");       // TextureImage3
-    LoadTextureImage("../../data/rocket/rocket.jpg");   // TextureImage4
-
-    LoadTextureImage("../../data/floor/trackTexture/City_Road_Sidewalk.jpg");  // TextureImage5
-
-
-
-    /// .obj adicionados
-    ObjModel spheremodel("../../data/sky/sphere.obj");
-    ComputeNormals(&spheremodel);
-    BuildTrianglesAndAddToVirtualScene(&spheremodel);
-
-    ObjModel bunnymodel("../../data/bunny.obj");
-    ComputeNormals(&bunnymodel);
-    BuildTrianglesAndAddToVirtualScene(&bunnymodel);
-
-    ObjModel planemodel("../../data/floor/plane.obj");
-    ComputeNormals(&planemodel);
-    BuildTrianglesAndAddToVirtualScene(&planemodel);
-
-    //====================================================================
-
-    ObjModel trackmodel("../../data/floor/trackObj/Modular_Roads_Pack.obj");
-    ComputeNormals(&trackmodel);
-    BuildTrianglesAndAddToVirtualScene(&trackmodel);
-
-    //====================================================================
-
-    ObjModel coinModel("../../data/coin/coin.obj");
-    ComputeNormals(&coinModel);
-    BuildTrianglesAndAddToVirtualScene(&coinModel);
-    Coin coin(glm::vec4(0.0f, -1.4f, 0.0f, 1.0f));
-
-    ObjModel kartModel("../../data/kart/kart.obj");
-    Kart player1("Player1", kartModel, glm::vec4(0.0f, -1.4f, 0.0f, 1.0f));
-    Kart player2("Enemy", kartModel, glm::vec4(5.0f, -1.4f, 0.0f, 1.0f));
-    ComputeNormals(&kartModel);
-    BuildTrianglesAndAddToVirtualScene(&kartModel);
-
-    ObjModel rocketmodel("../../data/rocket/rocket.obj");
-    ComputeNormals(&rocketmodel);
-    BuildTrianglesAndAddToVirtualScene(&rocketmodel);
-
-    //============================================================================================
-
     // Inicializamos o código para renderização de texto.
     TextRendering_Init();
 
@@ -132,30 +79,22 @@ int main(int argc, char* argv[])
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
-    // Constroi a Camera
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    //============================================================================================
+    //                                Criação da Camera e Cenário
+    //============================================================================================
+
     Camera camera;
-    // Constroi o cenário
     Scene scene;
 
-    // Ficamos em um loop infinito, renderizando, até que o usuário feche a janela
-    while (!glfwWindowShouldClose(window))
-    {
-
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glUseProgram(g_GpuProgramID);
-
-        //=======================================================================================================
+    // Loop infinito até que o usuário feche a janela
+    while (!glfwWindowShouldClose(window)) {
 
         // Inicializa e mantém o funcionamento da camera
-        camera.StartCamera(player1);
+        camera.StartCamera(scene.player1);
 
-        //=======================================================================================================
-
-
-        scene.Render(player1, player2);
-
-
+        scene.Render();
 
         // Curva de Bèzier na moeda
         float speed = 0.2f;
@@ -167,21 +106,9 @@ int main(int argc, char* argv[])
             t = 2.0f - t_loop; // volta
         glm::vec4 pos = glm::vec4(Bezier3(p0, p1, p2, p3, t), 1.0f);
 
+        scene.coin.Render(pos);
 
-
-
-        coin.Render(pos);
-
-        CheckRocketHits(player1, player2);
-        CheckRocketHits(player2, player1);
-
-        CheckKartCoinCollision(player1, coin);
-        CheckKartCoinCollision(player2, coin);
-
-        CheckKartKartCollision(player1, player2);
-
-
-
+        HandleCollisions(scene);
 
         //=======================================================================================================
 

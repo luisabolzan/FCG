@@ -2,6 +2,7 @@
 #include "collisions.h"
 #include "kart.h"
 #include "coin.h"
+#include "scene.h"
 
 // Colisão Kart (sphere) com Kart (sphere)
 bool CheckSphereSphere(const BoundingSphere& a, const BoundingSphere& b) {
@@ -69,6 +70,20 @@ bool CheckRaySphere(const glm::vec3& origin, const glm::vec3& dir, const Boundin
 
     return false;
 }
+
+
+void HandleCollisions(Scene& scene) {
+
+    CheckRocketHits(scene.player1, scene.player2);
+    CheckRocketHits(scene.player2, scene.player1);
+
+    CheckKartCoinCollision(scene.player1, scene.coin);
+    CheckKartCoinCollision(scene.player2, scene.coin);
+
+    CheckKartKartCollision(scene.player1, scene.player2);
+}
+
+
 
 void CheckRocketHits(Kart& shooter, Kart& target) {
     for (auto& rocket : shooter.rockets) {
