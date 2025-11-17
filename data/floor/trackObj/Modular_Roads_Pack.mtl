@@ -1,0 +1,27 @@
+newmtl Road_1X_StraightSG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd City_Road_Sidewalk.jpg
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl Road_Half_CircleSG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd road_Final.psd
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl Road_L_IntersectionSG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd Road_Intersection.jpg
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00

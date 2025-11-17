@@ -133,6 +133,15 @@ void main() {
             // Ks =
             // q =
         }
+        else if (object_id == RACETRACK) {
+            U = texcoords.x;
+            V = texcoords.y;
+            // Usa a textura da pista reta
+            Kd = texture(TextureImage5, vec2(U,V)).rgb;
+            Ka = vec3(0.1, 0.1, 0.1);
+            Ks = vec3(0.0, 0.0, 0.0);
+            q  = 1.0;
+        }
         else if (object_id == COIN) {
 
             U = texcoords.x ;

@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 class Kart;
 class Coin;
+class Scene;
 
 struct BoundingSphere {
     glm::vec3 center;
@@ -23,7 +24,7 @@ bool CheckSphereCube(const BoundingSphere& sphere, const AABB& box);
 bool CheckRayCube(const glm::vec3& origin, const glm::vec3& dir, const AABB& box, float& t);
 bool CheckRaySphere(const glm::vec3& origin, const glm::vec3& dir, const BoundingSphere& sphere, float& t);
 
-void HandleCollisions();
+void HandleCollisions(Scene& scene);
 
 void CheckRocketHits(Kart& shooter, Kart& target);
 void CheckKartCoinCollision(Kart& kart, Coin& coin);
