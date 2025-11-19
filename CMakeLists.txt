@@ -24,6 +24,7 @@ set(SOURCES
   src/scene.cpp
   src/menu.cpp
   src/miniaudio.cpp
+  src/control.cpp
 )
 
 cmake_minimum_required(VERSION 3.10)
