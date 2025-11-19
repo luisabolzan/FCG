@@ -259,10 +259,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
 
-    if (key == GLFW_KEY_C && action == GLFW_PRESS)
-    {
-        CPressed = !CPressed;
-    }
+
 
     if (g_ShowMenu) {
 
@@ -273,6 +270,10 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         }
     } else {
 
+        if (key == GLFW_KEY_C && action == GLFW_PRESS)
+        {
+            CPressed = !CPressed;
+        }
 
         if (key == GLFW_KEY_M && action == GLFW_PRESS)
         {
