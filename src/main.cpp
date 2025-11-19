@@ -255,6 +255,14 @@ void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 // tecla do teclado. Veja http://www.glfw.org/docs/latest/input_guide.html#input_key
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
 {
+    // Se o usuário pressionar a tecla ESC, fechamos a janela.
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
+
+    if (key == GLFW_KEY_C && action == GLFW_PRESS)
+    {
+        CPressed = !CPressed;
+    }
 
     if (g_ShowMenu) {
 
@@ -264,14 +272,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
     } else {
-        // Se o usuário pressionar a tecla ESC, fechamos a janela.
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-            glfwSetWindowShouldClose(window, GL_TRUE);
 
-        if (key == GLFW_KEY_C && action == GLFW_PRESS)
-        {
-            CPressed = !CPressed;
-        }
 
         if (key == GLFW_KEY_M && action == GLFW_PRESS)
         {
