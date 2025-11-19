@@ -47,25 +47,28 @@ Scene::Scene()
 
       // MOEDAS NA PISTA
       coins.push_back(Coin(dummy, 
-          glm::vec3(0.0f, 0.0f, 0.0f),  // P0
-          glm::vec3(5.0f, 0.0f, 5.0f),  // P1
-          glm::vec3(-5.0f, 0.0f, 5.0f), // P2
-          glm::vec3(0.0f, 0.0f, 10.0f)  // P3
+          glm::vec3(0.0f, 0.0f, 22.0f),  // P0
+          glm::vec3(-3.0f, 0.0f, 25.0f),  // P1
+          glm::vec3(3.0f, 0.0f, 29.0f), // P2
+          glm::vec3(0.0f, 0.0f, 32.0f)  // P3
       ));
-
-      // Moeda 
       coins.push_back(Coin(dummy, 
-          glm::vec3(30.0f, 0.0f, 0.0f),  // P0
-          glm::vec3(35.0f, 0.0f, 0.0f),  // P1
-          glm::vec3(25.0f, 0.0f, 10.0f), // P2
-          glm::vec3(30.0f, 0.0f, 10.0f)  // P3
+          glm::vec3(0.0f, 0.0f, -15.0f),  
+          glm::vec3(3.0f, 0.0f, -18.0f),
+          glm::vec3(-3.0f, 0.0f, -22.0f), 
+          glm::vec3(0.0f, 0.0f, -25.0f)   
       ));
-      // Moeda 3
       coins.push_back(Coin(dummy, 
-          glm::vec3(-20.0f, 0.0f, -20.0f), // P0
-          glm::vec3(-25.0f, 0.0f, -20.0f), // P1
-          glm::vec3(-20.0f, 0.0f, -25.0f), // P2
-          glm::vec3(-25.0f, 0.0f, -25.0f)  // P3
+          glm::vec3(55.0f, 0.0f, 0.0f),   
+          glm::vec3(58.0f, 0.0f, 0.0f),   
+          glm::vec3(58.0f, 0.0f, 5.0f), 
+          glm::vec3(55.0f, 0.0f, 10.0f)
+      ));
+      coins.push_back(Coin(dummy, 
+          glm::vec3(-55.0f, 0.0f, 0.0f),  
+          glm::vec3(-58.0f, 0.0f, 0.0f), 
+          glm::vec3(-58.0f, 0.0f, 5.0f),
+          glm::vec3(-55.0f, 0.0f, 10.0f)  
       ));
 }
 
