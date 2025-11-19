@@ -23,6 +23,7 @@ set(SOURCES
   src/coin.cpp
   src/scene.cpp
   src/menu.cpp
+  src/miniaudio.cpp
 )
 
 cmake_minimum_required(VERSION 3.10)

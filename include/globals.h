@@ -8,6 +8,8 @@
 
 #include "FCGfunctions.h"
 
+#include "miniaudio.h"
+
 extern std::map<std::string, struct SceneObject> g_VirtualScene;
 extern std::stack<glm::mat4>  g_MatrixStack;
 extern float g_ScreenRatio;
@@ -73,4 +75,8 @@ extern glm::vec3 p3;
 #define COIN        5
 #define ROCKET      6
 
+// Váriaveis de áudio
+extern ma_engine g_AudioEngine;
+
 #endif //GLOBALS_H
+
