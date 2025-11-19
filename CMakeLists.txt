@@ -16,6 +16,15 @@ set(SOURCES
   src/matrices.cpp
   src/stb_image.cpp
   src/tiny_obj_loader.cpp
+  src/animation.cpp
+  src/kart.cpp
+  src/rocket.cpp
+  src/collisions.cpp
+  src/coin.cpp
+  src/scene.cpp
+  src/menu.cpp
+  src/miniaudio.cpp
+  src/control.cpp
 )
 
 cmake_minimum_required(VERSION 3.10)
