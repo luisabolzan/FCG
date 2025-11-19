@@ -79,9 +79,9 @@ glm::vec3 p1(2.0f, 0.0f, 2.0f);
 glm::vec3 p2(4.0f, 0.0f, 4.0f);
 glm::vec3 p3(6.0f, 0.0f, 0.0f);
 
-
+// Váriaveis de Áudio
 ma_engine g_AudioEngine;
-
+ma_sound g_Music;
 
 
 

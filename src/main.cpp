@@ -86,7 +86,10 @@ int main(int argc, char* argv[])
     if (ma_engine_init(NULL, &g_AudioEngine) != MA_SUCCESS) {
         std::cerr << "Erro ao iniciar o engine de áudio.\n";
     }
-    ma_engine_play_sound(&g_AudioEngine, "../../data/audio/LadyJane.mp3", NULL);
+    ma_result result = ma_sound_init_from_file(&g_AudioEngine, "../../data/audio/LadyJane.mp3", MA_SOUND_FLAG_STREAM, NULL, NULL, &g_Music);
+    ma_sound_set_volume(&g_Music, 0.2f);
+    ma_sound_set_looping(&g_Music, MA_TRUE);
+    ma_sound_start(&g_Music);
 
     
     //============================================================================================
