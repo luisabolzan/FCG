@@ -36,7 +36,7 @@ void Coin::Update(float time) {
 
 void Coin::Render(float terrainHeight) {
 
-    position.y = terrainHeight + 0.5f;
+    position.y = terrainHeight + 0.8f;
 
     if (!active) {
         respawnTimer += deltaTime;
