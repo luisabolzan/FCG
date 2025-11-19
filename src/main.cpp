@@ -106,8 +106,6 @@ int main(int argc, char* argv[])
             t = 2.0f - t_loop; // volta
         glm::vec4 pos = glm::vec4(Bezier3(p0, p1, p2, p3, t), 1.0f);
 
-        scene.coin.Render(pos);
-
         HandleCollisions(scene);
 
         //=======================================================================================================

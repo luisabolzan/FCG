@@ -18,7 +18,8 @@ public:
 
     Coin(glm::vec4 pos);
 
-    void Render(const glm::vec4 pos);
+    void Update(float time);
+    void Render(const glm::vec4 pos, float terraineHeight);
 };
 
 #endif //COIN_H

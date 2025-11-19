@@ -1,5 +1,3 @@
-
-
 #include "scene.h"
 
 
@@ -60,6 +58,10 @@ void Scene::Render() {
       player1.Render();
       player2.Render();
       player2.dummy = true;
+
+      coin.Update(glfwGetTime());
+      float coinGroundHeight = GetHeightAt(coin.position.x, coin.position.z);
+      coin.Render(coin.position, coinGroundHeight);
 }
 
 
@@ -133,4 +135,10 @@ void Scene::RenderTrackPieces() {
     glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(g_object_id_uniform, RACETRACK);
     DrawVirtualObject("Road_1X_HalfCircle");
+}
+
+float Scene::GetHeightAt(float x, float z)
+{
+    (void)x; (void)z;
+    return -2.0f;
 }
