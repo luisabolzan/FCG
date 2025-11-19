@@ -43,33 +43,31 @@ Scene::Scene()
       ComputeNormals(&kartModel);
       BuildTrianglesAndAddToVirtualScene(&kartModel);
 
-      glm::vec4 dummy(0.0f);
-
       // MOEDAS NA PISTA
-      coins.push_back(Coin(dummy, 
-          glm::vec3(0.0f, 0.0f, 22.0f),  // P0
+      coins.emplace_back(
+          glm::vec3(0.0f, 0.0f, 22.0f),   // P0
           glm::vec3(-3.0f, 0.0f, 25.0f),  // P1
-          glm::vec3(3.0f, 0.0f, 29.0f), // P2
-          glm::vec3(0.0f, 0.0f, 32.0f)  // P3
-      ));
-      coins.push_back(Coin(dummy, 
-          glm::vec3(0.0f, 0.0f, -15.0f),  
+          glm::vec3(3.0f, 0.0f, 29.0f),   // P2
+          glm::vec3(0.0f, 0.0f, 32.0f)    // P3
+      );
+      coins.emplace_back(
+          glm::vec3(0.0f, 0.0f, -15.0f),
           glm::vec3(3.0f, 0.0f, -18.0f),
-          glm::vec3(-3.0f, 0.0f, -22.0f), 
-          glm::vec3(0.0f, 0.0f, -25.0f)   
-      ));
-      coins.push_back(Coin(dummy, 
-          glm::vec3(55.0f, 0.0f, 0.0f),   
-          glm::vec3(58.0f, 0.0f, 0.0f),   
-          glm::vec3(58.0f, 0.0f, 5.0f), 
+          glm::vec3(-3.0f, 0.0f, -22.0f),
+          glm::vec3(0.0f, 0.0f, -25.0f)
+      );
+      coins.emplace_back(
+          glm::vec3(55.0f, 0.0f, 0.0f),
+          glm::vec3(58.0f, 0.0f, 0.0f),
+          glm::vec3(58.0f, 0.0f, 5.0f),
           glm::vec3(55.0f, 0.0f, 10.0f)
-      ));
-      coins.push_back(Coin(dummy, 
-          glm::vec3(-55.0f, 0.0f, 0.0f),  
-          glm::vec3(-58.0f, 0.0f, 0.0f), 
+      );
+      coins.emplace_back(
+          glm::vec3(-55.0f, 0.0f, 0.0f),
+          glm::vec3(-58.0f, 0.0f, 0.0f),
           glm::vec3(-58.0f, 0.0f, 5.0f),
-          glm::vec3(-55.0f, 0.0f, 10.0f)  
-      ));
+          glm::vec3(-55.0f, 0.0f, 10.0f)
+      );
 }
 
 
@@ -82,15 +80,12 @@ void Scene::Render() {
       RenderSkySphere();
       RenderGround();
       RenderTrackPieces();
+      RenderCoins();
+
       player1.Render();
       player2.Render();
       player2.dummy = true;
 
-      for (auto & c : coins) {
-        c.Update(glfwGetTime());
-        float h = GetHeightAt(c.position.x, c.position.z);
-        c.Render(h);
-      }
 }
 
 
@@ -166,8 +161,7 @@ void Scene::RenderTrackPieces() {
     DrawVirtualObject("Road_1X_HalfCircle");
 }
 
-float Scene::GetHeightAt(float x, float z)
-{
-    (void)x; (void)z;
-    return -2.0f;
+void Scene::RenderCoins() {
+      for (auto & c : coins) c.Render();
 }
+

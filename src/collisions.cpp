@@ -119,7 +119,7 @@ void CheckKartCoinCollision(Kart& kart, Coin& coin) {
 
     if (!coin.active) return;
 
-    BoundingSphere kartSphere;
+    BoundingSphere kartSphere{};
     kartSphere.center = glm::vec3(kart.position);
     kartSphere.radius = kart.radius;
 
@@ -138,11 +138,11 @@ void CheckKartKartCollision(Kart& kartA, Kart& kartB) {
 
     if (!kartA.isAlive || !kartB.isAlive) return;
 
-    BoundingSphere sphereA;
+    BoundingSphere sphereA{};
     sphereA.center = glm::vec3(kartA.position);
     sphereA.radius = kartA.radius;
 
-    BoundingSphere sphereB;
+    BoundingSphere sphereB{};
     sphereB.center = glm::vec3(kartB.position);
     sphereB.radius = kartB.radius;
 

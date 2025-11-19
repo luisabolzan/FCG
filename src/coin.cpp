@@ -2,9 +2,9 @@
 #include "animation.h"
 #include <cmath>
 
-Coin::Coin(glm::vec4 pos, glm::vec3 _p0, glm::vec3 _p1, glm::vec3 _p2, glm::vec3 _p3) {
-    position     = pos;
+Coin::Coin( glm::vec3 _p0, glm::vec3 _p1, glm::vec3 _p2, glm::vec3 _p3) {
     active       = true;
+    speed        = 0.5f;
     respawnTime  = 5.0f;
     respawnTimer = 0.0f;
     rotationY    = 0.0f;
@@ -16,11 +16,11 @@ Coin::Coin(glm::vec4 pos, glm::vec3 _p0, glm::vec3 _p1, glm::vec3 _p2, glm::vec3
     p3 = _p3;
 }
 
-void Coin::Update(float time) {
-    if (!active) return; 
+void Coin::UpdateMovement() {
 
-    float speed = 0.5f; 
-    float t_loop = fmod(time * speed, 2.0f);
+    if (!active) return;
+
+    const float t_loop = fmod(currentTime * speed, 2.0f);
     float t;
 
     if (t_loop < 1.0f)
@@ -28,15 +28,17 @@ void Coin::Update(float time) {
     else
         t = 2.0f - t_loop;
 
-    glm::vec3 bezierPos = Bezier3(p0, p1, p2, p3, t);
+    const glm::vec3 bezierPos = Bezier3(p0, p1, p2, p3, t);
     
     position.x = bezierPos.x;
     position.z = bezierPos.z;
 }
 
-void Coin::Render(float terrainHeight) {
+void Coin::Render() {
 
-    position.y = terrainHeight + 0.8f;
+    this->UpdateMovement();
+
+    position.y = -1.2f;
 
     if (!active) {
         respawnTimer += deltaTime;
