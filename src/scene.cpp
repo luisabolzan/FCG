@@ -1,13 +1,10 @@
-
-
 #include "scene.h"
 
 
 Scene::Scene()
     : kartModel("../../data/kart/kart.obj"),
       player1("Player1", kartModel, glm::vec4(0.0f, -1.4f, 0.0f, 1.0f)),
-      player2("Enemy", kartModel, glm::vec4(5.0f, -1.4f, 0.0f, 1.0f)),
-      coin(glm::vec4(0.0f, -1.4f, 0.0f, 1.0f))
+      player2("Enemy", kartModel, glm::vec4(5.0f, -1.4f, 0.0f, 1.0f))
 {
 
       // Carrega todas as texturas
@@ -45,6 +42,34 @@ Scene::Scene()
 
       ComputeNormals(&kartModel);
       BuildTrianglesAndAddToVirtualScene(&kartModel);
+
+      glm::vec4 dummy(0.0f);
+
+      // MOEDAS NA PISTA
+      coins.push_back(Coin(dummy, 
+          glm::vec3(0.0f, 0.0f, 22.0f),  // P0
+          glm::vec3(-3.0f, 0.0f, 25.0f),  // P1
+          glm::vec3(3.0f, 0.0f, 29.0f), // P2
+          glm::vec3(0.0f, 0.0f, 32.0f)  // P3
+      ));
+      coins.push_back(Coin(dummy, 
+          glm::vec3(0.0f, 0.0f, -15.0f),  
+          glm::vec3(3.0f, 0.0f, -18.0f),
+          glm::vec3(-3.0f, 0.0f, -22.0f), 
+          glm::vec3(0.0f, 0.0f, -25.0f)   
+      ));
+      coins.push_back(Coin(dummy, 
+          glm::vec3(55.0f, 0.0f, 0.0f),   
+          glm::vec3(58.0f, 0.0f, 0.0f),   
+          glm::vec3(58.0f, 0.0f, 5.0f), 
+          glm::vec3(55.0f, 0.0f, 10.0f)
+      ));
+      coins.push_back(Coin(dummy, 
+          glm::vec3(-55.0f, 0.0f, 0.0f),  
+          glm::vec3(-58.0f, 0.0f, 0.0f), 
+          glm::vec3(-58.0f, 0.0f, 5.0f),
+          glm::vec3(-55.0f, 0.0f, 10.0f)  
+      ));
 }
 
 
@@ -60,6 +85,12 @@ void Scene::Render() {
       player1.Render();
       player2.Render();
       player2.dummy = true;
+
+      for (auto & c : coins) {
+        c.Update(glfwGetTime());
+        float h = GetHeightAt(c.position.x, c.position.z);
+        c.Render(h);
+      }
 }
 
 
@@ -133,4 +164,10 @@ void Scene::RenderTrackPieces() {
     glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(g_object_id_uniform, RACETRACK);
     DrawVirtualObject("Road_1X_HalfCircle");
+}
+
+float Scene::GetHeightAt(float x, float z)
+{
+    (void)x; (void)z;
+    return -2.0f;
 }

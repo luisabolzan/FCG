@@ -77,8 +77,10 @@ void HandleCollisions(Scene& scene) {
     CheckRocketHits(scene.player1, scene.player2);
     CheckRocketHits(scene.player2, scene.player1);
 
-    CheckKartCoinCollision(scene.player1, scene.coin);
-    CheckKartCoinCollision(scene.player2, scene.coin);
+    for (auto& c : scene.coins) {
+        CheckKartCoinCollision(scene.player1, c);
+        CheckKartCoinCollision(scene.player2, c);
+    }
 
     CheckKartKartCollision(scene.player1, scene.player2);
 }
