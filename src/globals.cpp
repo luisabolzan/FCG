@@ -1,3 +1,4 @@
+#include "miniaudio.h"
 #include "globals.h"
 
 // A cena virtual é uma lista de objetos nomeados, guardados em um dicionário
@@ -79,6 +80,7 @@ glm::vec3 p2(4.0f, 0.0f, 4.0f);
 glm::vec3 p3(6.0f, 0.0f, 0.0f);
 
 
+ma_engine g_AudioEngine;
 
 
 

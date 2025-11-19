@@ -2,7 +2,7 @@
  *                    Trabalho Final de Fundamentos de Computação Gráfica
  *                      Luísa Righi Bolzan e Rafael Silveira Bandeira
  =========================================================================================*/
-
+#include <iostream>
 #include "FCGfunctions.h"
 #include "globals.h"
 #include "camera.h"
@@ -12,6 +12,7 @@
 #include "collisions.h"
 #include "scene.h"
 #include "menu.h"
+#include "miniaudio.h"
 
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -22,7 +23,6 @@ void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 
 int main(int argc, char* argv[])
 {
-
     int success = glfwInit();
     if (!success)
     {
@@ -80,7 +80,15 @@ int main(int argc, char* argv[])
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
+    //============================================================================================
+    //                                Inicialização do Áudio
+    //============================================================================================
+    if (ma_engine_init(NULL, &g_AudioEngine) != MA_SUCCESS) {
+        std::cerr << "Erro ao iniciar o engine de áudio.\n";
+    }
+    ma_engine_play_sound(&g_AudioEngine, "../../data/audio/LadyJane.mp3", NULL);
 
+    
     //============================================================================================
     //                                Criação da Camera e Cenário
     //============================================================================================
@@ -106,6 +114,8 @@ int main(int argc, char* argv[])
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
+    ma_engine_uninit(&g_AudioEngine);
     glfwTerminate();
     return 0;
 }
