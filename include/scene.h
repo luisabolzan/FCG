@@ -13,7 +13,7 @@ public:
     ObjModel kartModel;
     Kart player1;
     Kart player2;
-    Coin coin;
+    std::vector<Coin> coins;
 
     Scene();
     void Render();

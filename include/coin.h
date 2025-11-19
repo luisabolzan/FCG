@@ -16,10 +16,11 @@ public:
     float respawnTimer;     // contador do respawn
     float rotationY;
 
-    Coin(glm::vec4 pos);
+    glm::vec3 p0, p1, p2, p3;
+    Coin(glm::vec4 pos, glm::vec3 _p0, glm::vec3 _p1, glm::vec3 _p2, glm::vec3 _p3);
 
     void Update(float time);
-    void Render(const glm::vec4 pos, float terraineHeight);
+    void Render(float terraineHeight);
 };
 
 #endif //COIN_H

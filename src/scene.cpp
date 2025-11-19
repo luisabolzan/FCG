@@ -4,8 +4,7 @@
 Scene::Scene()
     : kartModel("../../data/kart/kart.obj"),
       player1("Player1", kartModel, glm::vec4(0.0f, -1.4f, 0.0f, 1.0f)),
-      player2("Enemy", kartModel, glm::vec4(5.0f, -1.4f, 0.0f, 1.0f)),
-      coin(glm::vec4(0.0f, -1.4f, 0.0f, 1.0f))
+      player2("Enemy", kartModel, glm::vec4(5.0f, -1.4f, 0.0f, 1.0f))
 {
 
       // Carrega todas as texturas
@@ -43,6 +42,31 @@ Scene::Scene()
 
       ComputeNormals(&kartModel);
       BuildTrianglesAndAddToVirtualScene(&kartModel);
+
+      glm::vec4 dummy(0.0f);
+
+      // MOEDAS NA PISTA
+      coins.push_back(Coin(dummy, 
+          glm::vec3(0.0f, 0.0f, 0.0f),  // P0
+          glm::vec3(5.0f, 0.0f, 5.0f),  // P1
+          glm::vec3(-5.0f, 0.0f, 5.0f), // P2
+          glm::vec3(0.0f, 0.0f, 10.0f)  // P3
+      ));
+
+      // Moeda 
+      coins.push_back(Coin(dummy, 
+          glm::vec3(30.0f, 0.0f, 0.0f),  // P0
+          glm::vec3(35.0f, 0.0f, 0.0f),  // P1
+          glm::vec3(25.0f, 0.0f, 10.0f), // P2
+          glm::vec3(30.0f, 0.0f, 10.0f)  // P3
+      ));
+      // Moeda 3
+      coins.push_back(Coin(dummy, 
+          glm::vec3(-20.0f, 0.0f, -20.0f), // P0
+          glm::vec3(-25.0f, 0.0f, -20.0f), // P1
+          glm::vec3(-20.0f, 0.0f, -25.0f), // P2
+          glm::vec3(-25.0f, 0.0f, -25.0f)  // P3
+      ));
 }
 
 
@@ -59,9 +83,11 @@ void Scene::Render() {
       player2.Render();
       player2.dummy = true;
 
-      coin.Update(glfwGetTime());
-      float coinGroundHeight = GetHeightAt(coin.position.x, coin.position.z);
-      coin.Render(coin.position, coinGroundHeight);
+      for (auto & c : coins) {
+        c.Update(glfwGetTime());
+        float h = GetHeightAt(c.position.x, c.position.z);
+        c.Render(h);
+      }
 }
 
 
