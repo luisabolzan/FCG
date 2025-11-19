@@ -38,6 +38,8 @@ extern double g_LastCursorPosX, g_LastCursorPosY;
 
 // =================================================================================
 
+extern bool g_ShowMenu;
+
 extern int IlluminationModel;
 extern bool IsGouraudShading;
 

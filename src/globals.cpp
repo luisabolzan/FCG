@@ -50,8 +50,11 @@ double g_LastCursorPosY = 0.0;
 
 // =================================================================================
 
+bool g_ShowMenu = true;
+
 int IlluminationModel = 0;
 bool IsGouraudShading = false;
+
 
 float currentTime;
 float deltaTime;

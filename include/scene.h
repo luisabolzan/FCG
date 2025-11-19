@@ -22,8 +22,8 @@ private:
     void RenderSkySphere();
     void RenderGround();
     void RenderTrackPieces();
-    // retorna a altura do terreno em (x,z)
-    float GetHeightAt(float x, float z);
+    void RenderCoins();
+
 };
 
 #endif //SCENE_H

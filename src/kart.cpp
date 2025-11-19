@@ -126,14 +126,7 @@ void Kart::Render() {
         this->FireRocket();
 
     for (auto& rocket : rockets) {
-        rocket.UpdateMovement();
-        if (!rocket.active) continue;
-
-        glm::mat4 rocketModel = Matrix_Translate(rocket.position.x, rocket.position.y, rocket.position.z)
-                              * Matrix_Rotate_Y(rocket.rotationY)  * Matrix_Scale(0.5f, 0.5f, 0.5f);
-        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(rocketModel));
-        glUniform1i(g_object_id_uniform, ROCKET);
-        DrawVirtualObject("the_rocket");
+        rocket.Render();
     }
 }
 

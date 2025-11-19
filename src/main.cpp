@@ -11,6 +11,7 @@
 #include "kart.h"
 #include "collisions.h"
 #include "scene.h"
+#include "menu.h"
 
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -79,7 +80,6 @@ int main(int argc, char* argv[])
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     //============================================================================================
     //                                Criação da Camera e Cenário
@@ -91,26 +91,16 @@ int main(int argc, char* argv[])
     // Loop infinito até que o usuário feche a janela
     while (!glfwWindowShouldClose(window)) {
 
-        // Inicializa e mantém o funcionamento da camera
-        camera.StartCamera(scene.player1);
+        if (g_ShowMenu)
+            RenderMenu(window);
 
-        scene.Render();
+        else {
+            // Inicializa e mantém o funcionamento da camera
+            camera.StartCamera(scene.player1);
+            scene.Render();
+            HandleCollisions(scene);
+        }
 
-        // Curva de Bèzier na moeda
-        float speed = 0.2f;
-        float t_loop = fmod(glfwGetTime() * speed, 2.0f);
-        float t;
-        if (t_loop < 1.0f)
-            t = t_loop; // ida
-        else
-            t = 2.0f - t_loop; // volta
-        glm::vec4 pos = glm::vec4(Bezier3(p0, p1, p2, p3, t), 1.0f);
-
-        HandleCollisions(scene);
-
-        //=======================================================================================================
-
-        // Imprimimos na tela FPS
         TextRendering_ShowFramesPerSecond(window);
 
         glfwSwapBuffers(window);
@@ -256,134 +246,89 @@ void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
 {
 
-    // Se o usuário pressionar a tecla ESC, fechamos a janela.
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GL_TRUE);
+    if (g_ShowMenu) {
 
-    if (key == GLFW_KEY_C && action == GLFW_PRESS)
-    {
-        CPressed = !CPressed;
-    }
-
-    if (key == GLFW_KEY_M && action == GLFW_PRESS)
-    {
-        MPressed = !MPressed;
-        if (MPressed) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        if (key == GLFW_KEY_I && action == GLFW_PRESS) {
+            g_ShowMenu = !g_ShowMenu;
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
-        else {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    } else {
+        // Se o usuário pressionar a tecla ESC, fechamos a janela.
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+            glfwSetWindowShouldClose(window, GL_TRUE);
+
+        if (key == GLFW_KEY_C && action == GLFW_PRESS)
+        {
+            CPressed = !CPressed;
         }
-    }
 
-    if (key == GLFW_KEY_W)
-    {
-        if (action == GLFW_PRESS || action == GLFW_REPEAT)
-            WPressed = true;
-        else if (action == GLFW_RELEASE)
-            WPressed = false;
-    }
+        if (key == GLFW_KEY_M && action == GLFW_PRESS)
+        {
+            MPressed = !MPressed;
+            if (MPressed) {
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            }
+            else {
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            }
+        }
 
-    if (key == GLFW_KEY_A)
-    {
-        if (action == GLFW_PRESS || action == GLFW_REPEAT)
-            APressed = true;
-        else if (action == GLFW_RELEASE)
-            APressed = false;
-    }
+        if (key == GLFW_KEY_W)
+        {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT)
+                WPressed = true;
+            else if (action == GLFW_RELEASE)
+                WPressed = false;
+        }
 
-    if (key == GLFW_KEY_S)
-    {
-        if (action == GLFW_PRESS || action == GLFW_REPEAT)
-            SPressed = true;
-        else if (action == GLFW_RELEASE)
-            SPressed = false;
-    }
+        if (key == GLFW_KEY_A)
+        {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT)
+                APressed = true;
+            else if (action == GLFW_RELEASE)
+                APressed = false;
+        }
 
-    if (key == GLFW_KEY_D)
-    {
-        if (action == GLFW_PRESS || action == GLFW_REPEAT)
-            DPressed = true;
-        else if (action == GLFW_RELEASE)
-            DPressed = false;
-    }
+        if (key == GLFW_KEY_S)
+        {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT)
+                SPressed = true;
+            else if (action == GLFW_RELEASE)
+                SPressed = false;
+        }
 
-    if (key == GLFW_KEY_SPACE)
-    {
-        if (action == GLFW_PRESS || action == GLFW_REPEAT)
-            SpacePressed = true;
-        else if (action == GLFW_RELEASE)
-            SpacePressed = false;
-    }
+        if (key == GLFW_KEY_D)
+        {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT)
+                DPressed = true;
+            else if (action == GLFW_RELEASE)
+                DPressed = false;
+        }
 
-    if (key == GLFW_KEY_LEFT_SHIFT)
-    {
-        if (action == GLFW_PRESS || action == GLFW_REPEAT)
-            ShiftPressed = true;
-        else if (action == GLFW_RELEASE)
-            ShiftPressed = false;
-    }
+        if (key == GLFW_KEY_SPACE)
+        {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT)
+                SpacePressed = true;
+            else if (action == GLFW_RELEASE)
+                SpacePressed = false;
+        }
+
+        if (key == GLFW_KEY_LEFT_SHIFT)
+        {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT)
+                ShiftPressed = true;
+            else if (action == GLFW_RELEASE)
+                ShiftPressed = false;
+        }
 
 
 
-    //====================================================================
-
-    // O código abaixo implementa a seguinte lógica:
-    //   Se apertar tecla X       então g_AngleX += delta;
-    //   Se apertar tecla shift+X então g_AngleX -= delta;
-    //   Se apertar tecla Y       então g_AngleY += delta;
-    //   Se apertar tecla shift+Y então g_AngleY -= delta;
-    //   Se apertar tecla Z       então g_AngleZ += delta;
-    //   Se apertar tecla shift+Z então g_AngleZ -= delta;
-
-    float delta = 3.141592 / 16; // 22.5 graus, em radianos.
-
-    if (key == GLFW_KEY_X && action == GLFW_PRESS)
-    {
-        g_AngleX += (mod & GLFW_MOD_SHIFT) ? -delta : delta;
-    }
-
-    if (key == GLFW_KEY_Y && action == GLFW_PRESS)
-    {
-        g_AngleY += (mod & GLFW_MOD_SHIFT) ? -delta : delta;
-    }
-    if (key == GLFW_KEY_Z && action == GLFW_PRESS)
-    {
-        g_AngleZ += (mod & GLFW_MOD_SHIFT) ? -delta : delta;
-    }
-
-    // Se o usuário apertar a tecla espaço, resetamos os ângulos de Euler para zero.
-    if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-    {
-        g_AngleX = 0.0f;
-        g_AngleY = 0.0f;
-        g_AngleZ = 0.0f;
-    }
-
-    // Se o usuário apertar a tecla P, utilizamos projeção perspectiva.
-    if (key == GLFW_KEY_P && action == GLFW_PRESS)
-    {
-        g_UsePerspectiveProjection = true;
-    }
-
-    // Se o usuário apertar a tecla O, utilizamos projeção ortográfica.
-    if (key == GLFW_KEY_O && action == GLFW_PRESS)
-    {
-        g_UsePerspectiveProjection = false;
-    }
-
-    // Se o usuário apertar a tecla H, fazemos um "toggle" do texto informativo mostrado na tela.
-    if (key == GLFW_KEY_H && action == GLFW_PRESS)
-    {
-        g_ShowInfoText = !g_ShowInfoText;
-    }
-
-    // Se o usuário apertar a tecla R, recarregamos os shaders dos arquivos "shader_fragment.glsl" e "shader_vertex.glsl".
-    if (key == GLFW_KEY_R && action == GLFW_PRESS)
-    {
-        LoadShadersFromFiles();
-        fprintf(stdout,"Shaders recarregados!\n");
-        fflush(stdout);
+        // Se o usuário apertar a tecla H, fazemos um "toggle" do texto informativo mostrado na tela.
+        if (key == GLFW_KEY_H && action == GLFW_PRESS)
+        {
+            g_ShowInfoText = !g_ShowInfoText;
+        }
     }
 
     //====================================================================
