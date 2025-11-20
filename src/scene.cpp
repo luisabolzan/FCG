@@ -114,7 +114,7 @@ void Scene::RenderGround() {
 
     glm::mat4 model;
 
-    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_PHONG);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_BLINNPHONG);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), false);
 
     model = Matrix_Translate(0.0f, -2.1f, 0.0f)
