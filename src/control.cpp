@@ -79,9 +79,15 @@ void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
     g_CameraDistance -= 0.1f*yoffset;
 
-    const float verysmallnumber = std::numeric_limits<float>::epsilon();
-    if (g_CameraDistance < verysmallnumber)
-        g_CameraDistance = verysmallnumber;
+    const float MIN_DISTANCE = 2.0f;
+    const float MAX_DISTANCE = 10.0f;
+
+    // Aplica as restrições
+    if (g_CameraDistance < MIN_DISTANCE)
+        g_CameraDistance = MIN_DISTANCE;
+
+    if (g_CameraDistance > MAX_DISTANCE)
+        g_CameraDistance = MAX_DISTANCE;
 }
 
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)

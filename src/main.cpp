@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     GLFWwindow* window;
-    window = glfwCreateWindow(800, 600, "INF01047 - Smash Karts", NULL, NULL);
+    window = glfwCreateWindow(1920, 1080, "INF01047 - Smash Karts", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 
     glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
-    FramebufferSizeCallback(window, 800, 600);
+    FramebufferSizeCallback(window, 1920, 1080);
 
     const GLubyte *vendor      = glGetString(GL_VENDOR);
     const GLubyte *renderer    = glGetString(GL_RENDERER);

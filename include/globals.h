@@ -45,6 +45,11 @@ extern bool g_ShowMenu;
 extern int IlluminationModel;
 extern bool IsGouraudShading;
 
+#define ILLUMINATION_GLOBAL     0
+#define ILLUMINATION_LAMBERT    1
+#define ILLUMINATION_PHONG      2
+#define ILLUMINATION_BLINNPHONG 3
+
 extern float currentTime;
 extern float deltaTime;
 extern float lastTime;
