@@ -78,6 +78,22 @@ Scene::Scene()
       glm::vec3(-58.0f, 0.0f, 5.0f),
       glm::vec3(-55.0f, 0.0f, 10.0f)
     );
+
+    // Palmeiras
+    palmPositions = {
+        { 18.0f, -0.3f,  15.0f},
+        {-18.0f, -0.3f,  -8.0f},
+        { 18.0f, -0.3f,  -8.0f},
+        {-18.0f, -0.3f,  15.0f}
+    };
+
+    // Árvores
+    treePositions = {
+        { 23.0f, 4.0f,  15.0f},
+        {-23.0f, 4.0f,  -8.0f},
+        { 23.0f, 4.0f,  -8.0f},
+        {-23.0f, 4.0f,  15.0f}
+    };
 }
 
 
@@ -140,29 +156,11 @@ void Scene::RenderPalm() {
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_LAMBERT);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), true);
 
-    glm::mat4 model = Matrix_Translate(18.0f, -0.3f, 15.0f) * Matrix_Scale(2.0f, 2.0f, 2.0f);
-
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, PALM);
-    DrawVirtualObject("the_palm");
-
-    model = Matrix_Translate(-18.0f, -0.3f, -8.0f) * Matrix_Scale(2.0f,2.0f,2.0f);
-
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, PALM);
-    DrawVirtualObject("the_palm");
-
-    model = Matrix_Translate(18.0f, -0.3f, -8.0f) * Matrix_Scale(2.0f,2.0f,2.0f);
-
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, PALM);
-    DrawVirtualObject("the_palm");
-
-    model = Matrix_Translate(-18.0f, -0.3f, 15.0f) * Matrix_Scale(2.0f,2.0f,2.0f);
-
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, PALM);
-    DrawVirtualObject("the_palm");
+    for (const auto& pos : palmPositions) {
+        glm::mat4 model = Matrix_Translate(pos.x, pos.y, pos.z) * Matrix_Scale(2.0f, 2.0f, 2.0f);
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        DrawVirtualObject("the_palm");
+    }
 }
 
 
@@ -171,33 +169,15 @@ void Scene::RenderTree() {
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_BLINNPHONG);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), true);
 
-    glm::mat4 model = Matrix_Translate(23.0f, 4.0f, 15.0f) * Matrix_Scale(5.0f, 5.0f, 5.0f);
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, TREEL);
-    DrawVirtualObject("tree_leaves");
-    glUniform1i(g_object_id_uniform, TREEW);
-    DrawVirtualObject("tree_wood");
-
-    model = Matrix_Translate(-23.0f, 4.0f, -8.0f) * Matrix_Scale(5.0f,5.0f,5.0f);
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, TREEL);
-    DrawVirtualObject("tree_leaves");
-    glUniform1i(g_object_id_uniform, TREEW);
-    DrawVirtualObject("tree_wood");
-
-    model = Matrix_Translate(23.0f, 4.0f, -8.0f) * Matrix_Scale(5.0f,5.0f,5.0f);
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, TREEL);
-    DrawVirtualObject("tree_leaves");
-    glUniform1i(g_object_id_uniform, TREEW);
-    DrawVirtualObject("tree_wood");
-
-    model = Matrix_Translate(-23.0f, 4.0f, 15.0f) * Matrix_Scale(5.0f,5.0f,5.0f);
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, TREEL);
-    DrawVirtualObject("tree_leaves");
-    glUniform1i(g_object_id_uniform, TREEW);
-    DrawVirtualObject("tree_wood");
+    for (const auto& pos : treePositions) {
+        glm::mat4 model = Matrix_Translate(pos.x, pos.y, pos.z)
+                        * Matrix_Scale(5.0f, 5.0f, 5.0f);
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, TREEL);
+        DrawVirtualObject("tree_leaves");
+        glUniform1i(g_object_id_uniform, TREEW);
+        DrawVirtualObject("tree_wood");
+    }
 }
 
 

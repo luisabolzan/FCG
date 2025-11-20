@@ -3,6 +3,7 @@
 #define COLLISIONS_H
 
 #include <glm/glm.hpp>
+#include <vector>
 class Kart;
 class Coin;
 class Scene;
@@ -29,9 +30,11 @@ void HandleCollisions(Scene& scene);
 void CheckRocketKartCollision(Kart& shooter, Kart& target);
 void CheckKartCoinCollision(Kart& kart, Coin& coin);
 void CheckKartKartCollision(Kart& kartA, Kart& kartB);
-void CheckKartTreeCollision(Kart& kart);
-void CheckKartPalmCollision(Kart& kart);
-void CheckRocketPalmCollision(Kart& shooter);
-void CheckRocketTreeCollision(Kart& shooter);
+
+void CheckKartPalmCollision(Kart& kart, const std::vector<glm::vec3>& positions);
+void CheckKartTreeCollision(Kart& kart, const std::vector<glm::vec3>& positions);
+
+void CheckRocketPalmCollision(Kart& shooter, const std::vector<glm::vec3>& positions);
+void CheckRocketTreeCollision(Kart& shooter, const std::vector<glm::vec3>& positions);
 
 #endif //COLLISIONS_H

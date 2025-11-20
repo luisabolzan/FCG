@@ -14,6 +14,8 @@ public:
     Kart player1;
     Kart player2;
     std::vector<Coin> coins;
+    std::vector<glm::vec3> palmPositions;
+    std::vector<glm::vec3> treePositions;
 
     Scene();
     void Render();
