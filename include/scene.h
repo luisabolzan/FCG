@@ -21,9 +21,11 @@ public:
 private:
     void RenderSkySphere();
     void RenderGround();
+
+    void RenderPalm();
+    void RenderTree();
     void RenderTrackPieces();
     void RenderCoins();
-
 };
 
 #endif //SCENE_H

@@ -6,91 +6,102 @@ Scene::Scene()
       player2("Enemy", kartModel, glm::vec4(5.0f, -1.4f, 0.0f, 1.0f))
 {
 
-      // Carrega todas as texturas
-      LoadTextureImage("../../data/sky/sky.hdr");                                   // TextureImage0
-      LoadTextureImage("../../data/floor/grass.jpg");                               // TextureImage1
-      LoadTextureImage("../../data/coin/coin.jpg");                                 // TextureImage2
-      LoadTextureImage("../../data/kart/kart.jpg");                                 // TextureImage3
-      LoadTextureImage("../../data/rocket/rocket.jpg");                             // TextureImage4
-      LoadTextureImage("../../data/floor/trackTexture/City_Road_Sidewalk.jpg");     // TextureImage5
+    // Carrega todas as texturas
+    LoadTextureImage("../../data/sky/sky.hdr");                                   // TextureImage0
+    LoadTextureImage("../../data/floor/grass.jpg");                               // TextureImage1
+    LoadTextureImage("../../data/coin/coin.jpg");                                 // TextureImage2
+    LoadTextureImage("../../data/kart/kart.jpg");                                 // TextureImage3
+    LoadTextureImage("../../data/rocket/rocket.jpg");                             // TextureImage4
+    LoadTextureImage("../../data/floor/trackTexture/City_Road_Sidewalk.jpg");     // TextureImage5
+    LoadTextureImage("../../data/palm/palm.jpg");                                 // TextureImage6
+    LoadTextureImage("../../data/tree/leaves.jpg");                               // TextureImage7
+    LoadTextureImage("../../data/tree/wood.jpg");                                 // TextureImage8
 
-      // Carrega todos os .obj
-      ObjModel spheremodel("../../data/sky/sphere.obj");
-      ComputeNormals(&spheremodel);
-      BuildTrianglesAndAddToVirtualScene(&spheremodel);
+    // Carrega todos os .obj
+    ObjModel spheremodel("../../data/sky/sphere.obj");
+    ComputeNormals(&spheremodel);
+    BuildTrianglesAndAddToVirtualScene(&spheremodel);
 
-      ObjModel bunnymodel("../../data/bunny.obj");
-      ComputeNormals(&bunnymodel);
-      BuildTrianglesAndAddToVirtualScene(&bunnymodel);
+    ObjModel bunnymodel("../../data/bunny.obj");
+    ComputeNormals(&bunnymodel);
+    BuildTrianglesAndAddToVirtualScene(&bunnymodel);
 
-      ObjModel planemodel("../../data/floor/plane.obj");
-      ComputeNormals(&planemodel);
-      BuildTrianglesAndAddToVirtualScene(&planemodel);
+    ObjModel planemodel("../../data/floor/plane.obj");
+    ComputeNormals(&planemodel);
+    BuildTrianglesAndAddToVirtualScene(&planemodel);
 
-      ObjModel trackmodel("../../data/floor/trackObj/Modular_Roads_Pack.obj");
-      ComputeNormals(&trackmodel);
-      BuildTrianglesAndAddToVirtualScene(&trackmodel);
+    ObjModel trackmodel("../../data/floor/trackObj/Modular_Roads_Pack.obj");
+    ComputeNormals(&trackmodel);
+    BuildTrianglesAndAddToVirtualScene(&trackmodel);
 
-      ObjModel rocketmodel("../../data/rocket/rocket.obj");
-      ComputeNormals(&rocketmodel);
-      BuildTrianglesAndAddToVirtualScene(&rocketmodel);
+    ObjModel palmmodel("../../data/palm/palm.obj");
+    ComputeNormals(&palmmodel);
+    BuildTrianglesAndAddToVirtualScene(&palmmodel);
 
-      ObjModel coinModel("../../data/coin/coin.obj");
-      ComputeNormals(&coinModel);
-      BuildTrianglesAndAddToVirtualScene(&coinModel);
+    ObjModel treemodel("../../data/tree/tree.obj");
+    ComputeNormals(&treemodel);
+    BuildTrianglesAndAddToVirtualScene(&treemodel);
 
-      ComputeNormals(&kartModel);
-      BuildTrianglesAndAddToVirtualScene(&kartModel);
+    ObjModel rocketmodel("../../data/rocket/rocket.obj");
+    ComputeNormals(&rocketmodel);
+    BuildTrianglesAndAddToVirtualScene(&rocketmodel);
 
-      // MOEDAS NA PISTA
-      coins.emplace_back(
-          glm::vec3(0.0f, 0.0f, 22.0f),   // P0
-          glm::vec3(-3.0f, 0.0f, 25.0f),  // P1
-          glm::vec3(3.0f, 0.0f, 29.0f),   // P2
-          glm::vec3(0.0f, 0.0f, 32.0f)    // P3
-      );
-      coins.emplace_back(
-          glm::vec3(0.0f, 0.0f, -15.0f),
-          glm::vec3(3.0f, 0.0f, -18.0f),
-          glm::vec3(-3.0f, 0.0f, -22.0f),
-          glm::vec3(0.0f, 0.0f, -25.0f)
-      );
-      coins.emplace_back(
-          glm::vec3(55.0f, 0.0f, 0.0f),
-          glm::vec3(58.0f, 0.0f, 0.0f),
-          glm::vec3(58.0f, 0.0f, 5.0f),
-          glm::vec3(55.0f, 0.0f, 10.0f)
-      );
-      coins.emplace_back(
-          glm::vec3(-55.0f, 0.0f, 0.0f),
-          glm::vec3(-58.0f, 0.0f, 0.0f),
-          glm::vec3(-58.0f, 0.0f, 5.0f),
-          glm::vec3(-55.0f, 0.0f, 10.0f)
-      );
+    ObjModel coinModel("../../data/coin/coin.obj");
+    ComputeNormals(&coinModel);
+    BuildTrianglesAndAddToVirtualScene(&coinModel);
+
+    ComputeNormals(&kartModel);
+    BuildTrianglesAndAddToVirtualScene(&kartModel);
+
+    // MOEDAS NA PISTA
+    coins.emplace_back(
+      glm::vec3(0.0f, 0.0f, 22.0f),   // P0
+      glm::vec3(-3.0f, 0.0f, 25.0f),  // P1
+      glm::vec3(3.0f, 0.0f, 29.0f),   // P2
+      glm::vec3(0.0f, 0.0f, 32.0f)    // P3
+    );
+    coins.emplace_back(
+      glm::vec3(0.0f, 0.0f, -15.0f),
+      glm::vec3(3.0f, 0.0f, -18.0f),
+      glm::vec3(-3.0f, 0.0f, -22.0f),
+      glm::vec3(0.0f, 0.0f, -25.0f)
+    );
+    coins.emplace_back(
+      glm::vec3(55.0f, 0.0f, 0.0f),
+      glm::vec3(58.0f, 0.0f, 0.0f),
+      glm::vec3(58.0f, 0.0f, 5.0f),
+      glm::vec3(55.0f, 0.0f, 10.0f)
+    );
+    coins.emplace_back(
+      glm::vec3(-55.0f, 0.0f, 0.0f),
+      glm::vec3(-58.0f, 0.0f, 0.0f),
+      glm::vec3(-58.0f, 0.0f, 5.0f),
+      glm::vec3(-55.0f, 0.0f, 10.0f)
+    );
 }
 
 
 void Scene::Render() {
 
-      glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glUseProgram(g_GpuProgramID);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glUseProgram(g_GpuProgramID);
 
-      RenderSkySphere();
-      RenderGround();
-      RenderTrackPieces();
-      RenderCoins();
+    RenderSkySphere();
+    RenderGround();
+    RenderPalm();
+    RenderTree();
+    RenderTrackPieces();
+    RenderCoins();
 
-      player1.Render();
-      player2.Render();
-      player2.dummy = true;
+    player1.Render();
+    player2.Render();
+    player2.dummy = true;
 
 }
 
 
 void Scene::RenderSkySphere() {
-
-    glm::mat4 model;
 
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_GLOBAL);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), false);
@@ -98,8 +109,8 @@ void Scene::RenderSkySphere() {
     glCullFace(GL_FRONT);
     glDepthMask(GL_FALSE);
 
-    model = Matrix_Translate(0.0f, 0.0f, 0.0f)
-        * Matrix_Scale(200.0f, 200.0f, 200.0f);
+    glm::mat4 model = Matrix_Translate(0.0f, 0.0f, 0.0f)
+                      * Matrix_Scale(200.0f, 200.0f, 200.0f);
 
     glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(g_object_id_uniform, SPHERE);
@@ -112,13 +123,11 @@ void Scene::RenderSkySphere() {
 
 void Scene::RenderGround() {
 
-    glm::mat4 model;
-
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_BLINNPHONG);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), false);
 
-    model = Matrix_Translate(0.0f, -2.1f, 0.0f)
-        * Matrix_Scale(100.0f, 0.0f, 100.0f);
+    glm::mat4 model = Matrix_Translate(0.0f, -2.1f, 0.0f)
+                      * Matrix_Scale(100.0f, 0.0f, 100.0f);
 
     glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(g_object_id_uniform, PLANE);
@@ -126,10 +135,76 @@ void Scene::RenderGround() {
 }
 
 
+void Scene::RenderPalm() {
+
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_LAMBERT);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), true);
+
+    glm::mat4 model = Matrix_Translate(18.0f, -0.3f, 15.0f) * Matrix_Scale(2.0f, 2.0f, 2.0f);
+
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(g_object_id_uniform, PALM);
+    DrawVirtualObject("the_palm");
+
+    model = Matrix_Translate(-18.0f, -0.3f, -8.0f) * Matrix_Scale(2.0f,2.0f,2.0f);
+
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(g_object_id_uniform, PALM);
+    DrawVirtualObject("the_palm");
+
+    model = Matrix_Translate(18.0f, -0.3f, -8.0f) * Matrix_Scale(2.0f,2.0f,2.0f);
+
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(g_object_id_uniform, PALM);
+    DrawVirtualObject("the_palm");
+
+    model = Matrix_Translate(-18.0f, -0.3f, 15.0f) * Matrix_Scale(2.0f,2.0f,2.0f);
+
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(g_object_id_uniform, PALM);
+    DrawVirtualObject("the_palm");
+}
+
+
+void Scene::RenderTree() {
+
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_BLINNPHONG);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), true);
+
+    glm::mat4 model = Matrix_Translate(23.0f, 4.0f, 15.0f) * Matrix_Scale(5.0f, 5.0f, 5.0f);
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(g_object_id_uniform, TREEL);
+    DrawVirtualObject("tree_leaves");
+    glUniform1i(g_object_id_uniform, TREEW);
+    DrawVirtualObject("tree_wood");
+
+    model = Matrix_Translate(-23.0f, 4.0f, -8.0f) * Matrix_Scale(5.0f,5.0f,5.0f);
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(g_object_id_uniform, TREEL);
+    DrawVirtualObject("tree_leaves");
+    glUniform1i(g_object_id_uniform, TREEW);
+    DrawVirtualObject("tree_wood");
+
+    model = Matrix_Translate(23.0f, 4.0f, -8.0f) * Matrix_Scale(5.0f,5.0f,5.0f);
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(g_object_id_uniform, TREEL);
+    DrawVirtualObject("tree_leaves");
+    glUniform1i(g_object_id_uniform, TREEW);
+    DrawVirtualObject("tree_wood");
+
+    model = Matrix_Translate(-23.0f, 4.0f, 15.0f) * Matrix_Scale(5.0f,5.0f,5.0f);
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(g_object_id_uniform, TREEL);
+    DrawVirtualObject("tree_leaves");
+    glUniform1i(g_object_id_uniform, TREEW);
+    DrawVirtualObject("tree_wood");
+}
+
+
 void Scene::RenderTrackPieces() {
 
     glm::mat4 model;
-    float track_scale = 0.005f;
+    const float track_scale = 0.005f;
 
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_BLINNPHONG);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), false);
@@ -172,4 +247,3 @@ void Scene::RenderTrackPieces() {
 void Scene::RenderCoins() {
     for (auto & c : coins) c.Render();
 }
-
