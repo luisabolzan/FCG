@@ -26,8 +26,12 @@ bool CheckRaySphere(const glm::vec3& origin, const glm::vec3& dir, const Boundin
 
 void HandleCollisions(Scene& scene);
 
-void CheckRocketHits(Kart& shooter, Kart& target);
+void CheckRocketKartCollision(Kart& shooter, Kart& target);
 void CheckKartCoinCollision(Kart& kart, Coin& coin);
 void CheckKartKartCollision(Kart& kartA, Kart& kartB);
+void CheckKartTreeCollision(Kart& kart);
+void CheckKartPalmCollision(Kart& kart);
+void CheckRocketPalmCollision(Kart& shooter);
+void CheckRocketTreeCollision(Kart& shooter);
 
 #endif //COLLISIONS_H
