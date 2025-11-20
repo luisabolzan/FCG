@@ -75,10 +75,13 @@ extern glm::vec3 p3;
 #define SPHERE      0
 #define BUNNY       1
 #define PLANE       2
-#define KART       3
+#define KART        3
 #define RACETRACK   4
 #define COIN        5
 #define ROCKET      6
+#define PALM        7
+#define TREEL       8
+#define TREEW       9
 
 // Váriaveis de áudio
 extern ma_engine g_AudioEngine;
