@@ -21,6 +21,7 @@ public:
     Rocket(const glm::vec4& pos, const glm::vec4& dir, float kartSpeed);
 
     void UpdateMovement();
+    void Render();
 
 };
 

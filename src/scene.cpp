@@ -1,13 +1,9 @@
-
-
 #include "scene.h"
-
 
 Scene::Scene()
     : kartModel("../../data/kart/kart.obj"),
       player1("Player1", kartModel, glm::vec4(0.0f, -1.4f, 0.0f, 1.0f)),
-      player2("Enemy", kartModel, glm::vec4(5.0f, -1.4f, 0.0f, 1.0f)),
-      coin(glm::vec4(0.0f, -1.4f, 0.0f, 1.0f))
+      player2("Enemy", kartModel, glm::vec4(5.0f, -1.4f, 0.0f, 1.0f))
 {
 
       // Carrega todas as texturas
@@ -45,6 +41,32 @@ Scene::Scene()
 
       ComputeNormals(&kartModel);
       BuildTrianglesAndAddToVirtualScene(&kartModel);
+
+      // MOEDAS NA PISTA
+      coins.emplace_back(
+          glm::vec3(0.0f, 0.0f, 22.0f),   // P0
+          glm::vec3(-3.0f, 0.0f, 25.0f),  // P1
+          glm::vec3(3.0f, 0.0f, 29.0f),   // P2
+          glm::vec3(0.0f, 0.0f, 32.0f)    // P3
+      );
+      coins.emplace_back(
+          glm::vec3(0.0f, 0.0f, -15.0f),
+          glm::vec3(3.0f, 0.0f, -18.0f),
+          glm::vec3(-3.0f, 0.0f, -22.0f),
+          glm::vec3(0.0f, 0.0f, -25.0f)
+      );
+      coins.emplace_back(
+          glm::vec3(55.0f, 0.0f, 0.0f),
+          glm::vec3(58.0f, 0.0f, 0.0f),
+          glm::vec3(58.0f, 0.0f, 5.0f),
+          glm::vec3(55.0f, 0.0f, 10.0f)
+      );
+      coins.emplace_back(
+          glm::vec3(-55.0f, 0.0f, 0.0f),
+          glm::vec3(-58.0f, 0.0f, 0.0f),
+          glm::vec3(-58.0f, 0.0f, 5.0f),
+          glm::vec3(-55.0f, 0.0f, 10.0f)
+      );
 }
 
 
@@ -57,41 +79,50 @@ void Scene::Render() {
       RenderSkySphere();
       RenderGround();
       RenderTrackPieces();
+      RenderCoins();
+
       player1.Render();
       player2.Render();
       player2.dummy = true;
+
 }
 
 
 void Scene::RenderSkySphere() {
 
-      glm::mat4 model;
+    glm::mat4 model;
 
-      glCullFace(GL_FRONT);
-      glDepthMask(GL_FALSE);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_GLOBAL);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), false);
 
-      model = Matrix_Translate(0.0f, 0.0f, 0.0f)
-            * Matrix_Scale(200.0f, 200.0f, 200.0f);
+    glCullFace(GL_FRONT);
+    glDepthMask(GL_FALSE);
 
-      glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-      glUniform1i(g_object_id_uniform, SPHERE);
-      DrawVirtualObject("the_sphere");
+    model = Matrix_Translate(0.0f, 0.0f, 0.0f)
+        * Matrix_Scale(200.0f, 200.0f, 200.0f);
 
-      glDepthMask(GL_TRUE);
-      glCullFace(GL_BACK);
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(g_object_id_uniform, SPHERE);
+    DrawVirtualObject("the_sphere");
+
+    glDepthMask(GL_TRUE);
+    glCullFace(GL_BACK);
 }
 
 
 void Scene::RenderGround() {
 
-      glm::mat4 model;
+    glm::mat4 model;
 
-      model = Matrix_Translate(0.0f, -2.1f, 0.0f)
-            * Matrix_Scale(100.0f, 0.0f, 100.0f);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_BLINNPHONG);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), false);
 
-      glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-      glUniform1i(g_object_id_uniform, PLANE);
-      DrawVirtualObject("the_plane");
+    model = Matrix_Translate(0.0f, -2.1f, 0.0f)
+        * Matrix_Scale(100.0f, 0.0f, 100.0f);
+
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(g_object_id_uniform, PLANE);
+    DrawVirtualObject("the_plane");
 }
 
 
@@ -100,9 +131,12 @@ void Scene::RenderTrackPieces() {
     glm::mat4 model;
     float track_scale = 0.005f;
 
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_BLINNPHONG);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), false);
+
     // Reta 1
     model = Matrix_Translate(0.0f, -2.0f, 27.0f)
-          * Matrix_Scale(track_scale, track_scale, track_scale);
+        * Matrix_Scale(track_scale, track_scale, track_scale);
 
     glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(g_object_id_uniform, RACETRACK);
@@ -110,7 +144,7 @@ void Scene::RenderTrackPieces() {
 
     // Reta 2
     model = Matrix_Translate(0.0f, -2.0f, -19.55f)
-          * Matrix_Scale(track_scale, track_scale, track_scale);
+        * Matrix_Scale(track_scale, track_scale, track_scale);
 
     glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(g_object_id_uniform, RACETRACK);
@@ -118,8 +152,8 @@ void Scene::RenderTrackPieces() {
 
     // Curva direita
     model = Matrix_Translate(40.2f, -2.0f, 3.8f)
-          * Matrix_Scale(track_scale, track_scale, track_scale)
-          * Matrix_Rotate_Y(3.14159265359f / 2.0f);
+        * Matrix_Scale(track_scale, track_scale, track_scale)
+        * Matrix_Rotate_Y(3.14159265359f / 2.0f);
 
     glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(g_object_id_uniform, RACETRACK);
@@ -127,10 +161,15 @@ void Scene::RenderTrackPieces() {
 
     // Curva esquerda
     model = Matrix_Translate(-40.2f, -2.0f, 3.8f)
-          * Matrix_Scale(track_scale, track_scale, track_scale)
-          * Matrix_Rotate_Y(-3.14159265359f / 2.0f);
+        * Matrix_Scale(track_scale, track_scale, track_scale)
+        * Matrix_Rotate_Y(-3.14159265359f / 2.0f);
 
     glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(g_object_id_uniform, RACETRACK);
     DrawVirtualObject("Road_1X_HalfCircle");
 }
+
+void Scene::RenderCoins() {
+    for (auto & c : coins) c.Render();
+}
+

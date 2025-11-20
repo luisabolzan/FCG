@@ -77,8 +77,10 @@ void HandleCollisions(Scene& scene) {
     CheckRocketHits(scene.player1, scene.player2);
     CheckRocketHits(scene.player2, scene.player1);
 
-    CheckKartCoinCollision(scene.player1, scene.coin);
-    CheckKartCoinCollision(scene.player2, scene.coin);
+    for (auto& c : scene.coins) {
+        CheckKartCoinCollision(scene.player1, c);
+        CheckKartCoinCollision(scene.player2, c);
+    }
 
     CheckKartKartCollision(scene.player1, scene.player2);
 }
@@ -117,7 +119,7 @@ void CheckKartCoinCollision(Kart& kart, Coin& coin) {
 
     if (!coin.active) return;
 
-    BoundingSphere kartSphere;
+    BoundingSphere kartSphere{};
     kartSphere.center = glm::vec3(kart.position);
     kartSphere.radius = kart.radius;
 
@@ -136,11 +138,11 @@ void CheckKartKartCollision(Kart& kartA, Kart& kartB) {
 
     if (!kartA.isAlive || !kartB.isAlive) return;
 
-    BoundingSphere sphereA;
+    BoundingSphere sphereA{};
     sphereA.center = glm::vec3(kartA.position);
     sphereA.radius = kartA.radius;
 
-    BoundingSphere sphereB;
+    BoundingSphere sphereB{};
     sphereB.center = glm::vec3(kartB.position);
     sphereB.radius = kartB.radius;
 
