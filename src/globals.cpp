@@ -1,3 +1,4 @@
+#include "miniaudio.h"
 #include "globals.h"
 
 // A cena virtual é uma lista de objetos nomeados, guardados em um dicionário
@@ -50,8 +51,11 @@ double g_LastCursorPosY = 0.0;
 
 // =================================================================================
 
+bool g_ShowMenu = true;
+
 int IlluminationModel = 0;
 bool IsGouraudShading = false;
+
 
 float currentTime;
 float deltaTime;
@@ -71,11 +75,14 @@ bool ShiftPressed = false;
 // =================================================================================
 // Váriaveis de Bèzier
 glm::vec3 p0(0.0f, 0.0f, 0.0f);
-glm::vec3 p1(2.0f, 5.0f, 0.0f);
-glm::vec3 p2(5.0f, 5.0f, 0.0f);
-glm::vec3 p3(10.0f, 0.0f, 0.0f);
+glm::vec3 p1(2.0f, 0.0f, 2.0f);
+glm::vec3 p2(4.0f, 0.0f, 4.0f);
+glm::vec3 p3(6.0f, 0.0f, 0.0f);
 
 
+// Váriaveis de Áudio
+ma_engine g_AudioEngine;
+ma_sound g_Music;
 
 
 

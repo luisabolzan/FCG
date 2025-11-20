@@ -8,6 +8,8 @@
 
 #include "FCGfunctions.h"
 
+#include "miniaudio.h"
+
 extern std::map<std::string, struct SceneObject> g_VirtualScene;
 extern std::stack<glm::mat4>  g_MatrixStack;
 extern float g_ScreenRatio;
@@ -38,8 +40,15 @@ extern double g_LastCursorPosX, g_LastCursorPosY;
 
 // =================================================================================
 
+extern bool g_ShowMenu;
+
 extern int IlluminationModel;
 extern bool IsGouraudShading;
+
+#define ILLUMINATION_GLOBAL     0
+#define ILLUMINATION_LAMBERT    1
+#define ILLUMINATION_PHONG      2
+#define ILLUMINATION_BLINNPHONG 3
 
 extern float currentTime;
 extern float deltaTime;
@@ -66,9 +75,17 @@ extern glm::vec3 p3;
 #define SPHERE      0
 #define BUNNY       1
 #define PLANE       2
-#define KART       3
+#define KART        3
 #define RACETRACK   4
 #define COIN        5
 #define ROCKET      6
+#define PALM        7
+#define TREEL       8
+#define TREEW       9
+
+// Váriaveis de áudio
+extern ma_engine g_AudioEngine;
+extern ma_sound g_Music;
 
 #endif //GLOBALS_H
+

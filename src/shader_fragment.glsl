@@ -46,6 +46,9 @@ uniform int IlluminationModel;
 #define RACETRACK   4
 #define COIN        5
 #define ROCKET      6
+#define PALM        7
+#define TREEL       8
+#define TREEW       9
 uniform int object_id;
 
 // Variáveis para acesso das imagens de textura
@@ -55,6 +58,9 @@ uniform sampler2D TextureImage2;
 uniform sampler2D TextureImage3;
 uniform sampler2D TextureImage4;
 uniform sampler2D TextureImage5;
+uniform sampler2D TextureImage6;
+uniform sampler2D TextureImage7;
+uniform sampler2D TextureImage8;
 
 void main() {
 
@@ -101,9 +107,9 @@ void main() {
             V = (phi + M_PI_2) / M_PI;
 
             Kd = texture(TextureImage0, vec2(U,V)).rgb;
-            // Ka =
-            // Ks =
-            // q =
+            Ka = vec3(1.0, 1.0, 1.0);
+            Ks = vec3(0.0, 0.0, 0.0);
+            q  = 1.0;
         }
         else if ( object_id == BUNNY ) {
 
@@ -129,44 +135,73 @@ void main() {
             V = texcoords.y;
 
             Kd = texture(TextureImage1, vec2(U,V)).rgb;
-            // Ka =
-            // Ks =
-            // q =
+            Ka = Kd * 0.8;
+            Ks = vec3(0.3, 0.3, 0.3);
+            q  = 5.0;
+        }
+        else if (object_id == PALM) {
+            U = texcoords.x;
+            V = texcoords.y;
+
+            Kd = texture(TextureImage6, vec2(U,V)).rgb;
+            Ka = Kd * 0.5;
+            Ks = vec3(0.1, 0.1, 0.1);
+            q  = 10.0;
+        }
+        else if (object_id == TREEL) {
+            U = texcoords.x;
+            V = texcoords.y;
+
+            Kd = texture(TextureImage7, vec2(U,V)).rgb;
+            Ka = Kd * 0.5;
+            Ks = vec3(0.1, 0.1, 0.1);
+            q  = 10.0;
+        }
+        else if (object_id == TREEW) {
+            U = texcoords.x;
+            V = texcoords.y;
+
+            Kd = texture(TextureImage8, vec2(U,V)).rgb;
+            Ka = Kd * 0.5;
+            Ks = vec3(0.1, 0.1, 0.1);
+            q  = 10.0;
+        }
+        else if (object_id == RACETRACK) {
+            U = texcoords.x;
+            V = texcoords.y;
+
+            Kd = texture(TextureImage5, vec2(U,V)).rgb;
+            Ka = Kd * 0.5;
+            Ks = vec3(0.1, 0.1, 0.1);
+            q  = 10.0;
         }
         else if (object_id == COIN) {
-
             U = texcoords.x ;
             V = texcoords.y ;
 
             Kd = texture(TextureImage2, vec2(U,V)).rgb;
-            Ka = vec3(0.7, 0.7, 0.0);
-            Ks = vec3(0.3, 0.3, 0.3);
-            q  = 10.0;
-
+            Ka = Kd * 0.5;
+            Ks = vec3(1.0, 0.9, 0.4);
+            q  = 128.0;
         }
         else if (object_id == KART) {
-
             U = texcoords.x ;
             V = texcoords.y ;
 
             Kd = texture(TextureImage3, vec2(U,V)).rgb;
-            Ka = vec3(0.0, 0.0, 0.0);
-            Ks = vec3(0.0, 0.0, 0.0);
-            q  = 10.0;
-
+            Ka = Kd * 0.5;
+            Ks = vec3(1.0, 1.0, 1.0);
+            q  = 64.0;
         }
         else if (object_id == ROCKET) {
-
             U = texcoords.x ;
             V = texcoords.y ;
 
             Kd = texture(TextureImage4, vec2(U,V)).rgb;
-            Ka = vec3(0.0, 0.0, 0.0);
-            Ks = vec3(0.0, 0.0, 0.0);
-            q  = 10.0;
-
+            Ka = Kd * 0.5;
+            Ks = vec3(0.5, 0.5, 0.5);
+            q  = 32.0;
         }
-
 
         //==============================================================================
         // Modelos de Iluminação
@@ -196,7 +231,6 @@ void main() {
             color.rgb = PhongShading;
         else if (IlluminationModel == BLINNPHONG)
             color.rgb = BlinnPhongShading;
-
 
         color.a = 1;
         color.rgb = pow(color.rgb, vec3(1.0,1.0,1.0)/2.2);

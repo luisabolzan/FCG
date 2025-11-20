@@ -21,6 +21,10 @@ set(SOURCES
   src/rocket.cpp
   src/collisions.cpp
   src/coin.cpp
+  src/scene.cpp
+  src/menu.cpp
+  src/miniaudio.cpp
+  src/control.cpp
 )
 
 cmake_minimum_required(VERSION 3.10)

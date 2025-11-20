@@ -2,7 +2,7 @@
 
 float g_CameraTheta  = 0.0f;       // Ângulo no plano ZX em relação ao eixo Z
 float g_CameraPhi = 0.0f;         // Ângulo em relação ao eixo Y
-float g_CameraDistance = 3.5f;    // Distância da câmera para a origem
+float g_CameraDistance = 7.0f;    // Distância da câmera para a origem
 
 float nearplane = -0.1f;  // Posição do "near plane"
 float farplane  = -300.0f; // Posição do "far plane"

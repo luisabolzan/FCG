@@ -15,7 +15,7 @@ Rocket::Rocket(const glm::vec4& pos, const glm::vec4& dir, float kartSpeed)
 }
 
 
-void Rocket::Update() {
+void Rocket::UpdateMovement() {
 
     if (!active) return;
     prevPosition = position;
@@ -27,4 +27,19 @@ void Rocket::Update() {
     }
 
     position += direction * speed * deltaTime;
+}
+
+void Rocket::Render() {
+
+    this->UpdateMovement();
+    if (!active) return;
+
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_PHONG);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), true);
+
+    glm::mat4 rocketModel = Matrix_Translate(position.x, position.y, position.z)
+                          * Matrix_Rotate_Y(rotationY)  * Matrix_Scale(0.5f, 0.5f, 0.5f);
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(rocketModel));
+    glUniform1i(g_object_id_uniform, ROCKET);
+    DrawVirtualObject("the_rocket");
 }

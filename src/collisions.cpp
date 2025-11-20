@@ -2,6 +2,7 @@
 #include "collisions.h"
 #include "kart.h"
 #include "coin.h"
+#include "scene.h"
 
 // Colisão Kart (sphere) com Kart (sphere)
 bool CheckSphereSphere(const BoundingSphere& a, const BoundingSphere& b) {
@@ -70,6 +71,22 @@ bool CheckRaySphere(const glm::vec3& origin, const glm::vec3& dir, const Boundin
     return false;
 }
 
+
+void HandleCollisions(Scene& scene) {
+
+    CheckRocketHits(scene.player1, scene.player2);
+    CheckRocketHits(scene.player2, scene.player1);
+
+    for (auto& c : scene.coins) {
+        CheckKartCoinCollision(scene.player1, c);
+        CheckKartCoinCollision(scene.player2, c);
+    }
+
+    CheckKartKartCollision(scene.player1, scene.player2);
+}
+
+
+
 void CheckRocketHits(Kart& shooter, Kart& target) {
     for (auto& rocket : shooter.rockets) {
 
@@ -102,7 +119,7 @@ void CheckKartCoinCollision(Kart& kart, Coin& coin) {
 
     if (!coin.active) return;
 
-    BoundingSphere kartSphere;
+    BoundingSphere kartSphere{};
     kartSphere.center = glm::vec3(kart.position);
     kartSphere.radius = kart.radius;
 
@@ -121,11 +138,11 @@ void CheckKartKartCollision(Kart& kartA, Kart& kartB) {
 
     if (!kartA.isAlive || !kartB.isAlive) return;
 
-    BoundingSphere sphereA;
+    BoundingSphere sphereA{};
     sphereA.center = glm::vec3(kartA.position);
     sphereA.radius = kartA.radius;
 
-    BoundingSphere sphereB;
+    BoundingSphere sphereB{};
     sphereB.center = glm::vec3(kartB.position);
     sphereB.radius = kartB.radius;
 
