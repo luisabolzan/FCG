@@ -117,6 +117,9 @@ void Kart::Render() {
         }
     }
 
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_LAMBERT);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), true);
+
     glm::mat4 model = Matrix_Translate(position.x, position.y, position.z) * Matrix_Rotate_Y(rotation.y);
     glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(g_object_id_uniform, KART);

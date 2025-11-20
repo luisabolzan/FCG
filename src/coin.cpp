@@ -49,6 +49,9 @@ void Coin::Render() {
         return;
     }
 
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_BLINNPHONG);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), false);
+
     glm::mat4 model = Matrix_Translate(position.x, position.y, position.z)
                     * Matrix_Rotate_Y((float)glfwGetTime())
                     * Matrix_Scale(0.5f, 0.5f, 0.5f);

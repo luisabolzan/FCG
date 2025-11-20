@@ -101,9 +101,9 @@ void main() {
             V = (phi + M_PI_2) / M_PI;
 
             Kd = texture(TextureImage0, vec2(U,V)).rgb;
-            // Ka =
-            // Ks =
-            // q =
+            Ka = vec3(1.0, 1.0, 1.0);
+            Ks = vec3(0.0, 0.0, 0.0);
+            q  = 1.0;
         }
         else if ( object_id == BUNNY ) {
 
@@ -129,18 +129,19 @@ void main() {
             V = texcoords.y;
 
             Kd = texture(TextureImage1, vec2(U,V)).rgb;
-            // Ka =
-            // Ks =
-            // q =
+            Ka = Kd * 0.8;
+            Ks = vec3(0.3, 0.3, 0.3);
+            q  = 5.0;
         }
         else if (object_id == RACETRACK) {
             U = texcoords.x;
             V = texcoords.y;
             // Usa a textura da pista reta
             Kd = texture(TextureImage5, vec2(U,V)).rgb;
-            Ka = vec3(0.1, 0.1, 0.1);
-            Ks = vec3(0.0, 0.0, 0.0);
-            q  = 1.0;
+            Ka = Kd * 0.5;
+            Ks = vec3(0.1, 0.1, 0.1);
+            q  = 10.0;
+
         }
         else if (object_id == COIN) {
 
@@ -148,10 +149,9 @@ void main() {
             V = texcoords.y ;
 
             Kd = texture(TextureImage2, vec2(U,V)).rgb;
-            Ka = vec3(0.7, 0.7, 0.0);
-            Ks = vec3(0.3, 0.3, 0.3);
-            q  = 10.0;
-
+            Ka = Kd * 0.5;
+            Ks = vec3(1.0, 0.9, 0.4);
+            q  = 128.0;
         }
         else if (object_id == KART) {
 
@@ -159,10 +159,9 @@ void main() {
             V = texcoords.y ;
 
             Kd = texture(TextureImage3, vec2(U,V)).rgb;
-            Ka = vec3(0.0, 0.0, 0.0);
-            Ks = vec3(0.0, 0.0, 0.0);
-            q  = 10.0;
-
+            Ka = Kd * 0.5;
+            Ks = vec3(1.0, 1.0, 1.0);
+            q  = 64.0;
         }
         else if (object_id == ROCKET) {
 
@@ -170,12 +169,10 @@ void main() {
             V = texcoords.y ;
 
             Kd = texture(TextureImage4, vec2(U,V)).rgb;
-            Ka = vec3(0.0, 0.0, 0.0);
-            Ks = vec3(0.0, 0.0, 0.0);
-            q  = 10.0;
-
+            Ka = Kd * 0.5;
+            Ks = vec3(0.5, 0.5, 0.5);
+            q  = 32.0;
         }
-
 
         //==============================================================================
         // Modelos de Iluminação
@@ -205,7 +202,6 @@ void main() {
             color.rgb = PhongShading;
         else if (IlluminationModel == BLINNPHONG)
             color.rgb = BlinnPhongShading;
-
 
         color.a = 1;
         color.rgb = pow(color.rgb, vec3(1.0,1.0,1.0)/2.2);
