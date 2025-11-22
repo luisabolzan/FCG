@@ -542,7 +542,6 @@ GLuint CreateGpuProgram(GLuint vertex_shader_id, GLuint fragment_shader_id)
 // "framebuffer" (região de memória onde são armazenados os pixels da imagem).
 void FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
-    // tela dividida (split screen)
     glViewport(0, 0, width, height);
     g_ScreenRatio = (float)width / height;
 }

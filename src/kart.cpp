@@ -30,49 +30,57 @@ Kart::Kart(const std::string& name, const ObjModel &obj, const glm::vec4& startP
     dummy(false),
     radius(1.1f),
     isColliding(false),
-    accelerating(false),
-    braking(false),
-    turningLeft(false),
-    turningRight(false)
+    inputUp(false),
+    inputDown(false),
+    inputLeft(false),
+    inputRight(false),
+    inputFire(false)
 {
     direction = glm::normalize(direction);
 }
+
+
+void Kart::SetInputs(bool up, bool down, bool left, bool right, bool fire) {
+    this->inputUp = up;
+    this->inputDown = down;
+    this->inputLeft = left;
+    this->inputRight = right;
+    this->inputFire = fire;
+}
+
 
 void Kart::UpdateMovement() {
 
     if (dummy)
         return;
 
-    if (APressed)
+    if (inputLeft)
         rotation.y += turnSpeed * deltaTime;
-    if (DPressed)
+    if (inputRight)
         rotation.y -= turnSpeed * deltaTime;
 
     direction.x = sin(rotation.y);
     direction.z = cos(rotation.y);
     direction = glm::normalize(direction);
 
-    if (WPressed) {
+    if (inputUp) {
         speed += acceleration * deltaTime;
         if (speed > maxSpeed)
             speed = maxSpeed;
     }
-    else if (SPressed) {
+    else if (inputDown) {
         speed -= acceleration * deltaTime;
         if (speed < -maxSpeed / 2.0f)
             speed = -maxSpeed / 2.0f;
     }
-    else{
-
+    else {
         if (speed > 0.0f) {
             speed -= acceleration * 0.5f * deltaTime;
-            if (speed < 0.0f)
-                speed = 0.0f;
+            if (speed < 0.0f) speed = 0.0f;
         }
         else if (speed < 0.0f) {
             speed += acceleration * 0.5f * deltaTime;
-            if (speed > 0.0f)
-                speed = 0.0f;
+            if (speed > 0.0f) speed = 0.0f;
         }
     }
 
@@ -125,7 +133,7 @@ void Kart::Render() {
     glUniform1i(g_object_id_uniform, KART);
     DrawVirtualObject("the_kart");
 
-    if (SpacePressed)
+    if (inputFire)
         this->FireRocket();
 
     for (auto& rocket : rockets) {

@@ -3,8 +3,9 @@
 Scene::Scene()
     : kartModel("../../data/kart/kart.obj"),
       player1("Player1", kartModel, glm::vec4(0.0f, -1.4f, 0.0f, 1.0f)),
-      player2("Enemy", kartModel, glm::vec4(5.0f, -1.4f, 0.0f, 1.0f))
+      player2("Player2", kartModel, glm::vec4(5.0f, -1.4f, 0.0f, 1.0f))
 {
+
 
     // Carrega todas as texturas
     LoadTextureImage("../../data/sky/sky.hdr");                                   // TextureImage0
@@ -99,21 +100,51 @@ Scene::Scene()
 
 void Scene::Render() {
 
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glUseProgram(g_GpuProgramID);
-
     RenderSkySphere();
     RenderGround();
     RenderPalm();
     RenderTree();
     RenderTrackPieces();
     RenderCoins();
-
     player1.Render();
     player2.Render();
-    player2.dummy = true;
 
+}
+
+void Scene::RenderSinglePlayer(GLFWwindow* window, Camera& camera) {
+
+    glfwGetFramebufferSize(window, &g_ScreenWidth, &g_ScreenHeight);
+    glViewport(0, 0, g_ScreenWidth, g_ScreenHeight);
+
+    player1.SetInputs(WPressed, SPressed, APressed, DPressed, SpacePressed);
+    camera.UpdateProjectionMatrix(g_ScreenRatio);
+    camera.StartCamera(player1);
+    Render();
+    HandleCollisions(*this);
+}
+
+
+void Scene::RenderMultiplayer(GLFWwindow* window, Camera& cameraP1, Camera& cameraP2) {
+
+    glfwGetFramebufferSize(window, &g_ScreenWidth, &g_ScreenHeight);
+    const int halfWidth = g_ScreenWidth / 2;
+    const float splitRatio = (float)halfWidth / (float)g_ScreenHeight;
+
+    // PLAYER 1 (Esquerda)
+    player1.SetInputs(WPressed, SPressed, APressed, DPressed, SpacePressed);
+    glViewport(0, 0, halfWidth, g_ScreenHeight);
+    cameraP1.UpdateProjectionMatrix(splitRatio);
+    cameraP1.StartCamera(player1);
+    Render();
+    HandleCollisions(*this);
+
+    // PLAYER 2 (Direita)
+    player2.SetInputs(UpArrowPressed, DownArrowPressed, LeftArrowPressed, RightArrowPressed, RightShiftPressed);
+    glViewport(halfWidth, 0, halfWidth, g_ScreenHeight);
+    cameraP2.UpdateProjectionMatrix(splitRatio);
+    cameraP2.StartCamera(player2);
+    Render();
+    HandleCollisions(*this);
 }
 
 

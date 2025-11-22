@@ -5,6 +5,7 @@
 #include "glad/glad.h"
 #include "kart.h"
 #include "coin.h"
+#include "camera.h"
 #include "FCGfunctions.h"
 
 class Scene {
@@ -19,6 +20,8 @@ public:
 
     Scene();
     void Render();
+    void RenderSinglePlayer(GLFWwindow* window, Camera& camera);
+    void RenderMultiplayer(GLFWwindow* window, Camera& cam1, Camera& cam2);
 
 private:
     void RenderSkySphere();
