@@ -94,6 +94,7 @@ extern glm::vec3 p3;
 // Váriaveis de áudio
 extern ma_engine g_AudioEngine;
 extern ma_sound g_Music;
+extern bool g_IsMuted;
 
 #endif //GLOBALS_H
 

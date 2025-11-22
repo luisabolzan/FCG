@@ -1,4 +1,5 @@
 #include "control.h"
+#include "audio.h"
 
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
@@ -96,6 +97,10 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
 
+    // Mutar a música de fundo
+    if (key == GLFW_KEY_X && action == GLFW_PRESS)
+        Audio_ToggleMute();
+    
     // MENU
     if (g_ShowMenu) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);

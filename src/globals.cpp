@@ -91,7 +91,7 @@ glm::vec3 p3(6.0f, 0.0f, 0.0f);
 // Váriaveis de Áudio
 ma_engine g_AudioEngine;
 ma_sound g_Music;
-
+bool g_IsMuted = false;
 
 
 
