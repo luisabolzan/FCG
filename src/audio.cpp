@@ -3,22 +3,14 @@
 #include <iostream>
 
 void Audio_Init() {
-    if (ma_engine_init(NULL, &g_AudioEngine) != MA_SUCCESS) {
-        std::cerr << "Falha ao iniciar audio engine.\n";
-        return;
-    }
-
-    if (ma_sound_init_from_file(&g_AudioEngine, "../../data/audio/LadyJane.mp3", 
-        MA_SOUND_FLAG_STREAM, NULL, NULL, &g_Music) != MA_SUCCESS) {
-        std::cerr << "Falha ao carregar musica.\n";
-    }
-
+    ma_engine_init(NULL, &g_AudioEngine);
+    ma_sound_init_from_file(&g_AudioEngine, "../../data/audio/LadyJane.mp3", MA_SOUND_FLAG_STREAM, NULL, NULL, &g_Music);
     ma_sound_set_volume(&g_Music, 0.2f);
     ma_sound_set_looping(&g_Music, MA_TRUE);
     ma_sound_start(&g_Music);
 }
 
-void Audio_ToggleMute() {
+void Audio_Mute() {
     g_IsMuted = !g_IsMuted;
 
     if (g_IsMuted) {

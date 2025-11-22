@@ -70,16 +70,7 @@ int main(int argc, char* argv[]) {
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
-    //============================================================================================
-    //                                Inicialização do Áudio
-    //============================================================================================
-    // if (ma_engine_init(NULL, &g_AudioEngine) != MA_SUCCESS) {
-    //     std::cerr << "Erro ao iniciar o engine de áudio.\n";
-    // }
-    // ma_result result = ma_sound_init_from_file(&g_AudioEngine, "../../data/audio/LadyJane.mp3", MA_SOUND_FLAG_STREAM, NULL, NULL, &g_Music);
-    // ma_sound_set_volume(&g_Music, 0.2f);
-    // ma_sound_set_looping(&g_Music, MA_TRUE);
-    // ma_sound_start(&g_Music);
+
     Audio_Init();
     
     //============================================================================================
@@ -99,10 +90,14 @@ int main(int argc, char* argv[]) {
         if (g_ShowMenu)
             RenderMenu(window);
         else {
-            if (isMultiplayer)
+            if (isMultiplayer){
                 scene.RenderMultiplayer(window, cameraP1, cameraP2);
-            else
+                RenderAudioStatus(window);
+            }
+            else{
                 scene.RenderSinglePlayer(window, cameraP1);
+                RenderAudioStatus(window);
+            }
         }
 
         TextRendering_ShowFramesPerSecond(window);

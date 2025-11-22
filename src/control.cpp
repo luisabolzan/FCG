@@ -99,7 +99,7 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
 
     // Mutar a música de fundo
     if (key == GLFW_KEY_X && action == GLFW_PRESS)
-        Audio_ToggleMute();
+        Audio_Mute();
     
     // MENU
     if (g_ShowMenu) {
