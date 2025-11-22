@@ -1,31 +1,37 @@
 #include "menu.h"
 #include <cstdio>
 
-void RenderMenu(GLFWwindow* window)
-{
+void RenderMenu(GLFWwindow* window) {
     glDisable(GL_DEPTH_TEST);
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0, 0, g_ScreenWidth, g_ScreenHeight);
+
+    glfwGetFramebufferSize(window, &g_ScreenWidth, &g_ScreenHeight);
 
     float char_width = TextRendering_CharWidth(window);
 
-    // 1. Título "Smash Karts"
+    // Título
     const char* title_text = "SMASH KARTS";
     const float title_scale = 5.0f;
     float title_x_center = 0.0f - (char_width * strlen(title_text) * title_scale) / 2.0f;
     TextRendering_PrintString(window, title_text, title_x_center, 0.5f, title_scale);
 
-    // 2. Botão "INICIAR"
-    const char* start_text = "INICIAR JOGO (Pressione I)";
-    const float start_scale = 1.0f;
-    float start_x_center = 0.0f - (char_width * strlen(start_text) * start_scale) / 2.0f;
-    TextRendering_PrintString(window, start_text, start_x_center, 0.1f, start_scale);
+    // Opção Singleplayer
+    const char* single_text = "1 - SINGLEPLAYER";
+    const float scale_opts = 3.0f;
+    float single_x = 0.0f - (char_width * strlen(single_text) * scale_opts) / 2.0f;
+    TextRendering_PrintString(window, single_text, single_x, 0.1f, scale_opts);
 
-    // 3. Botão "SAIR"
-    const char* exit_text = "SAIR (Pressione ESC)";
-    const float exit_scale = 1.0f;
-    float exit_x_center = 0.0f - (char_width * strlen(exit_text) * exit_scale) / 2.0f;
-    TextRendering_PrintString(window, exit_text, exit_x_center, -0.1f, exit_scale);
+    // Opção Multiplayer
+    const char* multi_text = "2 - MULTIPLAYER (SPLIT SCREEN)";
+    float multi_x = 0.0f - (char_width * strlen(multi_text) * scale_opts) / 2.0f;
+    TextRendering_PrintString(window, multi_text, multi_x, -0.05f, scale_opts);
+
+    // Sair
+    const char* exit_text = "ESC - SAIR";
+    float exit_x = 0.0f - (char_width * strlen(exit_text) * scale_opts) / 2.0f;
+    TextRendering_PrintString(window, exit_text, exit_x, -0.3f, scale_opts);
 
     glEnable(GL_DEPTH_TEST);
 }

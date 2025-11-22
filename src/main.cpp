@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     GLFWwindow* window;
-    window = glfwCreateWindow(1920, 1080, "INF01047 - Smash Karts", NULL, NULL);
+    window = glfwCreateWindow(g_ScreenWidth, g_ScreenHeight, "INF01047 - Smash Karts", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 
     glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
-    FramebufferSizeCallback(window, 1920, 1080);
+    FramebufferSizeCallback(window, g_ScreenWidth, g_ScreenHeight);
 
     const GLubyte *vendor      = glGetString(GL_VENDOR);
     const GLubyte *renderer    = glGetString(GL_RENDERER);
@@ -85,24 +85,26 @@ int main(int argc, char* argv[]) {
     //                                Criação da Camera e Cenário
     //============================================================================================
 
-    Camera camera;
+    Camera cameraP1;
+    Camera cameraP2;
     Scene scene;
 
-    // Loop infinito até que o usuário feche a janela
     while (!glfwWindowShouldClose(window)) {
+
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glUseProgram(g_GpuProgramID);
 
         if (g_ShowMenu)
             RenderMenu(window);
-
         else {
-            // Inicializa e mantém o funcionamento da camera
-            camera.StartCamera(scene.player1);
-            scene.Render();
-            HandleCollisions(scene);
+            if (isMultiplayer)
+                scene.RenderMultiplayer(window, cameraP1, cameraP2);
+            else
+                scene.RenderSinglePlayer(window, cameraP1);
         }
 
         TextRendering_ShowFramesPerSecond(window);
-
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

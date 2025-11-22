@@ -54,14 +54,16 @@ class Kart {
     bool isColliding;           // flag de colisão
 
     // Estados e controle
-    bool accelerating;          // está acelerando?
-    bool braking;               // está freando?
-    bool turningLeft;           // virando à esquerda
-    bool turningRight;          // virando à direita
+    bool inputUp;
+    bool inputDown;
+    bool inputLeft;
+    bool inputRight;
+    bool inputFire;
 
 
     Kart(const std::string& name, const ObjModel &obj, const glm::vec4& startPos);
 
+    void SetInputs(bool up, bool down, bool left, bool right, bool fire);
     void UpdateMovement();
     void FireRocket();
     void Render();

@@ -11,7 +11,9 @@ std::map<std::string, SceneObject> g_VirtualScene;
 std::stack<glm::mat4>  g_MatrixStack;
 
 // Razão de proporção da janela (largura/altura). Veja função FramebufferSizeCallback().
-float g_ScreenRatio = 1.0f;
+int g_ScreenWidth = 1920;
+int g_ScreenHeight = 1080;
+float g_ScreenRatio = 1920.0f / 1080.0f;
 
 // Ângulos de Euler que controlam a rotação de um dos cubos da cena virtual
 float g_AngleX = 0.0f;
@@ -52,6 +54,7 @@ double g_LastCursorPosY = 0.0;
 // =================================================================================
 
 bool g_ShowMenu = true;
+bool isMultiplayer = false;
 
 int IlluminationModel = 0;
 bool IsGouraudShading = false;
@@ -66,11 +69,16 @@ bool APressed = false;
 bool SPressed = false;
 bool DPressed = false;
 
+bool UpArrowPressed = false;
+bool DownArrowPressed = false;
+bool LeftArrowPressed = false;
+bool RightArrowPressed = false;
+
 bool CPressed = false;
 bool MPressed = false;
-
 bool SpacePressed = false;
-bool ShiftPressed = false;
+bool LeftShiftPressed = false;
+bool RightShiftPressed = false;
 
 // =================================================================================
 // Váriaveis de Bèzier
