@@ -3,6 +3,8 @@
 #include <iostream>
 
 void AudioInit() {
+
+    // Música de fundo
     ma_engine_init(NULL, &g_AudioEngine);
     ma_sound_init_from_file(&g_AudioEngine, "../../data/audio/LadyJane.mp3", MA_SOUND_FLAG_STREAM, NULL, NULL, &g_Music);
     ma_sound_set_volume(&g_Music, 0.2f);
@@ -11,7 +13,11 @@ void AudioInit() {
 
     // Explosão
     ma_sound_init_from_file(&g_AudioEngine, "../../data/audio/Explosion.mp3", 0, NULL, NULL, &g_SoundExplosion);
-    ma_sound_set_volume(&g_SoundExplosion, 2.0f); 
+    ma_sound_set_volume(&g_SoundExplosion, 2.0f);
+
+    // Coin
+    ma_sound_init_from_file(&g_AudioEngine, "../../data/audio/Coin.mp3", 0, NULL, NULL, &g_SoundCoin);
+    ma_sound_set_volume(&g_SoundCoin, 0.3f);
 
     // Player 1
     // Aceleração
@@ -54,12 +60,18 @@ void AudioCleanup() {
     ma_sound_uninit(&g_SoundAccP2);
     ma_sound_uninit(&g_SoundDecelP2);
     ma_sound_uninit(&g_SoundExplosion);
+    ma_sound_uninit(&g_SoundCoin);
 
     ma_engine_uninit(&g_AudioEngine);
 }
 
 void AudioCoinSound() {
-    ma_engine_play_sound(&g_AudioEngine, "../../data/audio/Coin.mp3", NULL);
+    if (ma_sound_is_playing(&g_SoundCoin)) {
+        ma_sound_stop(&g_SoundCoin);
+        ma_sound_seek_to_pcm_frame(&g_SoundCoin, 0);
+    }
+
+    ma_sound_start(&g_SoundCoin);
 }
 
 void AudioShotSound() {

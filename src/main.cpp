@@ -67,6 +67,9 @@ int main(int argc, char* argv[]) {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
+
+    // Sincroniza o FPS com a taxa de atualização do monitor
+    glfwSwapInterval(1);
     
     //============================================================================================
     //                            Criação da Camera, Cenário e Som
