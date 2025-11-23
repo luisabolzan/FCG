@@ -24,3 +24,7 @@ void Audio_Cleanup() {
     ma_sound_uninit(&g_Music);
     ma_engine_uninit(&g_AudioEngine);
 }
+
+void Audio_CoinSound() {
+    ma_engine_play_sound(&g_AudioEngine, "../../data/audio/Coin.mp3", NULL);
+}
