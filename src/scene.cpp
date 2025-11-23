@@ -2,8 +2,8 @@
 
 Scene::Scene()
     : kartModel("../../data/kart/kart.obj"),
-      player1("Player1", kartModel, glm::vec4(0.0f, -1.4f, 0.0f, 1.0f)),
-      player2("Player2", kartModel, glm::vec4(5.0f, -1.4f, 0.0f, 1.0f))
+      player1("Player1", kartModel, glm::vec4(-20.0f, -1.4f, 3.0f, 1.0f)),
+      player2("Player2", kartModel, glm::vec4(20.0f, -1.4f, 3.0f, 1.0f))
 {
 
 

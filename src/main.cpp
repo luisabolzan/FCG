@@ -67,17 +67,15 @@ int main(int argc, char* argv[]) {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
-
-
-    Audio_Init();
     
     //============================================================================================
-    //                                Criação da Camera e Cenário
+    //                            Criação da Camera, Cenário e Som
     //============================================================================================
 
     Camera cameraP1;
     Camera cameraP2;
     Scene scene;
+    AudioInit();
 
     while (!glfwWindowShouldClose(window)) {
 
@@ -85,17 +83,15 @@ int main(int argc, char* argv[]) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUseProgram(g_GpuProgramID);
 
-        if (g_ShowMenu)
+        if (g_ShowMenu) {
             RenderMenu(window);
+            RenderAudioStatus(window);
+        }
         else {
-            if (isMultiplayer){
+            if (isMultiplayer)
                 scene.RenderMultiplayer(window, cameraP1, cameraP2);
-                RenderAudioStatus(window);
-            }
-            else{
+            else
                 scene.RenderSinglePlayer(window, cameraP1);
-                RenderAudioStatus(window);
-            }
         }
 
         TextRendering_ShowFramesPerSecond(window);
@@ -103,8 +99,7 @@ int main(int argc, char* argv[]) {
         glfwPollEvents();
     }
 
-    Audio_Cleanup();
-    //ma_engine_uninit(&g_AudioEngine);
+    AudioCleanup();
     glfwTerminate();
     return 0;
 }

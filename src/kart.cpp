@@ -164,7 +164,7 @@ void Kart::FireRocket() {
 
     glm::vec4 spawnPos = position + direction * 1.3f + glm::vec4(0, 0.1f, 0, 0);
 
-    Audio_ShotSound();
+    AudioShotSound();
 
     rockets.emplace_back(spawnPos, direction, speed);
     lastShotTime = currentTime;

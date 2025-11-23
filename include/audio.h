@@ -4,12 +4,12 @@
 #include "miniaudio.h"
 #include "globals.h"
 
-void Audio_Init();
-void Audio_Mute();
-void Audio_Cleanup();
-void Audio_CoinSound();
-void Audio_ShotSound();
-void Audio_ExplosionSound();
-void Audio_AccelerationSound();
+void AudioInit();
+void AudioMute();
+void AudioCleanup();
+void AudioCoinSound();
+void AudioShotSound();
+void AudioExplosionSound();
+void AudioAccelerationSound();
 
 #endif // AUDIO_H

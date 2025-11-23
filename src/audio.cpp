@@ -2,7 +2,7 @@
 #include "globals.h"
 #include <iostream>
 
-void Audio_Init() {
+void AudioInit() {
     ma_engine_init(NULL, &g_AudioEngine);
     ma_sound_init_from_file(&g_AudioEngine, "../../data/audio/LadyJane.mp3", MA_SOUND_FLAG_STREAM, NULL, NULL, &g_Music);
     ma_sound_set_volume(&g_Music, 0.2f);
@@ -37,7 +37,7 @@ void Audio_Init() {
 }
 
 
-void Audio_Mute() {
+void AudioMute() {
     g_IsMuted = !g_IsMuted;
 
     if (g_IsMuted) {
@@ -47,25 +47,26 @@ void Audio_Mute() {
     }
 }
 
-void Audio_Cleanup() {
+void AudioCleanup() {
     ma_sound_uninit(&g_Music);
     ma_sound_uninit(&g_SoundAccP1);
     ma_sound_uninit(&g_SoundDecelP1);
     ma_sound_uninit(&g_SoundAccP2);
     ma_sound_uninit(&g_SoundDecelP2);
-    ma_engine_uninit(&g_AudioEngine);
     ma_sound_uninit(&g_SoundExplosion);
+
+    ma_engine_uninit(&g_AudioEngine);
 }
 
-void Audio_CoinSound() {
+void AudioCoinSound() {
     ma_engine_play_sound(&g_AudioEngine, "../../data/audio/Coin.mp3", NULL);
 }
 
-void Audio_ShotSound() {
+void AudioShotSound() {
     ma_engine_play_sound(&g_AudioEngine, "../../data/audio/Shot.mp3", NULL);
 }
 
-void Audio_ExplosionSound(){
+void AudioExplosionSound(){
     if (ma_sound_is_playing(&g_SoundExplosion)) {
         ma_sound_stop(&g_SoundExplosion);
         ma_sound_seek_to_pcm_frame(&g_SoundExplosion, 0);
@@ -74,6 +75,6 @@ void Audio_ExplosionSound(){
     ma_sound_start(&g_SoundExplosion);
 }
 
-void Audio_AccelerationSound(){
+void AudioAccelerationSound(){
     ma_engine_play_sound(&g_AudioEngine, "../../data/audio/Acceleration.mp3", NULL);
 }

@@ -134,7 +134,7 @@ void CheckRocketKartCollision(Kart& shooter, Kart& target) {
         {
             rocket.active = false;
             target.isAlive = false;
-            Audio_ExplosionSound();
+            AudioExplosionSound();
             printf(" %s atingiu %s!\n", shooter.name.c_str(), target.name.c_str());
         }
     }
@@ -155,7 +155,7 @@ void CheckKartCoinCollision(Kart& kart, Coin& coin) {
         coin.active = false;
         coin.respawnTimer = 0.0f;
         kart.ammo++;
-        Audio_CoinSound();
+        AudioCoinSound();
         printf("%s pegou uma moeda!\n", kart.name.c_str());
     }
 }
@@ -283,7 +283,7 @@ void CheckRocketPalmCollision(Kart& shooter, const std::vector<glm::vec3>& posit
                 if (t <= segmentLength) {
                     rocket.active = false;
                     // printf("Foguete explodiu na Palmeira!\n");
-                    Audio_ExplosionSound();
+                    AudioExplosionSound();
                     break;
                 }
             }
@@ -318,7 +318,7 @@ void CheckRocketTreeCollision(Kart& shooter, const std::vector<glm::vec3>& posit
                 if (t <= segmentLength) {
                     rocket.active = false;
                     // printf("Foguete explodiu na Arvore!\n");
-                    Audio_ExplosionSound();
+                    AudioExplosionSound();
                     break;
                 }
             }
