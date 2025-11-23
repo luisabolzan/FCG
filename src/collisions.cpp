@@ -283,6 +283,7 @@ void CheckRocketPalmCollision(Kart& shooter, const std::vector<glm::vec3>& posit
                 if (t <= segmentLength) {
                     rocket.active = false;
                     // printf("Foguete explodiu na Palmeira!\n");
+                    Audio_ExplosionSound();
                     break;
                 }
             }
@@ -317,6 +318,7 @@ void CheckRocketTreeCollision(Kart& shooter, const std::vector<glm::vec3>& posit
                 if (t <= segmentLength) {
                     rocket.active = false;
                     // printf("Foguete explodiu na Arvore!\n");
+                    Audio_ExplosionSound();
                     break;
                 }
             }

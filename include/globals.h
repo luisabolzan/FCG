@@ -95,6 +95,7 @@ extern glm::vec3 p3;
 extern ma_engine g_AudioEngine;
 extern ma_sound g_Music;
 extern bool g_IsMuted;
+extern ma_sound g_SoundExplosion;
 // Player 1
 extern ma_sound g_SoundAccP1;  
 extern ma_sound g_SoundDecelP1; 

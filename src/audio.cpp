@@ -9,6 +9,10 @@ void Audio_Init() {
     ma_sound_set_looping(&g_Music, MA_TRUE);
     ma_sound_start(&g_Music);
 
+    // Explosão
+    ma_sound_init_from_file(&g_AudioEngine, "../../data/audio/Explosion.mp3", 0, NULL, NULL, &g_SoundExplosion);
+    ma_sound_set_volume(&g_SoundExplosion, 2.0f); 
+
     // Player 1
     // Aceleração
     ma_sound_init_from_file(&g_AudioEngine, "../../data/audio/EngineOn.mp3", 0, NULL, NULL, &g_SoundAccP1);
@@ -50,6 +54,7 @@ void Audio_Cleanup() {
     ma_sound_uninit(&g_SoundAccP2);
     ma_sound_uninit(&g_SoundDecelP2);
     ma_engine_uninit(&g_AudioEngine);
+    ma_sound_uninit(&g_SoundExplosion);
 }
 
 void Audio_CoinSound() {
@@ -61,7 +66,12 @@ void Audio_ShotSound() {
 }
 
 void Audio_ExplosionSound(){
-    ma_engine_play_sound(&g_AudioEngine, "../../data/audio/Explosion.mp3", NULL);
+    if (ma_sound_is_playing(&g_SoundExplosion)) {
+        ma_sound_stop(&g_SoundExplosion);
+        ma_sound_seek_to_pcm_frame(&g_SoundExplosion, 0);
+    }
+
+    ma_sound_start(&g_SoundExplosion);
 }
 
 void Audio_AccelerationSound(){
