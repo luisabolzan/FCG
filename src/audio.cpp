@@ -32,3 +32,7 @@ void Audio_CoinSound() {
 void Audio_ShotSound() {
     ma_engine_play_sound(&g_AudioEngine, "../../data/audio/Shot.mp3", NULL);
 }
+
+void Audio_ExplosionSound(){
+    ma_engine_play_sound(&g_AudioEngine, "../../data/audio/Explosion.mp3", NULL);
+}

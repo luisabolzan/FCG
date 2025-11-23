@@ -134,6 +134,7 @@ void CheckRocketKartCollision(Kart& shooter, Kart& target) {
         {
             rocket.active = false;
             target.isAlive = false;
+            Audio_ExplosionSound();
             printf(" %s atingiu %s!\n", shooter.name.c_str(), target.name.c_str());
         }
     }
