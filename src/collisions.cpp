@@ -3,6 +3,7 @@
 #include "kart.h"
 #include "coin.h"
 #include "scene.h"
+#include "audio.h"
 
 // Colisão Kart (sphere) com Kart (sphere)
 bool CheckSphereSphere(const BoundingSphere& a, const BoundingSphere& b) {
@@ -133,6 +134,7 @@ void CheckRocketKartCollision(Kart& shooter, Kart& target) {
         {
             rocket.active = false;
             target.isAlive = false;
+            Audio_ExplosionSound();
             printf(" %s atingiu %s!\n", shooter.name.c_str(), target.name.c_str());
         }
     }
@@ -153,6 +155,7 @@ void CheckKartCoinCollision(Kart& kart, Coin& coin) {
         coin.active = false;
         coin.respawnTimer = 0.0f;
         kart.ammo++;
+        Audio_CoinSound();
         printf("%s pegou uma moeda!\n", kart.name.c_str());
     }
 }

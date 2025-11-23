@@ -1,5 +1,26 @@
 #include "menu.h"
+#include "globals.h"
 #include <cstdio>
+#include <cstring>
+
+void RenderAudioStatus(GLFWwindow* window) {
+    glDisable(GL_DEPTH_TEST); 
+
+    const char* audio_text;
+    if (g_IsMuted) {
+        audio_text = "SONG: OFF [X]";
+    } else {
+        audio_text = "SONG: ON  [X]";
+    }
+
+    float audio_x = 0.6f; 
+    float audio_y = 0.85f;
+    float audio_scale = 2.0f;
+
+    TextRendering_PrintString(window, audio_text, audio_x, audio_y, audio_scale);
+
+    glEnable(GL_DEPTH_TEST); 
+}
 
 void RenderMenu(GLFWwindow* window) {
     glDisable(GL_DEPTH_TEST);
@@ -31,7 +52,9 @@ void RenderMenu(GLFWwindow* window) {
     // Sair
     const char* exit_text = "ESC - SAIR";
     float exit_x = 0.0f - (char_width * strlen(exit_text) * scale_opts) / 2.0f;
-    TextRendering_PrintString(window, exit_text, exit_x, -0.3f, scale_opts);
+    TextRendering_PrintString(window, exit_text, exit_x, -0.3f, scale_opts);    
+
+    RenderAudioStatus(window);
 
     glEnable(GL_DEPTH_TEST);
 }

@@ -1,6 +1,7 @@
 
 #include "kart.h"
-
+#include "audio.h"
+#include "globals.h"
 
 
 Kart::Kart(const std::string& name, const ObjModel &obj, const glm::vec4& startPos):
@@ -51,26 +52,26 @@ void Kart::SetInputs(bool up, bool down, bool left, bool right, bool fire) {
 
 void Kart::UpdateMovement() {
 
-    if (dummy)
+    if (dummy) 
         return;
-
-    if (inputLeft)
+    
+    if (inputLeft) 
         rotation.y += turnSpeed * deltaTime;
-    if (inputRight)
+    if (inputRight) 
         rotation.y -= turnSpeed * deltaTime;
-
+    
     direction.x = sin(rotation.y);
     direction.z = cos(rotation.y);
     direction = glm::normalize(direction);
 
     if (inputUp) {
         speed += acceleration * deltaTime;
-        if (speed > maxSpeed)
+        if (speed > maxSpeed) 
             speed = maxSpeed;
     }
     else if (inputDown) {
         speed -= acceleration * deltaTime;
-        if (speed < -maxSpeed / 2.0f)
+        if (speed < -maxSpeed / 2.0f) 
             speed = -maxSpeed / 2.0f;
     }
     else {
@@ -83,8 +84,74 @@ void Kart::UpdateMovement() {
             if (speed > 0.0f) speed = 0.0f;
         }
     }
-
     position += direction * speed * deltaTime;
+
+    // Áudio
+    if (isAlive) {
+        
+        ma_sound* soundAcc = nullptr;   
+        ma_sound* soundDecel = nullptr; 
+
+        if (this->name == "Player1") {
+            soundAcc = &g_SoundAccP1;
+            soundDecel = &g_SoundDecelP1;
+        } 
+        else if (this->name == "Enemy" || this->name == "Player2") {
+            soundAcc = &g_SoundAccP2;
+            soundDecel = &g_SoundDecelP2;
+        }
+
+        if (soundAcc != nullptr && soundDecel != nullptr) {
+            bool isMoving = std::abs(speed) > 0.2f;
+            bool isPressingGas = (inputUp || inputDown); 
+
+            float pitch = 0.8f + (std::abs(speed) / maxSpeed) * 0.6f;
+
+            // Se o carro estiver se movendo
+            if (isMoving) {
+                // e o jogador tiver apertando o botão
+                if (isPressingGas) {
+                    if (ma_sound_is_playing(soundDecel)) {
+                        ma_sound_stop(soundDecel);
+                    }
+
+                    if (!ma_sound_is_playing(soundAcc)) {
+                        ma_sound_set_volume(soundAcc, 0.5f);
+                        ma_sound_start(soundAcc);
+                    }
+                    ma_sound_set_pitch(soundAcc, pitch);
+                }
+                // e o jogador NÃO estiver apertando o botão
+                else {
+                    if (ma_sound_is_playing(soundAcc)) {
+                        ma_sound_stop(soundAcc);
+                    }
+
+                    if (!ma_sound_is_playing(soundDecel)) {
+                        ma_sound_set_volume(soundDecel, 0.5f);
+                        ma_sound_start(soundDecel);
+                    }
+                    ma_sound_set_pitch(soundDecel, pitch); 
+                }
+            } 
+            // Se o carro estiver parado
+            else {
+                if (ma_sound_is_playing(soundAcc))   ma_sound_stop(soundAcc);
+                if (ma_sound_is_playing(soundDecel)) ma_sound_stop(soundDecel);
+            }
+        }
+    } 
+    // Se o jogador morreu
+    else {
+        if (this->name == "Player1") {
+            if (ma_sound_is_playing(&g_SoundAccP1)) ma_sound_stop(&g_SoundAccP1);
+            if (ma_sound_is_playing(&g_SoundDecelP1)) ma_sound_stop(&g_SoundDecelP1);
+        }
+        else if (this->name == "Enemy" || this->name == "Player2") {
+            if (ma_sound_is_playing(&g_SoundAccP2)) ma_sound_stop(&g_SoundAccP2);
+            if (ma_sound_is_playing(&g_SoundDecelP2)) ma_sound_stop(&g_SoundDecelP2);
+        }
+    }
 }
 
 void Kart::FireRocket() {
@@ -96,6 +163,8 @@ void Kart::FireRocket() {
         return;
 
     glm::vec4 spawnPos = position + direction * 1.3f + glm::vec4(0, 0.1f, 0, 0);
+
+    Audio_ShotSound();
 
     rockets.emplace_back(spawnPos, direction, speed);
     lastShotTime = currentTime;
