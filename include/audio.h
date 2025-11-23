@@ -10,5 +10,6 @@ void Audio_Cleanup();
 void Audio_CoinSound();
 void Audio_ShotSound();
 void Audio_ExplosionSound();
+void Audio_AccelerationSound();
 
 #endif // AUDIO_H
