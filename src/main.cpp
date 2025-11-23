@@ -6,8 +6,6 @@
 #include "FCGfunctions.h"
 #include "globals.h"
 #include "camera.h"
-#include "kart.h"
-#include "collisions.h"
 #include "scene.h"
 #include "menu.h"
 #include "control.h"
