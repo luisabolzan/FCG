@@ -116,11 +116,18 @@ void Scene::RenderSinglePlayer(GLFWwindow* window, Camera& camera) {
     glfwGetFramebufferSize(window, &g_ScreenWidth, &g_ScreenHeight);
     glViewport(0, 0, g_ScreenWidth, g_ScreenHeight);
 
+    // Cenário
     player1.SetInputs(WPressed, SPressed, APressed, DPressed, SpacePressed);
     camera.UpdateProjectionMatrix(g_ScreenRatio);
     camera.StartCamera(player1);
     Render();
     HandleCollisions(*this);
+
+    // Texto
+    glDisable(GL_DEPTH_TEST);
+    RenderTextInfo(window, player1, -0.95f, 0.85f);
+    RenderRanking(window, 0.75f, 0.8f);
+    glEnable(GL_DEPTH_TEST);
 }
 
 
@@ -130,21 +137,38 @@ void Scene::RenderMultiplayer(GLFWwindow* window, Camera& cameraP1, Camera& came
     const int halfWidth = g_ScreenWidth / 2;
     const float splitRatio = (float)halfWidth / (float)g_ScreenHeight;
 
-    // PLAYER 1 (Esquerda)
+    glUseProgram(g_GpuProgramID);
+    glEnable(GL_DEPTH_TEST);
+
+    // --- PLAYER 1 (Esquerda) ---
     player1.SetInputs(WPressed, SPressed, APressed, DPressed, SpacePressed);
-    glViewport(0, 0, halfWidth, g_ScreenHeight);
+    glViewport(0, 0, halfWidth, g_ScreenHeight); // Metade Esquerda
     cameraP1.UpdateProjectionMatrix(splitRatio);
     cameraP1.StartCamera(player1);
     Render();
     HandleCollisions(*this);
 
-    // PLAYER 2 (Direita)
+    // --- PLAYER 2 (Direita) ---
     player2.SetInputs(UpArrowPressed, DownArrowPressed, LeftArrowPressed, RightArrowPressed, RightShiftPressed);
-    glViewport(halfWidth, 0, halfWidth, g_ScreenHeight);
+    glViewport(halfWidth, 0, halfWidth, g_ScreenHeight); // Metade Direita
     cameraP2.UpdateProjectionMatrix(splitRatio);
     cameraP2.StartCamera(player2);
     Render();
     HandleCollisions(*this);
+
+    // Para renderizar o texto sem distorções
+    glViewport(0, 0, g_ScreenWidth, g_ScreenHeight);
+    glDisable(GL_DEPTH_TEST);
+
+    RenderTextInfo(window, player1, -0.95f, 0.85f);
+
+    RenderRanking(window, -0.20f, 0.8f);
+
+    RenderTextInfo(window, player2, 0.05f, 0.85f);
+
+    RenderRanking(window, 0.80f, 0.8f);
+
+    glEnable(GL_DEPTH_TEST);
 }
 
 
@@ -257,4 +281,43 @@ void Scene::RenderTrackPieces() {
 
 void Scene::RenderCoins() {
     for (auto & c : coins) c.Render();
+}
+
+void Scene::RenderTextInfo(GLFWwindow* window, Kart& kart, float x_pos, float y_pos) {
+
+    char buffer[128];
+    snprintf(buffer, sizeof(buffer), "%s | HP: %d | Ammo: %d | Score: %d",
+             kart.name.c_str(), kart.health, kart.ammo, kart.score);
+
+    float scale = 1.5f;
+    TextRendering_PrintString(window, buffer, x_pos, y_pos, scale);
+}
+
+void Scene::RenderRanking(GLFWwindow* window, float x_pos, float y_pos) {
+
+    char p1Text[64];
+    char p2Text[64];
+    float scale = 1.2f;
+
+    Kart* primeiro;
+    Kart* segundo;
+
+    if (player1.score >= player2.score) {
+        primeiro = &player1;
+        segundo = &player2;
+    } else {
+        primeiro = &player2;
+        segundo = &player1;
+    }
+
+    // Título
+    TextRendering_PrintString(window, "RANKING:", x_pos, y_pos + 0.1f, scale);
+
+    // 1º Lugar
+    snprintf(p1Text, sizeof(p1Text), "1. %s (%d)", primeiro->name.c_str(), primeiro->score);
+    TextRendering_PrintString(window, p1Text, x_pos, y_pos, scale);
+
+    // 2º Lugar
+    snprintf(p2Text, sizeof(p2Text), "2. %s (%d)", segundo->name.c_str(), segundo->score);
+    TextRendering_PrintString(window, p2Text, x_pos, y_pos - 0.1f, scale);
 }
