@@ -7,6 +7,8 @@
 #include "coin.h"
 #include "camera.h"
 #include "FCGfunctions.h"
+#include <cstdio>
+#include <string>
 
 class Scene {
 
@@ -31,6 +33,9 @@ private:
     void RenderTree();
     void RenderTrackPieces();
     void RenderCoins();
+
+    void RenderTextInfo(GLFWwindow* window, Kart& kart, float x_pos, float y_pos);
+    void RenderRanking(GLFWwindow* window, float x_pos, float y_pos);
 };
 
 #endif //SCENE_H

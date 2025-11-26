@@ -178,6 +178,7 @@ void Kart::Render() {
         if (respawnTimer >= respawnTime) {
             isAlive = true;
             isInvincible = true;       // revive INVENCÍVEL
+            health = 100;
             respawnTimer = 0.0f;
             position = position; // spawnPosition; você precisa guardar posição inicial
         }
