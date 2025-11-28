@@ -26,6 +26,7 @@ set(SOURCES
   src/miniaudio.cpp
   src/control.cpp
   src/audio.cpp
+  src/gameover.cpp
 )
 
 cmake_minimum_required(VERSION 3.10)

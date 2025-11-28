@@ -99,9 +99,9 @@ ma_sound g_SoundDecelP1;
 ma_sound g_SoundAccP2;
 ma_sound g_SoundDecelP2;
 
-
-
-
+// Timer
+float RoundTime = 60.0f;
+bool g_GameEnded = false;
 
 
 

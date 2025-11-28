@@ -104,5 +104,9 @@ extern ma_sound g_SoundDecelP1;
 extern ma_sound g_SoundAccP2;
 extern ma_sound g_SoundDecelP2;
 
+// Timer
+extern float RoundTime;
+extern bool g_GameEnded;
+
 #endif //GLOBALS_H
 

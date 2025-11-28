@@ -28,6 +28,9 @@ public:
     void RenderTextSingleplayer(GLFWwindow* window);
     void RenderTextMultiplayer(GLFWwindow* window);
 
+    void RenderMatchTimer(GLFWwindow* window);
+    void ResetMatch();
+
 private:
     void RenderSkySphere();
     void RenderGround();

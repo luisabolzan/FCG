@@ -160,6 +160,7 @@ void Scene::RenderTextSingleplayer(GLFWwindow* window) {
     glViewport(0, 0, g_ScreenWidth, g_ScreenHeight);
     glDisable(GL_DEPTH_TEST);
 
+    RenderMatchTimer(window);
     RenderKartInfo(window, player1, -0.95f, 0.85f);
     RenderRanking(window, 0.75f, 0.8f);
     RenderSpeed(window, player1, -0.95f, -0.9f);
@@ -173,7 +174,7 @@ void Scene::RenderTextMultiplayer(GLFWwindow* window) {
     // Para renderizar o texto sem distorções (Tela Cheia)
     glViewport(0, 0, g_ScreenWidth, g_ScreenHeight);
     glDisable(GL_DEPTH_TEST);
-
+    RenderMatchTimer(window);
     // --- PLAYER 1 (Lado Esquerdo) ---
     // Ajustei levemente o Ranking para -0.30f para não colar no meio, ajuste como preferir
     RenderKartInfo(window, player1, -0.95f, 0.85f);
@@ -375,4 +376,47 @@ void Scene::RenderRespawnMessage(GLFWwindow* window, Kart& target, std::string s
 
     TextRendering_PrintString(window, msgHit, x_hit, y_center, scale);
     TextRendering_PrintString(window, msgTimer, x_timer, y_center - 0.15f, scale);
+}
+
+void Scene::RenderMatchTimer(GLFWwindow* window) {
+    char buffer[32];
+    
+    int t = (int)ceil(RoundTime); 
+    if (t < 0) t = 0;
+
+    snprintf(buffer, sizeof(buffer), "TIME: %02d", t);
+
+    float scale = 4.0f;
+    
+    float char_width = TextRendering_CharWidth(window);
+    float text_width = char_width * strlen(buffer) * scale;
+    float x_pos = 0.0f - (text_width / 2.0f);
+    float y_pos = 0.90f;
+
+    TextRendering_PrintString(window, buffer, x_pos, y_pos, scale);
+}
+
+void Scene::ResetMatch() {
+    RoundTime = 60.0f;
+    g_GameEnded = false;
+
+    player1.position = player1.spawnPosition;
+    player1.score = 0;
+    player1.health = 100;
+    player1.ammo = 10;
+    player1.isAlive = true;
+    player1.speed = 0.0f;
+    player1.rockets.clear(); 
+
+    player2.position = player2.spawnPosition;
+    player2.score = 0;
+    player2.health = 100;
+    player2.ammo = 10;
+    player2.isAlive = true;
+    player2.speed = 0.0f;
+    player2.rockets.clear();
+
+    for(auto &c : coins) {
+        c.active = true;
+    }
 }
