@@ -25,6 +25,9 @@ public:
     void RenderSinglePlayer(GLFWwindow* window, Camera& camera);
     void RenderMultiplayer(GLFWwindow* window, Camera& cam1, Camera& cam2);
 
+    void RenderTextSingleplayer(GLFWwindow* window);
+    void RenderTextMultiplayer(GLFWwindow* window);
+
 private:
     void RenderSkySphere();
     void RenderGround();
@@ -34,8 +37,10 @@ private:
     void RenderTrackPieces();
     void RenderCoins();
 
-    void RenderTextInfo(GLFWwindow* window, Kart& kart, float x_pos, float y_pos);
+    void RenderKartInfo(GLFWwindow* window, Kart& kart, float x_pos, float y_pos);
     void RenderRanking(GLFWwindow* window, float x_pos, float y_pos);
+    void RenderSpeed(GLFWwindow* window, Kart& kart, float x_pos, float y_pos);
+    void RenderRespawnMessage(GLFWwindow* window, Kart& target, std::string shooter, float x_center, float y_center);
 };
 
 #endif //SCENE_H

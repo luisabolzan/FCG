@@ -123,11 +123,8 @@ void Scene::RenderSinglePlayer(GLFWwindow* window, Camera& camera) {
     Render();
     HandleCollisions(*this);
 
-    // Texto
-    glDisable(GL_DEPTH_TEST);
-    RenderTextInfo(window, player1, -0.95f, 0.85f);
-    RenderRanking(window, 0.75f, 0.8f);
-    glEnable(GL_DEPTH_TEST);
+    // Textos
+    RenderTextSingleplayer(window);
 }
 
 
@@ -137,10 +134,7 @@ void Scene::RenderMultiplayer(GLFWwindow* window, Camera& cameraP1, Camera& came
     const int halfWidth = g_ScreenWidth / 2;
     const float splitRatio = (float)halfWidth / (float)g_ScreenHeight;
 
-    glUseProgram(g_GpuProgramID);
-    glEnable(GL_DEPTH_TEST);
-
-    // --- PLAYER 1 (Esquerda) ---
+    // PLAYER 1
     player1.SetInputs(WPressed, SPressed, APressed, DPressed, SpacePressed);
     glViewport(0, 0, halfWidth, g_ScreenHeight); // Metade Esquerda
     cameraP1.UpdateProjectionMatrix(splitRatio);
@@ -148,7 +142,7 @@ void Scene::RenderMultiplayer(GLFWwindow* window, Camera& cameraP1, Camera& came
     Render();
     HandleCollisions(*this);
 
-    // --- PLAYER 2 (Direita) ---
+    // PLAYER 2
     player2.SetInputs(UpArrowPressed, DownArrowPressed, LeftArrowPressed, RightArrowPressed, RightShiftPressed);
     glViewport(halfWidth, 0, halfWidth, g_ScreenHeight); // Metade Direita
     cameraP2.UpdateProjectionMatrix(splitRatio);
@@ -156,17 +150,42 @@ void Scene::RenderMultiplayer(GLFWwindow* window, Camera& cameraP1, Camera& came
     Render();
     HandleCollisions(*this);
 
-    // Para renderizar o texto sem distorções
+    // Textos
+    RenderTextMultiplayer(window);
+}
+
+
+void Scene::RenderTextSingleplayer(GLFWwindow* window) {
+    // tela cheia
     glViewport(0, 0, g_ScreenWidth, g_ScreenHeight);
     glDisable(GL_DEPTH_TEST);
 
-    RenderTextInfo(window, player1, -0.95f, 0.85f);
+    RenderKartInfo(window, player1, -0.95f, 0.85f);
+    RenderRanking(window, 0.75f, 0.8f);
+    RenderSpeed(window, player1, -0.95f, -0.9f);
+    RenderRespawnMessage(window, player1, "PLAYER 2", 0.0f, 0.15f);
 
+    glEnable(GL_DEPTH_TEST);
+}
+
+
+void Scene::RenderTextMultiplayer(GLFWwindow* window) {
+    // Para renderizar o texto sem distorções (Tela Cheia)
+    glViewport(0, 0, g_ScreenWidth, g_ScreenHeight);
+    glDisable(GL_DEPTH_TEST);
+
+    // --- PLAYER 1 (Lado Esquerdo) ---
+    // Ajustei levemente o Ranking para -0.30f para não colar no meio, ajuste como preferir
+    RenderKartInfo(window, player1, -0.95f, 0.85f);
     RenderRanking(window, -0.20f, 0.8f);
+    RenderSpeed(window, player1, -0.95f, -0.9f);
+    RenderRespawnMessage(window, player1, player2.name, -0.5f, 0.15f);
 
-    RenderTextInfo(window, player2, 0.05f, 0.85f);
-
+    // --- PLAYER 2 (Lado Direito) ---
+    RenderKartInfo(window, player2, 0.05f, 0.85f);
     RenderRanking(window, 0.80f, 0.8f);
+    RenderSpeed(window, player2, 0.05f, -0.9f);
+    RenderRespawnMessage(window, player2, player1.name, 0.5f, 0.15f);
 
     glEnable(GL_DEPTH_TEST);
 }
@@ -283,7 +302,7 @@ void Scene::RenderCoins() {
     for (auto & c : coins) c.Render();
 }
 
-void Scene::RenderTextInfo(GLFWwindow* window, Kart& kart, float x_pos, float y_pos) {
+void Scene::RenderKartInfo(GLFWwindow* window, Kart& kart, float x_pos, float y_pos) {
 
     char buffer[128];
     snprintf(buffer, sizeof(buffer), "%s | HP: %d | Ammo: %d | Score: %d",
@@ -320,4 +339,40 @@ void Scene::RenderRanking(GLFWwindow* window, float x_pos, float y_pos) {
     // 2º Lugar
     snprintf(p2Text, sizeof(p2Text), "2. %s (%d)", segundo->name.c_str(), segundo->score);
     TextRendering_PrintString(window, p2Text, x_pos, y_pos - 0.1f, scale);
+}
+
+
+void Scene::RenderSpeed(GLFWwindow* window, Kart& kart, float x_pos, float y_pos) {
+    char buffer[64];
+
+    int speedVal = (int)(std::abs(kart.speed) * 3.6f);
+    snprintf(buffer, sizeof(buffer), "SPEED: %02d km/h", speedVal);
+
+    float scale = 3.0f;
+    TextRendering_PrintString(window, buffer, x_pos, y_pos, scale);
+}
+
+
+void Scene::RenderRespawnMessage(GLFWwindow* window, Kart& target, std::string shooter, float x_center, float y_center) {
+
+    if (target.isAlive) return;
+
+    int timeLeft = (int)(target.respawnTime - target.respawnTimer) + 1;
+
+    char msgHit[64];
+    char msgTimer[64];
+    float scale = 3.0f;
+    float char_width = TextRendering_CharWidth(window);
+
+    snprintf(msgHit, sizeof(msgHit), "ELIMINADO POR %s", shooter.c_str());
+    snprintf(msgTimer, sizeof(msgTimer), "RESPAWN EM: %d", timeLeft);
+
+    float widthHit = strlen(msgHit) * char_width * scale;
+    float x_hit = x_center - (widthHit / 2.0f);
+
+    float widthTimer = strlen(msgTimer) * char_width * scale;
+    float x_timer = x_center - (widthTimer / 2.0f);
+
+    TextRendering_PrintString(window, msgHit, x_hit, y_center, scale);
+    TextRendering_PrintString(window, msgTimer, x_timer, y_center - 0.15f, scale);
 }
