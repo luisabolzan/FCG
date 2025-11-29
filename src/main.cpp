@@ -87,19 +87,25 @@ int main(int argc, char* argv[]) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUseProgram(g_GpuProgramID);
 
-        if(g_GameEnded){
-            RenderGameOverScreen(window, scene.player1.score, scene.player2.score);
-        }
-        else if (g_ShowMenu) {
+        if (g_ShowMenu) {
+            if (g_GameEnded) {
+                scene.ResetMatch();
+            }
+            
             RenderMenu(window);
             RenderAudioStatus(window);
         }
+        else if (g_GameEnded) {
+            RenderGameOverScreen(window, scene.player1.score, scene.player2.score);
+        }
         else {
             RoundTime -= deltaTime;
+            
             if (RoundTime <= 0.0f) {
                 RoundTime = 0.0f;
                 g_GameEnded = true;
             }
+
             if (isMultiplayer)
                 scene.RenderMultiplayer(window, cameraP1, cameraP2);
             else

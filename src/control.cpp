@@ -1,5 +1,6 @@
 #include "control.h"
 #include "audio.h"
+#include "globals.h"
 
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
@@ -109,6 +110,8 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
             isMultiplayer = false;         // Define modo Single
             g_ShowMenu = false;            // Fecha o menu
+            RoundTime = 60.0f;
+            g_GameEnded = false;
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // Trava o mouse
         }
 
@@ -116,7 +119,19 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
         if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
             isMultiplayer = true;          // Define modo Multi
             g_ShowMenu = false;            // Fecha o menu
+            RoundTime = 60.0f;
+            g_GameEnded = false;
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // Trava o mouse
+        }
+    }
+    // FIM DE JOGO
+    else if (g_GameEnded) {
+        // Na tela de Game Over, liberamos o mouse e só aceitamos a tecla 'I'
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+        if (key == GLFW_KEY_I && action == GLFW_PRESS) {
+            g_ShowMenu = true; // Volta para o menu
+            // O reset real dos karts acontecerá na main.cpp
         }
     }
     // JOGO
