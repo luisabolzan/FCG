@@ -1,38 +1,17 @@
 #include "miniaudio.h"
 #include "globals.h"
 
-// A cena virtual é uma lista de objetos nomeados, guardados em um dicionário
-// (map).  Veja dentro da função BuildTrianglesAndAddToVirtualScene() como que são incluídos
-// objetos dentro da variável g_VirtualScene, e veja na função main() como
-// estes são acessados.
-std::map<std::string, SceneObject> g_VirtualScene;
-
-// Pilha que guardará as matrizes de modelagem.
-std::stack<glm::mat4>  g_MatrixStack;
-
-// Razão de proporção da janela (largura/altura). Veja função FramebufferSizeCallback().
+// =================================================================================
+// JANELA E CÂMERA
+// =================================================================================
 int g_ScreenWidth = 1920;
 int g_ScreenHeight = 1080;
 float g_ScreenRatio = 1920.0f / 1080.0f;
-
-// Ângulos de Euler que controlam a rotação de um dos cubos da cena virtual
-float g_AngleX = 0.0f;
-float g_AngleY = 0.0f;
-float g_AngleZ = 0.0f;
-
-// "g_LeftMouseButtonPressed = true" se o usuário está com o botão esquerdo do mouse
-// pressionado no momento atual. Veja função MouseButtonCallback().
-bool g_LeftMouseButtonPressed = false;
-bool g_RightMouseButtonPressed = false; // Análogo para botão direito do mouse
-bool g_MiddleMouseButtonPressed = false; // Análogo para botão do meio do mouse
-
-// Variável que controla o tipo de projeção utilizada: perspectiva ou ortográfica.
 bool g_UsePerspectiveProjection = true;
 
-// Variável que controla se o texto informativo será mostrado na tela.
-bool g_ShowInfoText = false;
-
-// Variáveis que definem um programa de GPU (shaders). Veja função LoadShadersFromFiles().
+// =================================================================================
+// SHADERS E GPU
+// =================================================================================
 GLuint g_GpuProgramID = 0;
 GLint g_model_uniform;
 GLint g_view_uniform;
@@ -42,28 +21,28 @@ GLint g_object_type_uniform;
 GLint g_bbox_min_uniform;
 GLint g_bbox_max_uniform;
 
-// Número de texturas carregadas pela função LoadTextureImage()
 GLuint g_NumLoadedTextures = 0;
 
-// Variáveis globais que armazenam a última posição do cursor do mouse, para
-// que possamos calcular quanto que o mouse se movimentou entre dois instantes
-// de tempo. Utilizadas no callback CursorPosCallback() abaixo.
+int IlluminationModel = ILLUMINATION_GLOBAL;
+bool IsGouraudShading = false;
+
+// =================================================================================
+// SCENE E MATRIZES
+// =================================================================================
+std::map<std::string, SceneObject> g_VirtualScene;
+std::stack<glm::mat4> g_MatrixStack;
+
+// =================================================================================
+// INPUTS (Mouse e Teclado)
+// =================================================================================
+// Mouse
+bool g_LeftMouseButtonPressed = false;
+bool g_RightMouseButtonPressed = false;
+bool g_MiddleMouseButtonPressed = false;
 double g_LastCursorPosX = 0.0;
 double g_LastCursorPosY = 0.0;
 
-// =================================================================================
-
-bool g_ShowMenu = true;
-bool isMultiplayer = false;
-
-int IlluminationModel = 0;
-bool IsGouraudShading = false;
-
-
-float currentTime;
-float deltaTime;
-float lastTime;
-
+// Teclado - Movimento
 bool WPressed = false;
 bool APressed = false;
 bool SPressed = false;
@@ -74,21 +53,35 @@ bool DownArrowPressed = false;
 bool LeftArrowPressed = false;
 bool RightArrowPressed = false;
 
-bool CPressed = false;
-bool MPressed = false;
 bool SpacePressed = false;
 bool LeftShiftPressed = false;
 bool RightShiftPressed = false;
 
+// Teclado - Controle
+bool CPressed = false;
+bool MPressed = false;
+
 // =================================================================================
-// Váriaveis de Bèzier
-glm::vec3 p0(0.0f, 0.0f, 0.0f);
-glm::vec3 p1(2.0f, 0.0f, 2.0f);
-glm::vec3 p2(4.0f, 0.0f, 4.0f);
-glm::vec3 p3(6.0f, 0.0f, 0.0f);
+// TEMPO E TIMER
+// =================================================================================
+float currentTime = 0.0f;
+float deltaTime = 0.0f;
+float lastTime = 0.0f;
 
+float RoundTime = 60.0f;
+float CurrentRoundTime = 0.0f;
+bool GameEnded = false;
 
-// Váriaveis de Áudio
+// =================================================================================
+// ESTADOS DO JOGO (Gameplay)
+// =================================================================================
+bool g_ShowMenu = true;
+bool isMultiplayer = false;
+bool g_ShowInfoText = false;
+
+// =================================================================================
+// ÁUDIO
+// =================================================================================
 bool g_IsMuted = false;
 ma_engine g_AudioEngine;
 ma_sound g_Music;
@@ -99,19 +92,17 @@ ma_sound g_SoundDecelP1;
 ma_sound g_SoundAccP2;
 ma_sound g_SoundDecelP2;
 
-// Timer
-float RoundTime = 60.0f;
-bool g_GameEnded = false;
+// =================================================================================
+// BEZIER
+// =================================================================================
+glm::vec3 p0(0.0f, 0.0f, 0.0f);
+glm::vec3 p1(2.0f, 0.0f, 2.0f);
+glm::vec3 p2(4.0f, 0.0f, 4.0f);
+glm::vec3 p3(6.0f, 0.0f, 0.0f);
 
-
-
-
-
-
-
-
-
-
-
-
-
+// =================================================================================
+// OUTROS
+// =================================================================================
+float g_AngleX = 0.0f;
+float g_AngleY = 0.0f;
+float g_AngleZ = 0.0f;
