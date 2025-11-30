@@ -33,16 +33,16 @@ class Camera {
     glm::mat4 view_matrix;          // Matriz view
     glm::mat4 projection;           // Matriz de Projeção
 
+    float c_theta;
+    float c_phi;
+    float c_distance;
+
     glm::vec4 U;
-
-
-    float r;
 
     float speed;                    // Velocidade da Camera
 
     public:
 
-    //Camera(glm::vec3 StartingPosition);
     Camera();
 
     glm::vec4 GetPosition();
@@ -67,7 +67,7 @@ class Camera {
     void UpdateLookAtCamera(const Kart& kart);
     void SyncVectorToAngles();
     void StartCamera(const Kart& kart);
-
+    void UpdateProjectionMatrix(float screenRatio);
 };
 
 

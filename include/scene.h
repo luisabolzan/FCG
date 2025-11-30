@@ -5,7 +5,10 @@
 #include "glad/glad.h"
 #include "kart.h"
 #include "coin.h"
+#include "camera.h"
 #include "FCGfunctions.h"
+#include <cstdio>
+#include <string>
 
 class Scene {
 
@@ -14,14 +17,22 @@ public:
     Kart player1;
     Kart player2;
     std::vector<Coin> coins;
+    std::vector<glm::vec3> palmPositions;
+    std::vector<glm::vec3> treePositions;
 
     Scene();
-    void Render();
+
+    void UpdateScene();
+    void RenderScene();
+    void ResetScene();
+
+    void RenderSinglePlayer(GLFWwindow* window, Camera& camera);
+    void RenderMultiplayer(GLFWwindow* window, Camera& cam1, Camera& cam2);
 
 private:
+
     void RenderSkySphere();
     void RenderGround();
-
     void RenderPalm();
     void RenderTree();
     void RenderTrackPieces();

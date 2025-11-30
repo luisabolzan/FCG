@@ -1,4 +1,6 @@
 #include "control.h"
+#include "audio.h"
+#include "globals.h"
 
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
@@ -96,83 +98,139 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
 
+    // Mutar a música de fundo
+    if (key == GLFW_KEY_X && action == GLFW_PRESS)
+        AudioMute();
+    
+    // MENU
     if (g_ShowMenu) {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+        // Opção 1: SINGLEPLAYER
+        if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
+            isMultiplayer = false;         // Define modo Single
+            g_ShowMenu = false;            // Fecha o menu
+            RoundTime = 60.0f;
+            g_GameEnded = false;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // Trava o mouse
+        }
+
+        // Opção 2: MULTIPLAYER
+        if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
+            isMultiplayer = true;          // Define modo Multi
+            g_ShowMenu = false;            // Fecha o menu
+            RoundTime = 60.0f;
+            g_GameEnded = false;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // Trava o mouse
+        }
+    }
+
+    // FIM DE JOGO
+    else if (g_GameEnded) {
 
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        if (key == GLFW_KEY_I && action == GLFW_PRESS) {
-            g_ShowMenu = !g_ShowMenu;
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        }
-    } else {
 
+        if (key == GLFW_KEY_I && action == GLFW_PRESS) {
+            g_ShowMenu = true;
+        }
+    }
+
+    // JOGO
+    else {
+
+        // --- CONTROLES GERAIS ---
         if (key == GLFW_KEY_C && action == GLFW_PRESS)
         {
             CPressed = !CPressed;
         }
 
+        if (key == GLFW_KEY_I && action == GLFW_PRESS) {
+            g_ShowMenu = true;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+
         if (key == GLFW_KEY_M && action == GLFW_PRESS)
         {
             MPressed = !MPressed;
-            if (MPressed) {
-                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            }
-            else {
+            if (MPressed)
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            }
+            else
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
 
-        if (key == GLFW_KEY_W)
+        if (key == GLFW_KEY_H && action == GLFW_PRESS)
         {
-            if (action == GLFW_PRESS || action == GLFW_REPEAT)
-                WPressed = true;
-            else if (action == GLFW_RELEASE)
-                WPressed = false;
-        }
-
-        if (key == GLFW_KEY_A)
-        {
-            if (action == GLFW_PRESS || action == GLFW_REPEAT)
-                APressed = true;
-            else if (action == GLFW_RELEASE)
-                APressed = false;
-        }
-
-        if (key == GLFW_KEY_S)
-        {
-            if (action == GLFW_PRESS || action == GLFW_REPEAT)
-                SPressed = true;
-            else if (action == GLFW_RELEASE)
-                SPressed = false;
-        }
-
-        if (key == GLFW_KEY_D)
-        {
-            if (action == GLFW_PRESS || action == GLFW_REPEAT)
-                DPressed = true;
-            else if (action == GLFW_RELEASE)
-                DPressed = false;
-        }
-
-        if (key == GLFW_KEY_SPACE)
-        {
-            if (action == GLFW_PRESS || action == GLFW_REPEAT)
-                SpacePressed = true;
-            else if (action == GLFW_RELEASE)
-                SpacePressed = false;
+            g_ShowInfoText = !g_ShowInfoText;
         }
 
         if (key == GLFW_KEY_LEFT_SHIFT)
         {
-            if (action == GLFW_PRESS || action == GLFW_REPEAT)
-                ShiftPressed = true;
-            else if (action == GLFW_RELEASE)
-                ShiftPressed = false;
+            if (action == GLFW_PRESS || action == GLFW_REPEAT) LeftShiftPressed = true;
+            else if (action == GLFW_RELEASE) LeftShiftPressed = false;
         }
 
-        // Se o usuário apertar a tecla H, fazemos um "toggle" do texto informativo mostrado na tela.
-        if (key == GLFW_KEY_H && action == GLFW_PRESS)
+        // --- CONTROLES PLAYER 1 (WASD + Space) ---
+
+        if (key == GLFW_KEY_W)
         {
-            g_ShowInfoText = !g_ShowInfoText;
+            if (action == GLFW_PRESS || action == GLFW_REPEAT) WPressed = true;
+            else if (action == GLFW_RELEASE) WPressed = false;
+        }
+
+        if (key == GLFW_KEY_S)
+        {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT) SPressed = true;
+            else if (action == GLFW_RELEASE) SPressed = false;
+        }
+
+        if (key == GLFW_KEY_A)
+        {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT) APressed = true;
+            else if (action == GLFW_RELEASE) APressed = false;
+        }
+
+        if (key == GLFW_KEY_D)
+        {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT) DPressed = true;
+            else if (action == GLFW_RELEASE) DPressed = false;
+        }
+
+        if (key == GLFW_KEY_SPACE)
+        {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT) SpacePressed = true;
+            else if (action == GLFW_RELEASE) SpacePressed = false;
+        }
+
+        // --- CONTROLES PLAYER 2 (Setas + Right Shift) ---
+
+        if (key == GLFW_KEY_UP)
+        {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT) UpArrowPressed = true;
+            else if (action == GLFW_RELEASE) UpArrowPressed = false;
+        }
+
+        if (key == GLFW_KEY_DOWN)
+        {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT) DownArrowPressed = true;
+            else if (action == GLFW_RELEASE) DownArrowPressed = false;
+        }
+
+        if (key == GLFW_KEY_LEFT)
+        {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT) LeftArrowPressed = true;
+            else if (action == GLFW_RELEASE) LeftArrowPressed = false;
+        }
+
+        if (key == GLFW_KEY_RIGHT)
+        {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT) RightArrowPressed = true;
+            else if (action == GLFW_RELEASE) RightArrowPressed = false;
+        }
+
+        if (key == GLFW_KEY_RIGHT_SHIFT)
+        {
+            if (action == GLFW_PRESS || action == GLFW_REPEAT) RightShiftPressed = true;
+            else if (action == GLFW_RELEASE) RightShiftPressed = false;
         }
     }
 }

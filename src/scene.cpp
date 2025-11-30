@@ -1,10 +1,14 @@
 #include "scene.h"
 
+#include "collisions.h"
+#include "gametext.h"
+
 Scene::Scene()
     : kartModel("../../data/kart/kart.obj"),
-      player1("Player1", kartModel, glm::vec4(0.0f, -1.4f, 0.0f, 1.0f)),
-      player2("Enemy", kartModel, glm::vec4(5.0f, -1.4f, 0.0f, 1.0f))
+      player1("Player1", kartModel, glm::vec4(-20.0f, -1.4f, 3.0f, 1.0f)),
+      player2("Player2", kartModel, glm::vec4(20.0f, -1.4f, 3.0f, 1.0f))
 {
+
 
     // Carrega todas as texturas
     LoadTextureImage("../../data/sky/sky.hdr");                                   // TextureImage0
@@ -78,14 +82,43 @@ Scene::Scene()
       glm::vec3(-58.0f, 0.0f, 5.0f),
       glm::vec3(-55.0f, 0.0f, 10.0f)
     );
+
+    // Palmeiras
+    palmPositions = {
+        { 18.0f, -0.3f,  15.0f},
+        {-18.0f, -0.3f,  -8.0f},
+        { 18.0f, -0.3f,  -8.0f},
+        {-18.0f, -0.3f,  15.0f}
+    };
+
+    // Árvores
+    treePositions = {
+        { 23.0f, 4.0f,  15.0f},
+        {-23.0f, 4.0f,  -8.0f},
+        { 23.0f, 4.0f,  -8.0f},
+        {-23.0f, 4.0f,  15.0f}
+    };
+}
+
+void Scene::UpdateScene() {
+
+    player1.SetInputs(WPressed, SPressed, APressed, DPressed, SpacePressed);
+    player1.Update();
+
+    if (isMultiplayer) {
+        player2.SetInputs(UpArrowPressed, DownArrowPressed, LeftArrowPressed, RightArrowPressed, RightShiftPressed);
+    } else {
+        player2.SetInputs(false, false, false, false, false);
+    }
+    player2.Update();
+
+    HandleCollisions(*this);
+
+    for (auto & c : coins) c.UpdateMovement();
 }
 
 
-void Scene::Render() {
-
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glUseProgram(g_GpuProgramID);
+void Scene::RenderScene() {
 
     RenderSkySphere();
     RenderGround();
@@ -93,11 +126,45 @@ void Scene::Render() {
     RenderTree();
     RenderTrackPieces();
     RenderCoins();
-
     player1.Render();
     player2.Render();
-    player2.dummy = true;
+}
 
+void Scene::RenderSinglePlayer(GLFWwindow* window, Camera& camera) {
+
+    glfwGetFramebufferSize(window, &g_ScreenWidth, &g_ScreenHeight);
+    glViewport(0, 0, g_ScreenWidth, g_ScreenHeight);
+
+    // Cenário
+    camera.UpdateProjectionMatrix(g_ScreenRatio);
+    camera.StartCamera(player1);
+    RenderScene();
+
+    // Textos
+    RenderSinglePlayerHUD(window, player1, player2, RoundTime);
+}
+
+
+void Scene::RenderMultiplayer(GLFWwindow* window, Camera& cameraP1, Camera& cameraP2) {
+
+    glfwGetFramebufferSize(window, &g_ScreenWidth, &g_ScreenHeight);
+    const int halfWidth = g_ScreenWidth / 2;
+    const float splitRatio = (float)halfWidth / (float)g_ScreenHeight;
+
+    // PLAYER 1
+    glViewport(0, 0, halfWidth, g_ScreenHeight); // Metade Esquerda
+    cameraP1.UpdateProjectionMatrix(splitRatio);
+    cameraP1.StartCamera(player1);
+    RenderScene();
+
+    // PLAYER 2
+    glViewport(halfWidth, 0, halfWidth, g_ScreenHeight); // Metade Direita
+    cameraP2.UpdateProjectionMatrix(splitRatio);
+    cameraP2.StartCamera(player2);
+    RenderScene();
+
+    // Textos
+    RenderMultiPlayerHUD(window, player1, player2, RoundTime);
 }
 
 
@@ -140,29 +207,11 @@ void Scene::RenderPalm() {
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_LAMBERT);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), true);
 
-    glm::mat4 model = Matrix_Translate(18.0f, -0.3f, 15.0f) * Matrix_Scale(2.0f, 2.0f, 2.0f);
-
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, PALM);
-    DrawVirtualObject("the_palm");
-
-    model = Matrix_Translate(-18.0f, -0.3f, -8.0f) * Matrix_Scale(2.0f,2.0f,2.0f);
-
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, PALM);
-    DrawVirtualObject("the_palm");
-
-    model = Matrix_Translate(18.0f, -0.3f, -8.0f) * Matrix_Scale(2.0f,2.0f,2.0f);
-
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, PALM);
-    DrawVirtualObject("the_palm");
-
-    model = Matrix_Translate(-18.0f, -0.3f, 15.0f) * Matrix_Scale(2.0f,2.0f,2.0f);
-
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, PALM);
-    DrawVirtualObject("the_palm");
+    for (const auto& pos : palmPositions) {
+        glm::mat4 model = Matrix_Translate(pos.x, pos.y, pos.z) * Matrix_Scale(2.0f, 2.0f, 2.0f);
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        DrawVirtualObject("the_palm");
+    }
 }
 
 
@@ -171,33 +220,15 @@ void Scene::RenderTree() {
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_BLINNPHONG);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), true);
 
-    glm::mat4 model = Matrix_Translate(23.0f, 4.0f, 15.0f) * Matrix_Scale(5.0f, 5.0f, 5.0f);
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, TREEL);
-    DrawVirtualObject("tree_leaves");
-    glUniform1i(g_object_id_uniform, TREEW);
-    DrawVirtualObject("tree_wood");
-
-    model = Matrix_Translate(-23.0f, 4.0f, -8.0f) * Matrix_Scale(5.0f,5.0f,5.0f);
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, TREEL);
-    DrawVirtualObject("tree_leaves");
-    glUniform1i(g_object_id_uniform, TREEW);
-    DrawVirtualObject("tree_wood");
-
-    model = Matrix_Translate(23.0f, 4.0f, -8.0f) * Matrix_Scale(5.0f,5.0f,5.0f);
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, TREEL);
-    DrawVirtualObject("tree_leaves");
-    glUniform1i(g_object_id_uniform, TREEW);
-    DrawVirtualObject("tree_wood");
-
-    model = Matrix_Translate(-23.0f, 4.0f, 15.0f) * Matrix_Scale(5.0f,5.0f,5.0f);
-    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-    glUniform1i(g_object_id_uniform, TREEL);
-    DrawVirtualObject("tree_leaves");
-    glUniform1i(g_object_id_uniform, TREEW);
-    DrawVirtualObject("tree_wood");
+    for (const auto& pos : treePositions) {
+        glm::mat4 model = Matrix_Translate(pos.x, pos.y, pos.z)
+                        * Matrix_Scale(5.0f, 5.0f, 5.0f);
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, TREEL);
+        DrawVirtualObject("tree_leaves");
+        glUniform1i(g_object_id_uniform, TREEW);
+        DrawVirtualObject("tree_wood");
+    }
 }
 
 
@@ -246,4 +277,62 @@ void Scene::RenderTrackPieces() {
 
 void Scene::RenderCoins() {
     for (auto & c : coins) c.Render();
+}
+
+
+// Reseta todas as variáveis do jogo
+void Scene::ResetScene() {
+
+    RoundTime = 60.0f;
+    g_GameEnded = false;
+
+    WPressed = false;
+    APressed = false;
+    SPressed = false;
+    DPressed = false;
+    UpArrowPressed = false;
+    DownArrowPressed = false;
+    LeftArrowPressed = false;
+    RightArrowPressed = false;
+    SpacePressed = false;
+    RightShiftPressed = false;
+    g_LeftMouseButtonPressed = false;
+    g_RightMouseButtonPressed = false;
+
+    player1.position = player1.spawnPosition;
+    player1.rotation = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+    player1.direction = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
+    player1.score = 0;
+    player1.health = 100;
+    player1.ammo = 10;
+    player1.isAlive = true;
+    player1.speed = 0.0f;
+    player1.isInvincible = false;
+    player1.invincibleTimer = 0.0f;
+    player1.respawnTimer = 0.0f;
+    player1.rockets.clear();
+    player1.SetInputs(false, false, false, false, false);
+
+    player2.position = player2.spawnPosition;
+    player2.rotation = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+    player2.direction = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
+    player2.score = 0;
+    player2.health = 100;
+    player2.ammo = 10;
+    player2.isAlive = true;
+    player2.speed = 0.0f;
+    player2.isInvincible = false;
+    player2.invincibleTimer = 0.0f;
+    player2.respawnTimer = 0.0f;
+    player2.rockets.clear();
+    player2.SetInputs(false, false, false, false, false);
+
+    for(auto &c : coins) {
+        c.active = true;
+    }
+
+    if (ma_sound_is_playing(&g_SoundAccP1)) ma_sound_stop(&g_SoundAccP1);
+    if (ma_sound_is_playing(&g_SoundDecelP1)) ma_sound_stop(&g_SoundDecelP1);
+    if (ma_sound_is_playing(&g_SoundAccP2)) ma_sound_stop(&g_SoundAccP2);
+    if (ma_sound_is_playing(&g_SoundDecelP2)) ma_sound_stop(&g_SoundDecelP2);
 }

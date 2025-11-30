@@ -2,18 +2,21 @@
  *                    Trabalho Final de Fundamentos de Computação Gráfica
  *                      Luísa Righi Bolzan e Rafael Silveira Bandeira
  =========================================================================================*/
+
 #include <iostream>
 #include "FCGfunctions.h"
 #include "globals.h"
 #include "camera.h"
-#include "kart.h"
-#include "collisions.h"
 #include "scene.h"
-#include "menu.h"
+#include "gametext.h"
 #include "control.h"
-#include "miniaudio.h"
+#include "audio.h"
 
 int main(int argc, char* argv[]) {
+
+    // =========================================================================
+    //  INICIALIZAÇÃO GLFW/GLAD E CONFIGURAÇÕES OPENGL
+    // =========================================================================
     int success = glfwInit();
     if (!success)
     {
@@ -31,7 +34,7 @@ int main(int argc, char* argv[]) {
 
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     GLFWwindow* window;
-    window = glfwCreateWindow(1920, 1080, "INF01047 - Smash Karts", NULL, NULL);
+    window = glfwCreateWindow(g_ScreenWidth, g_ScreenHeight, "INF01047 - Smash Karts", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -48,7 +51,7 @@ int main(int argc, char* argv[]) {
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 
     glfwSetFramebufferSizeCallback(window, FramebufferSizeCallback);
-    FramebufferSizeCallback(window, 1920, 1080);
+    FramebufferSizeCallback(window, g_ScreenWidth, g_ScreenHeight);
 
     const GLubyte *vendor      = glGetString(GL_VENDOR);
     const GLubyte *renderer    = glGetString(GL_RENDERER);
@@ -69,45 +72,81 @@ int main(int argc, char* argv[]) {
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
-    //============================================================================================
-    //                                Inicialização do Áudio
-    //============================================================================================
-    if (ma_engine_init(NULL, &g_AudioEngine) != MA_SUCCESS) {
-        std::cerr << "Erro ao iniciar o engine de áudio.\n";
-    }
-    ma_result result = ma_sound_init_from_file(&g_AudioEngine, "../../data/audio/LadyJane.mp3", MA_SOUND_FLAG_STREAM, NULL, NULL, &g_Music);
-    ma_sound_set_volume(&g_Music, 0.2f);
-    ma_sound_set_looping(&g_Music, MA_TRUE);
-    ma_sound_start(&g_Music);
+    // Sincroniza o FPS com a taxa de atualização do monitor
+    glfwSwapInterval(1);
 
-    
-    //============================================================================================
-    //                                Criação da Camera e Cenário
-    //============================================================================================
+    // =========================================================================
+    //  INICIALIZAÇÃO DO JOGO (Cena, Câmera, Áudio)
+    // =========================================================================
 
-    Camera camera;
+    Camera cameraP1;
+    Camera cameraP2;
     Scene scene;
+    AudioInit();
 
-    // Loop infinito até que o usuário feche a janela
+    // Reset inicial para garantir variáveis limpas
+    scene.ResetScene();
+
+    // Inicializa o tempo
+    lastTime = (float)glfwGetTime();
+
+    // =========================================================================
+    // GAME LOOP PRINCIPAL
+    // =========================================================================
     while (!glfwWindowShouldClose(window)) {
 
-        if (g_ShowMenu)
-            RenderMenu(window);
+        // Cálculo do DeltaTime
+        float currentFrame = (float)glfwGetTime();
+        deltaTime = currentFrame - lastTime;
+        lastTime = currentFrame;
+        currentTime = currentFrame;
 
+        // Limpeza de Tela
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glUseProgram(g_GpuProgramID);
+
+        // Máquina de Estados
+
+        // ESTADO 1: MENU PRINCIPAL
+        if (g_ShowMenu) {
+            scene.ResetScene();
+            RenderMenu(window);
+        }
+
+        // ESTADO 2: FIM DE JOGO
+        else if (g_GameEnded)
+            RenderGameOver(window, scene.player1.score, scene.player2.score);
+
+        // ESTADO 3: JOGO RODANDO
         else {
-            // Inicializa e mantém o funcionamento da camera
-            camera.StartCamera(scene.player1);
-            scene.Render();
-            HandleCollisions(scene);
+
+            // Só decrementa o tempo se o jogo estiver valendo
+            RoundTime -= deltaTime;
+            if (RoundTime <= 0.0f) {
+                RoundTime = 0.0f;
+                g_GameEnded = true;
+            }
+
+            // Atualiza Física e Inputs
+            scene.UpdateScene();
+
+            // Renderiza Cena 3D + Interface (HUD)
+            if (isMultiplayer)
+                scene.RenderMultiplayer(window, cameraP1, cameraP2);
+            else
+                scene.RenderSinglePlayer(window, cameraP1);
         }
 
         TextRendering_ShowFramesPerSecond(window);
-
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    ma_engine_uninit(&g_AudioEngine);
+    // =========================================================================
+    // FINALIZAÇÃO
+    // =========================================================================
+    AudioCleanup();
     glfwTerminate();
     return 0;
 }

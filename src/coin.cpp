@@ -36,8 +36,6 @@ void Coin::UpdateMovement() {
 
 void Coin::Render() {
 
-    this->UpdateMovement();
-
     position.y = -1.2f;
 
     if (!active) {

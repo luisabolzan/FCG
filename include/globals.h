@@ -13,6 +13,8 @@
 extern std::map<std::string, struct SceneObject> g_VirtualScene;
 extern std::stack<glm::mat4>  g_MatrixStack;
 extern float g_ScreenRatio;
+extern int g_ScreenWidth;
+extern int g_ScreenHeight;
 
 extern float g_AngleX;
 extern float g_AngleY;
@@ -41,6 +43,7 @@ extern double g_LastCursorPosX, g_LastCursorPosY;
 // =================================================================================
 
 extern bool g_ShowMenu;
+extern bool isMultiplayer;
 
 extern int IlluminationModel;
 extern bool IsGouraudShading;
@@ -59,11 +62,16 @@ extern bool APressed;
 extern bool SPressed;
 extern bool DPressed;
 
+extern bool UpArrowPressed;
+extern bool DownArrowPressed;
+extern bool LeftArrowPressed;
+extern bool RightArrowPressed;
+
 extern bool CPressed;
 extern bool MPressed;
-
 extern bool SpacePressed;
-extern bool ShiftPressed;
+extern bool LeftShiftPressed;
+extern bool RightShiftPressed;
 
 // ==================================================================================
 extern glm::vec3 p0;
@@ -84,8 +92,21 @@ extern glm::vec3 p3;
 #define TREEW       9
 
 // Váriaveis de áudio
+extern bool g_IsMuted;
 extern ma_engine g_AudioEngine;
 extern ma_sound g_Music;
+extern ma_sound g_SoundExplosion;
+extern ma_sound g_SoundCoin;
+// Player 1
+extern ma_sound g_SoundAccP1;  
+extern ma_sound g_SoundDecelP1; 
+// Player 2
+extern ma_sound g_SoundAccP2;
+extern ma_sound g_SoundDecelP2;
+
+// Timer
+extern float RoundTime;
+extern bool g_GameEnded;
 
 #endif //GLOBALS_H
 

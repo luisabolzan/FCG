@@ -3,6 +3,7 @@
 #include "kart.h"
 #include "coin.h"
 #include "scene.h"
+#include "audio.h"
 
 // Colisão Kart (sphere) com Kart (sphere)
 bool CheckSphereSphere(const BoundingSphere& a, const BoundingSphere& b) {
@@ -88,27 +89,25 @@ void HandleCollisions(Scene& scene) {
     // Verifica se os foguetes acertaram algo
     CheckRocketKartCollision(scene.player1, scene.player2);
     CheckRocketKartCollision(scene.player2, scene.player1);
-    CheckRocketPalmCollision(scene.player1);
-    CheckRocketTreeCollision(scene.player1);
-    CheckRocketPalmCollision(scene.player2);
-    CheckRocketTreeCollision(scene.player2);
+    CheckRocketPalmCollision(scene.player1, scene.palmPositions);
+    CheckRocketTreeCollision(scene.player1, scene.treePositions);
+    CheckRocketPalmCollision(scene.player2, scene.palmPositions);
+    CheckRocketTreeCollision(scene.player2, scene.treePositions);
 
-    // Verifica P1 e P2 contra as moedas
+    // Verifica Players contra as moedas
     for (auto& c : scene.coins) {
         CheckKartCoinCollision(scene.player1, c);
         CheckKartCoinCollision(scene.player2, c);
     }
 
-    // Verifica Player 1 contra Player 2
+    // Verifica Player contra Player
     CheckKartKartCollision(scene.player1, scene.player2);
 
-    // Verifica Player 1 contra o ambiente
-    CheckKartPalmCollision(scene.player1);
-    CheckKartTreeCollision(scene.player1);
-
-    // Verifica Player 2 contra o ambiente
-    CheckKartPalmCollision(scene.player2);
-    CheckKartTreeCollision(scene.player2);
+    // Verifica Players contra o ambiente
+    CheckKartPalmCollision(scene.player1, scene.palmPositions);
+    CheckKartTreeCollision(scene.player1, scene.treePositions);
+    CheckKartPalmCollision(scene.player2, scene.palmPositions);
+    CheckKartTreeCollision(scene.player2, scene.treePositions);
 }
 
 
@@ -135,6 +134,9 @@ void CheckRocketKartCollision(Kart& shooter, Kart& target) {
         {
             rocket.active = false;
             target.isAlive = false;
+            target.health = 0;
+            shooter.score += 100;
+            AudioExplosionSound();
             printf(" %s atingiu %s!\n", shooter.name.c_str(), target.name.c_str());
         }
     }
@@ -155,7 +157,8 @@ void CheckKartCoinCollision(Kart& kart, Coin& coin) {
         coin.active = false;
         coin.respawnTimer = 0.0f;
         kart.ammo++;
-        printf("%s pegou uma moeda!\n", kart.name.c_str());
+        AudioCoinSound();
+        printf(" %s pegou uma moeda!\n", kart.name.c_str());
     }
 }
 
@@ -211,52 +214,38 @@ void ResolveSphereCubeCollision(Kart& kart, const BoundingSphere& sphere, const 
     }
 }
 
-void CheckKartPalmCollision(Kart& kart) {
+void CheckKartPalmCollision(Kart& kart, const std::vector<glm::vec3>& positions) {
 
     BoundingSphere kartSphere{};
     kartSphere.center = glm::vec3(kart.position);
     kartSphere.radius = kart.radius;
 
-    std::vector<glm::vec3> palmPositions = {
-        {18.0f, -0.3f, 15.0f},
-        {-18.0f, -0.3f, -8.0f},
-        {18.0f, -0.3f, -8.0f},
-        {-18.0f, -0.3f, 15.0f}
-    };
-
     // Tamanho da caixa de colisão da palmeira
     glm::vec3 halfSize(0.1f, 5.0f, 0.1f);
 
-    for (const auto& pos : palmPositions) {
+    for (const auto& pos : positions) {
         AABB box{};
         box.min = pos - halfSize;
         box.max = pos + halfSize;
 
         if (CheckSphereCube(kartSphere, box)) {
             ResolveSphereCubeCollision(kart, kartSphere, box);
-            printf("Colisao com Palmeira!\n");
             kart.speed = 0.0f;
+            // printf("Batida na Palmeira!\n");
         }
     }
 }
 
-void CheckKartTreeCollision(Kart& kart) {
+void CheckKartTreeCollision(Kart& kart, const std::vector<glm::vec3>& positions) {
 
     BoundingSphere kartSphere{};
     kartSphere.center = glm::vec3(kart.position);
     kartSphere.radius = kart.radius;
 
-    std::vector<glm::vec3> treePositions = {
-        {23.0f, 4.0f, 15.0f},
-        {-23.0f, 4.0f, -8.0f},
-        {23.0f, 4.0f, -8.0f},
-        {-23.0f, 4.0f, 15.0f}
-    };
-
     // Tamanho da caixa de colisão da árvore
     glm::vec3 halfSize(0.1f, 10.0f, 0.1f);
 
-    for (const auto& pos : treePositions) {
+    for (const auto& pos : positions) {
         AABB box{};
         glm::vec3 collisionPos = pos;
         collisionPos.y = 0.0f;
@@ -265,21 +254,14 @@ void CheckKartTreeCollision(Kart& kart) {
 
         if (CheckSphereCube(kartSphere, box)) {
             ResolveSphereCubeCollision(kart, kartSphere, box);
-            printf("Colisao com Arvore!\n");
             kart.speed = 0.0f;
+            // printf("Batida na Arvore!\n");
         }
     }
 }
 
 
-void CheckRocketPalmCollision(Kart& shooter) {
-
-    std::vector<glm::vec3> palmPositions = {
-        {18.0f, -0.3f, 15.0f},
-        {-18.0f, -0.3f, -8.0f},
-        {18.0f, -0.3f, -8.0f},
-        {-18.0f, -0.3f, 15.0f}
-    };
+void CheckRocketPalmCollision(Kart& shooter, const std::vector<glm::vec3>& positions) {
 
     // Tamanho da caixa de colisão da palmeira
     glm::vec3 halfSize(0.5f, 5.0f, 0.5f);
@@ -290,22 +272,20 @@ void CheckRocketPalmCollision(Kart& shooter) {
         glm::vec3 origin = glm::vec3(rocket.prevPosition);
         glm::vec3 diff = glm::vec3(rocket.position - rocket.prevPosition);
         float segmentLength = length(diff);
-
         if (segmentLength <= 0.0f) continue;
-
         glm::vec3 dir = normalize(diff);
 
-        for (const auto& pos : palmPositions) {
+        for (const auto& pos : positions) {
             AABB box{};
             box.min = pos - halfSize;
             box.max = pos + halfSize;
 
             float t = 0.0f;
-
             if (CheckRayCube(origin, dir, box, t)) {
-                if (t >= 0.0f && t <= segmentLength) {
+                if (t <= segmentLength) {
                     rocket.active = false;
-                    printf("Foguete colidiu com Palmeira!\n");
+                    // printf("Foguete explodiu na Palmeira!\n");
+                    AudioExplosionSound();
                     break;
                 }
             }
@@ -314,14 +294,7 @@ void CheckRocketPalmCollision(Kart& shooter) {
 }
 
 
-void CheckRocketTreeCollision(Kart& shooter) {
-
-    std::vector<glm::vec3> treePositions = {
-        {23.0f, 4.0f, 15.0f},
-        {-23.0f, 4.0f, -8.0f},
-        {23.0f, 4.0f, -8.0f},
-        {-23.0f, 4.0f, 15.0f}
-    };
+void CheckRocketTreeCollision(Kart& shooter, const std::vector<glm::vec3>& positions) {
 
     // Tamanho da caixa de colisão da árvore
     glm::vec3 halfSize(0.5f, 10.0f, 0.5f);
@@ -332,12 +305,10 @@ void CheckRocketTreeCollision(Kart& shooter) {
         glm::vec3 origin = glm::vec3(rocket.prevPosition);
         glm::vec3 diff = glm::vec3(rocket.position - rocket.prevPosition);
         float segmentLength = length(diff);
-
         if (segmentLength <= 0.0f) continue;
-
         glm::vec3 dir = normalize(diff);
 
-        for (const auto& pos : treePositions) {
+        for (const auto& pos : positions) {
             AABB box{};
             glm::vec3 collisionPos = pos;
             collisionPos.y = 0.0f;
@@ -346,13 +317,13 @@ void CheckRocketTreeCollision(Kart& shooter) {
 
             float t = 0.0f;
             if (CheckRayCube(origin, dir, box, t)) {
-                if (t >= 0.0f && t <= segmentLength) {
+                if (t <= segmentLength) {
                     rocket.active = false;
-                    printf("Foguete colidiu com Arvore!\n");
+                    // printf("Foguete explodiu na Arvore!\n");
+                    AudioExplosionSound();
                     break;
                 }
             }
         }
     }
 }
-
