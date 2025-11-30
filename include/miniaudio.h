@@ -4,6 +4,7 @@ miniaudio - v0.11.23 - 2025-09-11
 
 David Reid - mackron@gmail.com
 
+FONTE
 Website:       https://miniaud.io
 Documentation: https://miniaud.io/docs
 GitHub:        https://github.com/mackron/miniaudio
