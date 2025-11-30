@@ -141,7 +141,7 @@ void Scene::RenderSinglePlayer(GLFWwindow* window, Camera& camera) {
     RenderScene();
 
     // Textos
-    RenderSinglePlayerHUD(window, player1, player2, RoundTime);
+    RenderSinglePlayerHUD(window, player1, player2, CurrentRoundTime);
 }
 
 
@@ -164,7 +164,7 @@ void Scene::RenderMultiplayer(GLFWwindow* window, Camera& cameraP1, Camera& came
     RenderScene();
 
     // Textos
-    RenderMultiPlayerHUD(window, player1, player2, RoundTime);
+    RenderMultiPlayerHUD(window, player1, player2, CurrentRoundTime);
 }
 
 
@@ -283,8 +283,8 @@ void Scene::RenderCoins() {
 // Reseta todas as variáveis do jogo
 void Scene::ResetScene() {
 
-    RoundTime = 60.0f;
-    g_GameEnded = false;
+    CurrentRoundTime = RoundTime;
+    GameEnded = false;
 
     WPressed = false;
     APressed = false;
@@ -331,8 +331,5 @@ void Scene::ResetScene() {
         c.active = true;
     }
 
-    if (ma_sound_is_playing(&g_SoundAccP1)) ma_sound_stop(&g_SoundAccP1);
-    if (ma_sound_is_playing(&g_SoundDecelP1)) ma_sound_stop(&g_SoundDecelP1);
-    if (ma_sound_is_playing(&g_SoundAccP2)) ma_sound_stop(&g_SoundAccP2);
-    if (ma_sound_is_playing(&g_SoundDecelP2)) ma_sound_stop(&g_SoundDecelP2);
+    StopGameSounds();
 }

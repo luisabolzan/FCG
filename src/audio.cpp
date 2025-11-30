@@ -90,3 +90,10 @@ void AudioExplosionSound(){
 void AudioAccelerationSound(){
     ma_engine_play_sound(&g_AudioEngine, "../../data/audio/Acceleration.mp3", NULL);
 }
+
+void StopGameSounds() {
+    if (ma_sound_is_playing(&g_SoundAccP1)) ma_sound_stop(&g_SoundAccP1);
+    if (ma_sound_is_playing(&g_SoundDecelP1)) ma_sound_stop(&g_SoundDecelP1);
+    if (ma_sound_is_playing(&g_SoundAccP2)) ma_sound_stop(&g_SoundAccP2);
+    if (ma_sound_is_playing(&g_SoundDecelP2)) ma_sound_stop(&g_SoundDecelP2);
+}

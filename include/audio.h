@@ -11,5 +11,6 @@ void AudioCoinSound();
 void AudioShotSound();
 void AudioExplosionSound();
 void AudioAccelerationSound();
+void StopGameSounds();
 
 #endif // AUDIO_H

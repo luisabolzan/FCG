@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
     glfwSwapInterval(1);
 
     // =========================================================================
-    //  INICIALIZAÇÃO DO JOGO (Cena, Câmera, Áudio)
+    //  INICIALIZAÇÃO DO JOGO (Cena, Câmera, Áudio e Tempo)
     // =========================================================================
 
     Camera cameraP1;
@@ -110,22 +110,24 @@ int main(int argc, char* argv[]) {
 
         // ESTADO 1: MENU PRINCIPAL
         if (g_ShowMenu) {
-            scene.ResetScene();
             RenderMenu(window);
+            scene.ResetScene();
         }
 
         // ESTADO 2: FIM DE JOGO
-        else if (g_GameEnded)
+        else if (GameEnded) {
+            StopGameSounds();
             RenderGameOver(window, scene.player1.score, scene.player2.score);
+        }
 
         // ESTADO 3: JOGO RODANDO
         else {
 
             // Só decrementa o tempo se o jogo estiver valendo
-            RoundTime -= deltaTime;
-            if (RoundTime <= 0.0f) {
-                RoundTime = 0.0f;
-                g_GameEnded = true;
+            CurrentRoundTime -= deltaTime;
+            if (CurrentRoundTime <= 0.0f) {
+                CurrentRoundTime = 0.0f;
+                GameEnded = true;
             }
 
             // Atualiza Física e Inputs

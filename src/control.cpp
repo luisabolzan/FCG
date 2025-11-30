@@ -108,25 +108,25 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
 
         // Opção 1: SINGLEPLAYER
         if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
-            isMultiplayer = false;         // Define modo Single
-            g_ShowMenu = false;            // Fecha o menu
-            RoundTime = 60.0f;
-            g_GameEnded = false;
+            isMultiplayer = false;
+            g_ShowMenu = false;
+            CurrentRoundTime = RoundTime;
+            GameEnded = false;
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // Trava o mouse
         }
 
         // Opção 2: MULTIPLAYER
         if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
-            isMultiplayer = true;          // Define modo Multi
-            g_ShowMenu = false;            // Fecha o menu
-            RoundTime = 60.0f;
-            g_GameEnded = false;
+            isMultiplayer = true;
+            g_ShowMenu = false;
+            CurrentRoundTime = RoundTime;
+            GameEnded = false;
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // Trava o mouse
         }
     }
 
     // FIM DE JOGO
-    else if (g_GameEnded) {
+    else if (GameEnded) {
 
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
