@@ -2,17 +2,21 @@
  *                    Trabalho Final de Fundamentos de Computação Gráfica
  *                      Luísa Righi Bolzan e Rafael Silveira Bandeira
  =========================================================================================*/
+
 #include <iostream>
 #include "FCGfunctions.h"
 #include "globals.h"
 #include "camera.h"
 #include "scene.h"
-#include "menu.h"
+#include "gametext.h"
 #include "control.h"
-#include "miniaudio.h"
 #include "audio.h"
 
 int main(int argc, char* argv[]) {
+
+    // =========================================================================
+    //  INICIALIZAÇÃO GLFW/GLAD E CONFIGURAÇÕES OPENGL
+    // =========================================================================
     int success = glfwInit();
     if (!success)
     {
@@ -70,27 +74,64 @@ int main(int argc, char* argv[]) {
 
     // Sincroniza o FPS com a taxa de atualização do monitor
     glfwSwapInterval(1);
-    
-    //============================================================================================
-    //                            Criação da Camera, Cenário e Som
-    //============================================================================================
+
+    // =========================================================================
+    //  INICIALIZAÇÃO DO JOGO (Cena, Câmera, Áudio)
+    // =========================================================================
 
     Camera cameraP1;
     Camera cameraP2;
     Scene scene;
     AudioInit();
 
+    // Reset inicial para garantir variáveis limpas
+    scene.ResetScene();
+
+    // Inicializa o tempo
+    lastTime = (float)glfwGetTime();
+
+    // =========================================================================
+    // GAME LOOP PRINCIPAL
+    // =========================================================================
     while (!glfwWindowShouldClose(window)) {
 
+        // Cálculo do DeltaTime
+        float currentFrame = (float)glfwGetTime();
+        deltaTime = currentFrame - lastTime;
+        lastTime = currentFrame;
+        currentTime = currentFrame;
+
+        // Limpeza de Tela
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUseProgram(g_GpuProgramID);
 
+        // Máquina de Estados
+
+        // ESTADO 1: MENU PRINCIPAL
         if (g_ShowMenu) {
+            scene.ResetScene();
             RenderMenu(window);
-            RenderAudioStatus(window);
         }
+
+        // ESTADO 2: FIM DE JOGO
+        else if (g_GameEnded)
+            RenderGameOver(window, scene.player1.score, scene.player2.score);
+
+        // ESTADO 3: JOGO RODANDO
         else {
+
+            // Só decrementa o tempo se o jogo estiver valendo
+            RoundTime -= deltaTime;
+            if (RoundTime <= 0.0f) {
+                RoundTime = 0.0f;
+                g_GameEnded = true;
+            }
+
+            // Atualiza Física e Inputs
+            scene.UpdateScene();
+
+            // Renderiza Cena 3D + Interface (HUD)
             if (isMultiplayer)
                 scene.RenderMultiplayer(window, cameraP1, cameraP2);
             else
@@ -102,6 +143,9 @@ int main(int argc, char* argv[]) {
         glfwPollEvents();
     }
 
+    // =========================================================================
+    // FINALIZAÇÃO
+    // =========================================================================
     AudioCleanup();
     glfwTerminate();
     return 0;

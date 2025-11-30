@@ -158,7 +158,7 @@ void CheckKartCoinCollision(Kart& kart, Coin& coin) {
         coin.respawnTimer = 0.0f;
         kart.ammo++;
         AudioCoinSound();
-        printf("%s pegou uma moeda!\n", kart.name.c_str());
+        printf(" %s pegou uma moeda!\n", kart.name.c_str());
     }
 }
 

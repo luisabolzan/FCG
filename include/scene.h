@@ -21,21 +21,22 @@ public:
     std::vector<glm::vec3> treePositions;
 
     Scene();
-    void Render();
+
+    void UpdateScene();
+    void RenderScene();
+    void ResetScene();
+
     void RenderSinglePlayer(GLFWwindow* window, Camera& camera);
     void RenderMultiplayer(GLFWwindow* window, Camera& cam1, Camera& cam2);
 
 private:
+
     void RenderSkySphere();
     void RenderGround();
-
     void RenderPalm();
     void RenderTree();
     void RenderTrackPieces();
     void RenderCoins();
-
-    void RenderTextInfo(GLFWwindow* window, Kart& kart, float x_pos, float y_pos);
-    void RenderRanking(GLFWwindow* window, float x_pos, float y_pos);
 };
 
 #endif //SCENE_H

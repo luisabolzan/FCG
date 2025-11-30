@@ -142,10 +142,6 @@ void Camera::StartCamera(const Kart& kart) {
         CPressed = false;
     }
 
-    currentTime = glfwGetTime();
-    deltaTime = currentTime - lastTime;
-    lastTime = currentTime;
-
     if (this->GetFreeCamera()) {
 
         float speed = this->GetSpeed() * deltaTime;
