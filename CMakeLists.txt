@@ -22,11 +22,10 @@ set(SOURCES
   src/collisions.cpp
   src/coin.cpp
   src/scene.cpp
-  src/menu.cpp
   src/miniaudio.cpp
   src/control.cpp
   src/audio.cpp
-  src/gameover.cpp
+  src/gametext.cpp
 )
 
 cmake_minimum_required(VERSION 3.10)

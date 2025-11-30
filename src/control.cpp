@@ -124,16 +124,17 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // Trava o mouse
         }
     }
+
     // FIM DE JOGO
     else if (g_GameEnded) {
-        // Na tela de Game Over, liberamos o mouse e só aceitamos a tecla 'I'
+
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
         if (key == GLFW_KEY_I && action == GLFW_PRESS) {
-            g_ShowMenu = true; // Volta para o menu
-            // O reset real dos karts acontecerá na main.cpp
+            g_ShowMenu = true;
         }
     }
+
     // JOGO
     else {
 

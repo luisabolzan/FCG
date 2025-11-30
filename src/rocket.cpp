@@ -15,7 +15,7 @@ Rocket::Rocket(const glm::vec4& pos, const glm::vec4& dir, float kartSpeed)
 }
 
 
-void Rocket::UpdateMovement() {
+void Rocket::Update() {
 
     if (!active) return;
     prevPosition = position;
@@ -31,7 +31,6 @@ void Rocket::UpdateMovement() {
 
 void Rocket::Render() {
 
-    this->UpdateMovement();
     if (!active) return;
 
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_PHONG);

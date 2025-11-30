@@ -1,5 +1,8 @@
 #include "scene.h"
 
+#include "collisions.h"
+#include "gametext.h"
+
 Scene::Scene()
     : kartModel("../../data/kart/kart.obj"),
       player1("Player1", kartModel, glm::vec4(-20.0f, -1.4f, 3.0f, 1.0f)),
@@ -97,8 +100,25 @@ Scene::Scene()
     };
 }
 
+void Scene::UpdateScene() {
 
-void Scene::Render() {
+    player1.SetInputs(WPressed, SPressed, APressed, DPressed, SpacePressed);
+    player1.Update();
+
+    if (isMultiplayer) {
+        player2.SetInputs(UpArrowPressed, DownArrowPressed, LeftArrowPressed, RightArrowPressed, RightShiftPressed);
+    } else {
+        player2.SetInputs(false, false, false, false, false);
+    }
+    player2.Update();
+
+    HandleCollisions(*this);
+
+    for (auto & c : coins) c.UpdateMovement();
+}
+
+
+void Scene::RenderScene() {
 
     RenderSkySphere();
     RenderGround();
@@ -108,7 +128,6 @@ void Scene::Render() {
     RenderCoins();
     player1.Render();
     player2.Render();
-
 }
 
 void Scene::RenderSinglePlayer(GLFWwindow* window, Camera& camera) {
@@ -117,14 +136,12 @@ void Scene::RenderSinglePlayer(GLFWwindow* window, Camera& camera) {
     glViewport(0, 0, g_ScreenWidth, g_ScreenHeight);
 
     // Cenário
-    player1.SetInputs(WPressed, SPressed, APressed, DPressed, SpacePressed);
     camera.UpdateProjectionMatrix(g_ScreenRatio);
     camera.StartCamera(player1);
-    Render();
-    HandleCollisions(*this);
+    RenderScene();
 
     // Textos
-    RenderTextSingleplayer(window);
+    RenderSinglePlayerHUD(window, player1, player2, RoundTime);
 }
 
 
@@ -135,60 +152,19 @@ void Scene::RenderMultiplayer(GLFWwindow* window, Camera& cameraP1, Camera& came
     const float splitRatio = (float)halfWidth / (float)g_ScreenHeight;
 
     // PLAYER 1
-    player1.SetInputs(WPressed, SPressed, APressed, DPressed, SpacePressed);
     glViewport(0, 0, halfWidth, g_ScreenHeight); // Metade Esquerda
     cameraP1.UpdateProjectionMatrix(splitRatio);
     cameraP1.StartCamera(player1);
-    Render();
-    HandleCollisions(*this);
+    RenderScene();
 
     // PLAYER 2
-    player2.SetInputs(UpArrowPressed, DownArrowPressed, LeftArrowPressed, RightArrowPressed, RightShiftPressed);
     glViewport(halfWidth, 0, halfWidth, g_ScreenHeight); // Metade Direita
     cameraP2.UpdateProjectionMatrix(splitRatio);
     cameraP2.StartCamera(player2);
-    Render();
-    HandleCollisions(*this);
+    RenderScene();
 
     // Textos
-    RenderTextMultiplayer(window);
-}
-
-
-void Scene::RenderTextSingleplayer(GLFWwindow* window) {
-    // tela cheia
-    glViewport(0, 0, g_ScreenWidth, g_ScreenHeight);
-    glDisable(GL_DEPTH_TEST);
-
-    RenderMatchTimer(window);
-    RenderKartInfo(window, player1, -0.95f, 0.85f);
-    RenderRanking(window, 0.75f, 0.8f);
-    RenderSpeed(window, player1, -0.95f, -0.9f);
-    RenderRespawnMessage(window, player1, "PLAYER 2", 0.0f, 0.15f);
-
-    glEnable(GL_DEPTH_TEST);
-}
-
-
-void Scene::RenderTextMultiplayer(GLFWwindow* window) {
-    // Para renderizar o texto sem distorções (Tela Cheia)
-    glViewport(0, 0, g_ScreenWidth, g_ScreenHeight);
-    glDisable(GL_DEPTH_TEST);
-    RenderMatchTimer(window);
-    // --- PLAYER 1 (Lado Esquerdo) ---
-    // Ajustei levemente o Ranking para -0.30f para não colar no meio, ajuste como preferir
-    RenderKartInfo(window, player1, -0.95f, 0.85f);
-    RenderRanking(window, -0.20f, 0.8f);
-    RenderSpeed(window, player1, -0.95f, -0.9f);
-    RenderRespawnMessage(window, player1, player2.name, -0.5f, 0.15f);
-
-    // --- PLAYER 2 (Lado Direito) ---
-    RenderKartInfo(window, player2, 0.05f, 0.85f);
-    RenderRanking(window, 0.80f, 0.8f);
-    RenderSpeed(window, player2, 0.05f, -0.9f);
-    RenderRespawnMessage(window, player2, player1.name, 0.5f, 0.15f);
-
-    glEnable(GL_DEPTH_TEST);
+    RenderMultiPlayerHUD(window, player1, player2, RoundTime);
 }
 
 
@@ -303,120 +279,60 @@ void Scene::RenderCoins() {
     for (auto & c : coins) c.Render();
 }
 
-void Scene::RenderKartInfo(GLFWwindow* window, Kart& kart, float x_pos, float y_pos) {
 
-    char buffer[128];
-    snprintf(buffer, sizeof(buffer), "%s | HP: %d | Ammo: %d | Score: %d",
-             kart.name.c_str(), kart.health, kart.ammo, kart.score);
+// Reseta todas as variáveis do jogo
+void Scene::ResetScene() {
 
-    float scale = 1.5f;
-    TextRendering_PrintString(window, buffer, x_pos, y_pos, scale);
-}
-
-void Scene::RenderRanking(GLFWwindow* window, float x_pos, float y_pos) {
-
-    char p1Text[64];
-    char p2Text[64];
-    float scale = 1.2f;
-
-    Kart* primeiro;
-    Kart* segundo;
-
-    if (player1.score >= player2.score) {
-        primeiro = &player1;
-        segundo = &player2;
-    } else {
-        primeiro = &player2;
-        segundo = &player1;
-    }
-
-    // Título
-    TextRendering_PrintString(window, "RANKING:", x_pos, y_pos + 0.1f, scale);
-
-    // 1º Lugar
-    snprintf(p1Text, sizeof(p1Text), "1. %s (%d)", primeiro->name.c_str(), primeiro->score);
-    TextRendering_PrintString(window, p1Text, x_pos, y_pos, scale);
-
-    // 2º Lugar
-    snprintf(p2Text, sizeof(p2Text), "2. %s (%d)", segundo->name.c_str(), segundo->score);
-    TextRendering_PrintString(window, p2Text, x_pos, y_pos - 0.1f, scale);
-}
-
-
-void Scene::RenderSpeed(GLFWwindow* window, Kart& kart, float x_pos, float y_pos) {
-    char buffer[64];
-
-    int speedVal = (int)(std::abs(kart.speed) * 3.6f);
-    snprintf(buffer, sizeof(buffer), "SPEED: %02d km/h", speedVal);
-
-    float scale = 3.0f;
-    TextRendering_PrintString(window, buffer, x_pos, y_pos, scale);
-}
-
-
-void Scene::RenderRespawnMessage(GLFWwindow* window, Kart& target, std::string shooter, float x_center, float y_center) {
-
-    if (target.isAlive) return;
-
-    int timeLeft = (int)(target.respawnTime - target.respawnTimer) + 1;
-
-    char msgHit[64];
-    char msgTimer[64];
-    float scale = 3.0f;
-    float char_width = TextRendering_CharWidth(window);
-
-    snprintf(msgHit, sizeof(msgHit), "ELIMINADO POR %s", shooter.c_str());
-    snprintf(msgTimer, sizeof(msgTimer), "RESPAWN EM: %d", timeLeft);
-
-    float widthHit = strlen(msgHit) * char_width * scale;
-    float x_hit = x_center - (widthHit / 2.0f);
-
-    float widthTimer = strlen(msgTimer) * char_width * scale;
-    float x_timer = x_center - (widthTimer / 2.0f);
-
-    TextRendering_PrintString(window, msgHit, x_hit, y_center, scale);
-    TextRendering_PrintString(window, msgTimer, x_timer, y_center - 0.15f, scale);
-}
-
-void Scene::RenderMatchTimer(GLFWwindow* window) {
-    char buffer[32];
-    
-    int t = (int)ceil(RoundTime); 
-    if (t < 0) t = 0;
-
-    snprintf(buffer, sizeof(buffer), "TIME: %02d", t);
-
-    float scale = 4.0f;
-    
-    float char_width = TextRendering_CharWidth(window);
-    float text_width = char_width * strlen(buffer) * scale;
-    float x_pos = 0.0f - (text_width / 2.0f);
-    float y_pos = 0.90f;
-
-    TextRendering_PrintString(window, buffer, x_pos, y_pos, scale);
-}
-
-void Scene::ResetMatch() {
     RoundTime = 60.0f;
     g_GameEnded = false;
 
+    WPressed = false;
+    APressed = false;
+    SPressed = false;
+    DPressed = false;
+    UpArrowPressed = false;
+    DownArrowPressed = false;
+    LeftArrowPressed = false;
+    RightArrowPressed = false;
+    SpacePressed = false;
+    RightShiftPressed = false;
+    g_LeftMouseButtonPressed = false;
+    g_RightMouseButtonPressed = false;
+
     player1.position = player1.spawnPosition;
+    player1.rotation = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+    player1.direction = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
     player1.score = 0;
     player1.health = 100;
     player1.ammo = 10;
     player1.isAlive = true;
     player1.speed = 0.0f;
-    player1.rockets.clear(); 
+    player1.isInvincible = false;
+    player1.invincibleTimer = 0.0f;
+    player1.respawnTimer = 0.0f;
+    player1.rockets.clear();
+    player1.SetInputs(false, false, false, false, false);
 
     player2.position = player2.spawnPosition;
+    player2.rotation = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+    player2.direction = glm::vec4(0.0f, 0.0f, -1.0f, 0.0f);
     player2.score = 0;
     player2.health = 100;
     player2.ammo = 10;
     player2.isAlive = true;
     player2.speed = 0.0f;
+    player2.isInvincible = false;
+    player2.invincibleTimer = 0.0f;
+    player2.respawnTimer = 0.0f;
     player2.rockets.clear();
+    player2.SetInputs(false, false, false, false, false);
 
     for(auto &c : coins) {
         c.active = true;
     }
+
+    if (ma_sound_is_playing(&g_SoundAccP1)) ma_sound_stop(&g_SoundAccP1);
+    if (ma_sound_is_playing(&g_SoundDecelP1)) ma_sound_stop(&g_SoundDecelP1);
+    if (ma_sound_is_playing(&g_SoundAccP2)) ma_sound_stop(&g_SoundAccP2);
+    if (ma_sound_is_playing(&g_SoundDecelP2)) ma_sound_stop(&g_SoundDecelP2);
 }
