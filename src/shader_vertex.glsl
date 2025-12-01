@@ -50,6 +50,7 @@ uniform int IlluminationModel;
 #define PALM        7
 #define TREEL       8
 #define TREEW       9
+#define LOGO        10
 uniform int object_id;
 
 // Variáveis para acesso das imagens de textura
@@ -63,6 +64,7 @@ uniform sampler2D TextureImage6;
 uniform sampler2D TextureImage7;
 uniform sampler2D TextureImage8;
 uniform sampler2D TextureImage9;
+uniform sampler2D TextureImage10;
 
 void main()
 {

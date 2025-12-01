@@ -15,7 +15,7 @@ void RenderMenu(GLFWwindow* window) {
     float char_width = TextRendering_CharWidth(window);
 
 
-    //  DESENHAR A LOGO (Fixa na tela)
+    // LOGO
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_GLOBAL);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), false);
 
