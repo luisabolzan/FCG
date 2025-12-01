@@ -17,6 +17,8 @@
 #define ILLUMINATION_PHONG      2
 #define ILLUMINATION_BLINNPHONG 3
 
+#define M_PI 3.14159265359
+
 // IDs dos Objetos na Cena
 #define SPHERE      0
 #define BUNNY       1
@@ -28,6 +30,12 @@
 #define PALM        7
 #define TREEL       8
 #define TREEW       9
+
+enum GameMode {
+    MODE_SINGLEPLAYER, // 1 Jogador (Treino/Time Trial)
+    MODE_MULTIPLAYER,  // 2 Jogadores (Split Screen)
+    MODE_VERSUS_AI     // 1 Jogador vs Computador
+};
 
 // =================================================================================
 // JANELA E CÂMERA
@@ -103,7 +111,7 @@ extern bool GameEnded;
 // ESTADOS DO JOGO (Gameplay)
 // =================================================================================
 extern bool g_ShowMenu;
-extern bool isMultiplayer;
+extern GameMode g_CurrentGameMode;
 extern bool g_ShowInfoText;
 
 // =================================================================================

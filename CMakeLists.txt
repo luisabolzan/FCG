@@ -26,6 +26,7 @@ set(SOURCES
   src/control.cpp
   src/audio.cpp
   src/gametext.cpp
+  src/enemyAI.cpp
 )
 
 cmake_minimum_required(VERSION 3.10)

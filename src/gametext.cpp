@@ -29,9 +29,13 @@ void RenderMenu(GLFWwindow* window) {
     float multi_x = 0.0f - (char_width * strlen(multi_text) * scale_opts) / 2.0f;
     TextRendering_PrintString(window, multi_text, multi_x, -0.05f, scale_opts);
 
+    const char* ai_text = "3 - VERSUS AI (PLAYER VS CPU)";
+    float ai_x = 0.0f - (char_width * strlen(ai_text) * scale_opts) / 2.0f;
+    TextRendering_PrintString(window, ai_text, ai_x, -0.20f, scale_opts);
+
     const char* exit_text = "ESC - SAIR";
     float exit_x = 0.0f - (char_width * strlen(exit_text) * scale_opts) / 2.0f;
-    TextRendering_PrintString(window, exit_text, exit_x, -0.3f, scale_opts);
+    TextRendering_PrintString(window, exit_text, exit_x, -0.35f, scale_opts);
 
     RenderAudioStatus(window);
     glEnable(GL_DEPTH_TEST);

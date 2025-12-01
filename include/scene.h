@@ -6,6 +6,7 @@
 #include "kart.h"
 #include "coin.h"
 #include "camera.h"
+#include "enemyAI.h"
 #include "audio.h"
 #include "FCGfunctions.h"
 #include <cstdio>
@@ -17,6 +18,7 @@ public:
     ObjModel kartModel;
     Kart player1;
     Kart player2;
+    EnemyAI* enemyAI;
     std::vector<Coin> coins;
     std::vector<glm::vec3> palmPositions;
     std::vector<glm::vec3> treePositions;

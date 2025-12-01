@@ -123,7 +123,7 @@ int main(int argc, char* argv[]) {
         // ESTADO 3: JOGO RODANDO
         else {
 
-            // Só decrementa o tempo se o jogo estiver valendo
+            // Cronometro dos Rounds
             CurrentRoundTime -= deltaTime;
             if (CurrentRoundTime <= 0.0f) {
                 CurrentRoundTime = 0.0f;
@@ -134,7 +134,7 @@ int main(int argc, char* argv[]) {
             scene.UpdateScene();
 
             // Renderiza Cena 3D + Interface (HUD)
-            if (isMultiplayer)
+            if (g_CurrentGameMode == MODE_MULTIPLAYER)
                 scene.RenderMultiplayer(window, cameraP1, cameraP2);
             else
                 scene.RenderSinglePlayer(window, cameraP1);
