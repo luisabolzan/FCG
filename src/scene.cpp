@@ -98,6 +98,12 @@ Scene::Scene()
         { 23.0f, 4.0f,  -8.0f},
         {-23.0f, 4.0f,  15.0f}
     };
+
+    enemyAI = new EnemyAI(&player2, &player1);
+}
+
+Scene::~Scene() {
+    delete enemyAI;
 }
 
 void Scene::UpdateScene() {
@@ -108,7 +114,7 @@ void Scene::UpdateScene() {
     if (isMultiplayer) {
         player2.SetInputs(UpArrowPressed, DownArrowPressed, LeftArrowPressed, RightArrowPressed, RightShiftPressed);
     } else {
-        player2.SetInputs(false, false, false, false, false);
+        enemyAI->UpdateAI();
     }
     player2.Update();
 

@@ -6,6 +6,7 @@
 #include "kart.h"
 #include "coin.h"
 #include "camera.h"
+#include "enemyAI.h"
 #include "audio.h"
 #include "FCGfunctions.h"
 #include <cstdio>
@@ -21,7 +22,10 @@ public:
     std::vector<glm::vec3> palmPositions;
     std::vector<glm::vec3> treePositions;
 
+    EnemyAI* enemyAI;
+
     Scene();
+    ~Scene();
 
     void UpdateScene();
     void RenderScene();
