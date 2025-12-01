@@ -30,6 +30,7 @@
 #define PALM        7
 #define TREEL       8
 #define TREEW       9
+#define LOGO        10
 
 enum GameMode {
     MODE_SINGLEPLAYER, // 1 Jogador (Treino/Time Trial)

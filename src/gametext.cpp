@@ -8,36 +8,50 @@
 void RenderMenu(GLFWwindow* window) {
 
     glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
     glfwGetFramebufferSize(window, &g_ScreenWidth, &g_ScreenHeight);
     glViewport(0, 0, g_ScreenWidth, g_ScreenHeight);
 
     float char_width = TextRendering_CharWidth(window);
 
-    // Título
-    const char* title_text = "SMASH KARTS";
-    const float title_scale = 5.0f;
-    float title_x_center = 0.0f - (char_width * strlen(title_text) * title_scale) / 2.0f;
-    TextRendering_PrintString(window, title_text, title_x_center, 0.5f, title_scale);
+
+    //  DESENHAR A LOGO (Fixa na tela)
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_GLOBAL);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), false);
+
+    glm::mat4 identity = glm::mat4(1.0f);
+    glUniformMatrix4fv(g_view_uniform, 1, GL_FALSE, glm::value_ptr(identity));
+    glUniformMatrix4fv(g_projection_uniform, 1, GL_FALSE, glm::value_ptr(identity));
+
+    glm::mat4 model = Matrix_Translate(0.0f, 0.5f, 0.0f)
+                    * Matrix_Scale(0.8f, 0.4f, 1.0f)
+                    * Matrix_Rotate_X(glm::radians(90.0f));
+
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+    glUniform1i(g_object_id_uniform, LOGO);
+    DrawVirtualObject("the_plane");
 
     // Opções
     const char* single_text = "1 - SINGLEPLAYER";
     const float scale_opts = 3.0f;
     float single_x = 0.0f - (char_width * strlen(single_text) * scale_opts) / 2.0f;
-    TextRendering_PrintString(window, single_text, single_x, 0.1f, scale_opts);
+    TextRendering_PrintString(window, single_text, single_x, -0.05f, scale_opts);
 
     const char* multi_text = "2 - MULTIPLAYER (SPLIT SCREEN)";
     float multi_x = 0.0f - (char_width * strlen(multi_text) * scale_opts) / 2.0f;
-    TextRendering_PrintString(window, multi_text, multi_x, -0.05f, scale_opts);
+    TextRendering_PrintString(window, multi_text, multi_x, -0.20f, scale_opts);
 
     const char* ai_text = "3 - VERSUS AI (PLAYER VS CPU)";
     float ai_x = 0.0f - (char_width * strlen(ai_text) * scale_opts) / 2.0f;
-    TextRendering_PrintString(window, ai_text, ai_x, -0.20f, scale_opts);
+    TextRendering_PrintString(window, ai_text, ai_x, -0.35f, scale_opts);
 
     const char* exit_text = "ESC - SAIR";
     float exit_x = 0.0f - (char_width * strlen(exit_text) * scale_opts) / 2.0f;
-    TextRendering_PrintString(window, exit_text, exit_x, -0.35f, scale_opts);
+    TextRendering_PrintString(window, exit_text, exit_x, -0.5f, scale_opts);
 
     RenderAudioStatus(window);
+
+    glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 }
 

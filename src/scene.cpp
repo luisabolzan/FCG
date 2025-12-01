@@ -21,6 +21,7 @@ Scene::Scene()
     LoadTextureImage("../../data/tree/leaves.jpg");                               // TextureImage7
     LoadTextureImage("../../data/tree/wood.jpg");                                 // TextureImage8
     LoadTextureImage("../../data/frog_skin.jpg");                                 // TextureImage9
+    LoadTextureImage("../../data/readme/smash_logo.png");                         // TextureImage10
 
     // Carrega todos os .obj
     ObjModel spheremodel("../../data/sky/sphere.obj");

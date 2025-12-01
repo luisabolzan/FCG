@@ -49,6 +49,7 @@ uniform int IlluminationModel;
 #define PALM        7
 #define TREEL       8
 #define TREEW       9
+#define LOGO        10
 uniform int object_id;
 
 // Variáveis para acesso das imagens de textura
@@ -62,6 +63,7 @@ uniform sampler2D TextureImage6;
 uniform sampler2D TextureImage7;
 uniform sampler2D TextureImage8;
 uniform sampler2D TextureImage9;
+uniform sampler2D TextureImage10;
 
 void main() {
 
@@ -203,6 +205,26 @@ void main() {
             Ks = vec3(0.5, 0.5, 0.5);
             q  = 32.0;
         }
+        else if (object_id == LOGO) {
+
+            U = texcoords.x;
+            V = texcoords.y;
+
+            vec4 texColor = texture(TextureImage10, vec2(U,V));
+            float brilho = texColor.r + texColor.g + texColor.b;
+            if (brilho < 0.1) {
+                // É preto/fundo -> Pintar de BRANCO
+                color.rgb = vec3(1.0, 1.0, 1.0);
+            } else {
+                // É colorido/logo -> Manter a cor original
+                color.rgb = texColor.rgb;
+            }
+
+            color.a = 1.0;
+            color.rgb = pow(color.rgb, vec3(1.0,1.0,1.0)/2.2);
+            return;
+        }
+
 
         //==============================================================================
         // Modelos de Iluminação
