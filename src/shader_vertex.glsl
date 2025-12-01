@@ -62,6 +62,7 @@ uniform sampler2D TextureImage5;
 uniform sampler2D TextureImage6;
 uniform sampler2D TextureImage7;
 uniform sampler2D TextureImage8;
+uniform sampler2D TextureImage9;
 
 void main()
 {
@@ -167,10 +168,10 @@ void main()
             U = (position_model.x - minx) / (maxx - minx);
             V = (position_model.y - miny) / (maxy - miny);
 
-            Kd = texture(TextureImage0, vec2(U,V)).rgb;
-            // Ka =
-            // Ks =
-            // q =
+            Kd = texture(TextureImage9, vec2(U,V)).rgb;
+            Ka = vec3(1.0, 1.0, 1.0);
+            Ks = vec3(0.0, 0.0, 0.0);
+            q  = 1.0;
         }
         else if ( object_id == PLANE ) {
             U = texcoords.x;

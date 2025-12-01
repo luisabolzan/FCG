@@ -234,19 +234,36 @@ void Kart::Render() {
 
     if (!isAlive) return;
 
-    // Configura Iluminação
+    // Configura Iluminação para o Kart
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_LAMBERT);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), true);
 
-    // Matriz do Modelo
+    // DESENHA O KART
     glm::mat4 model = Matrix_Translate(position.x, position.y, position.z) 
                     * Matrix_Rotate_Y(rotation.y)
                     * Matrix_Scale(scale.x, scale.y, scale.z);
 
     glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
     glUniform1i(g_object_id_uniform, KART);
-    
     DrawVirtualObject("the_kart");
+
+
+    // Copia a matriz do modelo do kart para começar da mesma posição/rotação
+    glm::mat4 bunnyModel = model;
+
+    // Configura iluminação para o Coelho
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), ILLUMINATION_LAMBERT);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "IsGouraudShading"), true);
+
+    // DESENHA O PILOTO (BUNNY)
+    const float bunnyScale = 0.50f;
+    bunnyModel = bunnyModel * Matrix_Translate(0.0f, 0.0f, 0.0f)
+               * Matrix_Scale(bunnyScale, bunnyScale, bunnyScale);
+
+    glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(bunnyModel));
+    glUniform1i(g_object_id_uniform, BUNNY);
+    DrawVirtualObject("the_bunny");
+
 
     // Renderiza Foguetes
     for (auto& rocket : rockets) {

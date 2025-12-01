@@ -141,6 +141,7 @@ void LoadShadersFromFiles()
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage6"), 6);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage7"), 7);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage8"), 8);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage9"), 9);
 
     // Se quiser adicionar variáveis nos arquivos de Shader, colocar aqui:
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "IlluminationModel"), IlluminationModel);

@@ -20,6 +20,7 @@ Scene::Scene()
     LoadTextureImage("../../data/palm/palm.jpg");                                 // TextureImage6
     LoadTextureImage("../../data/tree/leaves.jpg");                               // TextureImage7
     LoadTextureImage("../../data/tree/wood.jpg");                                 // TextureImage8
+    LoadTextureImage("../../data/frog_skin.jpg");                                 // TextureImage9
 
     // Carrega todos os .obj
     ObjModel spheremodel("../../data/sky/sphere.obj");
