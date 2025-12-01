@@ -99,27 +99,28 @@ Scene::Scene()
         {-23.0f, 4.0f,  15.0f}
     };
 
-    enemyAI = new EnemyAI(&player2, &player1);
+    enemyAI = new EnemyAI(&player2, &player1, &coins);
 }
 
-Scene::~Scene() {
-    delete enemyAI;
-}
 
 void Scene::UpdateScene() {
 
     player1.SetInputs(WPressed, SPressed, APressed, DPressed, SpacePressed);
     player1.Update();
 
-    if (isMultiplayer) {
+    if (g_CurrentGameMode == MODE_MULTIPLAYER) {
         player2.SetInputs(UpArrowPressed, DownArrowPressed, LeftArrowPressed, RightArrowPressed, RightShiftPressed);
-    } else {
+    }
+    else if (g_CurrentGameMode == MODE_VERSUS_AI) {
         enemyAI->UpdateAI();
     }
+    else {
+        player2.SetInputs(false, false, false, false, false);
+    }
+
     player2.Update();
 
     HandleCollisions(*this);
-
     for (auto & c : coins) c.UpdateMovement();
 }
 

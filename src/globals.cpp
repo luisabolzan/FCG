@@ -76,7 +76,7 @@ bool GameEnded = false;
 // ESTADOS DO JOGO (Gameplay)
 // =================================================================================
 bool g_ShowMenu = true;
-bool isMultiplayer = false;
+GameMode g_CurrentGameMode = MODE_SINGLEPLAYER;
 bool g_ShowInfoText = false;
 
 // =================================================================================

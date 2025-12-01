@@ -104,24 +104,32 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
     
     // MENU
     if (g_ShowMenu) {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
         // Opção 1: SINGLEPLAYER
         if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
-            isMultiplayer = false;
+            g_CurrentGameMode = MODE_SINGLEPLAYER;
             g_ShowMenu = false;
             CurrentRoundTime = RoundTime;
             GameEnded = false;
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // Trava o mouse
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
 
         // Opção 2: MULTIPLAYER
         if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
-            isMultiplayer = true;
+            g_CurrentGameMode = MODE_MULTIPLAYER;
             g_ShowMenu = false;
             CurrentRoundTime = RoundTime;
             GameEnded = false;
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // Trava o mouse
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+
+        // Opção 3: VERSUS AI (NOVA)
+        if (key == GLFW_KEY_3 && action == GLFW_PRESS) {
+            g_CurrentGameMode = MODE_VERSUS_AI;
+            g_ShowMenu = false;
+            CurrentRoundTime = RoundTime;
+            GameEnded = false;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
     }
 
