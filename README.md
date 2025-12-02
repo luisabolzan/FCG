@@ -29,6 +29,9 @@
     <li>
       <a href="#ai">Uso de Ferramentas de IA</a>
     </li>
+    <li>
+      <a href="#assets">Assets Utilizados</a>
+    </li>
   </ol>
 </details>
 
@@ -166,4 +169,29 @@ Em um modo extra, contra bot, o uso de IA foi essencial para que o bot se portas
 Análise crítica: As ferramentas mostraram-se extremamente úteis para acelerar tarefas repetitivas, explicar erros de sintaxe e fornecer esqueletos de código, funcionando como uma documentação interativa eficiente. No entanto, houve uma certa limitação quando as IAs sugeriram códigos em versões antigas da OpenGL. Assim, o uso exigiu revisão e adaptação por parte da dupla para garantir que as ideias se adequassem à arquitetura específica do projeto.
 
 ---
+
+
+## 📦 Assets Utilizados <a id="assets"></a>
+
+### **Modelos 3D (.obj)**
+- **Kart:** https://rigmodels.com/model.php?view=Crash_Nitro_Kart-3d-model__RRUK7Z4OZSA792961SVBLJP2O&searchkeyword=kart&manualsearch=1
+- **Moeda:** https://rigmodels.com/model.php?view=Coin-3d-model__I89O58TBZ353I4X9ANHTRFF5K&searchkeyword=coin&manualsearch=1
+- **Foguete:** https://rigmodels.com/model.php?view=Rocket-3d-model__BBLT6Y289HRMFUPXB4F97YQGM&searchkeyword=bullet&manualsearch=1
+- **Palmeira:** https://rigmodels.com/model.php?view=Palm-3d-model__L3NAEA4864VBU6RACQOZNZ43R&searchkeyword=palm&manualsearch=1
+- **Árvore:** https://rigmodels.com/model.php?view=Tree-2-N020414-3d-model__LVA2SSG6VH9BJ6DTEGA82K6F3&searchkeyword=tree&manualsearch=1
+- **Tracks (pista):** https://3dexport.com/pt/3d-model-modularroadspack-450748
+- **Sphere, Bunny e Plane:** fornecidos via *Moodle*
+
+
+### **Texturas**
+- **Céu:** https://polyhaven.com/a/overcast_soil_puresky
+- **Chão:** https://polyhaven.com/a/rocky_terrain_02
+- **Demais texturas nos mesmos links dos objetos;**
+
+### **Áudios**
+- **Música de fundo:** https://royaltyfreemusiclibrary.com/tracks?tracks=axis9999-303
+- **Som de moeda:** https://www.youtube.com/watch?v=-oiucsrxixU
+- **Som de disparo:** https://www.youtube.com/watch?v=hyLEK0Ox-78
+- **Som de explosão:** https://youtu.be/JoC7Ylckrks?si=EmTvI0C1BMQdk5Gd
+- **Som de (de)aceleração:** https://elevenlabs.io/pt/sound-effects/tire-screech  
 
