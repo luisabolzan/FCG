@@ -53,11 +53,14 @@ void Kart::SetInputs(bool up, bool down, bool left, bool right, bool fire) {
 void Kart::Update() {
     if (dummy) return;
 
+    // Combate
+    HandleShooting();
+
     // Verifica se está morto
     if (!isAlive) {
         HandleRespawn();
         HandleAudio();
-        return; // Não processa física nem tiro se estiver morto
+        return;
     }
 
     // Lógicas de Estado
@@ -65,9 +68,6 @@ void Kart::Update() {
 
     // Movimentação
     HandlePhysics();
-
-    // Combate
-    HandleShooting();
 
     // Áudio
     HandleAudio();
@@ -150,7 +150,7 @@ void Kart::HandlePhysics() {
 void Kart::HandleShooting() {
 
     // Tenta disparar
-    if (inputFire) FireRocket();
+    if (inputFire && isAlive) FireRocket();
 
     // Atualiza foguetes existentes
     for (auto& rocket : rockets) rocket.Update();
@@ -232,6 +232,11 @@ void Kart::HandleAudio() {
 
 void Kart::Render() {
 
+    // Renderiza Foguetes
+    for (auto& rocket : rockets) {
+        rocket.Render();
+    }
+
     if (!isAlive) return;
 
     // Configura Iluminação para o Kart
@@ -264,9 +269,4 @@ void Kart::Render() {
     glUniform1i(g_object_id_uniform, BUNNY);
     DrawVirtualObject("the_bunny");
 
-
-    // Renderiza Foguetes
-    for (auto& rocket : rockets) {
-        rocket.Render();
-    }
 }
