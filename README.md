@@ -8,6 +8,8 @@
 
  Smash Karts é um jogo PVP de carros inspirado em um jogo de mesmo nome [smashkarts.io](smashkarts.io), no qual dois jogadores competem usando veículos controláveis para destruir o adversário, capturar moedas (que viram munição) e dominar o mapa. Cada partida é curta e frenética: os jogadores aceleram e atiram projéteis. O objetivo principal é eliminar o oponente para marcar pontos dentro do tempo limite. No final da partida, quem tiver mais pontos ganha!
 
+Link do Vídeo / Apresentação: https://youtu.be/nxwsponBZwE
+
  <details>
   <summary><b style="font-size: 20px;">SUMÁRIO</b></summary>
   <ol>
